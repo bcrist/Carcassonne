@@ -20,44 +20,44 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: main.cc
+// File: game.h
+//
+// Main game logic.
 
+#ifndef CARCASSONNE_GAME_H_
+#define CARCASSONNE_GAME_H_
+#include "_carcassonne.h"
 
-#ifdef DEBUG
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 
-//#pragma comment (lib, "sfml-main-d.lib")
-#pragma comment (lib, "sfml-system-d.lib")
-#pragma comment (lib, "sfml-window-d.lib")
+namespace carcassonne {
 
-#else
+class Game
+{
+public:
+   Game();
+   int run();
 
-//#pragma comment (lib, "sfml-main.lib")
-#pragma comment (lib, "sfml-system.lib")
-#pragma comment (lib, "sfml-window.lib")
+   void initOpenGL();
+
+   void resize(const glm::ivec2& new_size);
+
+   void simulate(sf::Time delta);
+   void draw();
+
+   bool isSimulationRunning() const;
+   void setSimulationRunning(bool running);
+
+private:
+   sf::Window wnd_;
+   glm::ivec2 viewport_size_;
+
+   bool simulation_running_;
+   sf::Time min_simulate_interval_;
+   sf::Clock clock_;
+};
+
+} // namespace carcassonne
 
 #endif
-
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-
-
-
-int main()
-{
-	sf::Window window(sf::VideoMode(640, 480), "SFML works!");
-
-	while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        
-        window.display();
-    }
-
-    return 0;
-}
