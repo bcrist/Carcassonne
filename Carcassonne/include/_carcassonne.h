@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Dougrist Productions
+// Copyright (c) 2013 Dougrist Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -29,7 +29,7 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <ostream>
+#include <iostream>
 
 #include <glm/glm.hpp>
 

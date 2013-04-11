@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Dougrist Productions
+// Copyright (c) 2013 Dougrist Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -31,6 +31,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
+#include "db/db.h"
+
 namespace carcassonne {
 
 class Game
@@ -50,6 +52,8 @@ public:
    void setSimulationRunning(bool running);
 
 private:
+   db::DB config_db_;
+
    sf::Window wnd_;
    glm::ivec2 viewport_size_;
 

@@ -11,12 +11,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\db\db.cc" />
+    <ClCompile Include="src\db\stmt.cc" />
     <ClCompile Include="src\game.cc" />
     <ClCompile Include="src\main.cc" />
+    <ClCompile Include="src\sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\db\db.h" />
+    <ClInclude Include="include\db\stmt.h" />
+    <ClInclude Include="include\db\transaction.h" />
     <ClInclude Include="include\game.h" />
+    <ClInclude Include="include\sqlite3.h" />
     <ClInclude Include="include\_carcassonne.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\db\db.inl" />
+    <None Include="include\db\stmt.inl" />
+    <None Include="include\db\transaction.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8FD4D4BE-A710-4A9B-A8D1-1219A84C17B6}</ProjectGuid>
@@ -58,7 +70,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,6 +83,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

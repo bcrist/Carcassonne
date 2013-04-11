@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Dougrist Productions
+// Copyright (c) 2013 Dougrist Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -45,7 +45,19 @@
 
 int main()
 {
-   carcassonne::Game g;
+   carcassonne::Game* game;
 
-   return g.run();
+   try
+   {
+      carcassonne::Game g;
+      game = &g;
+   }
+   catch (const carcassonne::db::DB::error& err)
+   {
+      std::cerr << "Could not load carcassonne.config!" << std::endl
+                << err.what() << std::endl;
+      return -1;
+   }
+
+   return game->run();
 }

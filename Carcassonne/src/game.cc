@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Dougrist Productions
+// Copyright (c) 2013 Dougrist Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -28,10 +28,14 @@
 
 #include <SFML/OpenGL.hpp>
 
+#include "db/transaction.h"
+#include "db/stmt.h"
+
 namespace carcassonne {
 
 Game::Game()
-   : simulation_running_(true),
+   : config_db_("carcassonne.config"),
+     simulation_running_(true),
      min_simulate_interval_(sf::milliseconds(5))
 {
 }
