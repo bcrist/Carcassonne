@@ -61,6 +61,8 @@ public:
 
    void exec(const std::string& sql);
 
+   int getInt(const std::string& sql, int default_value);
+
 private:
    sqlite3* db_;
 

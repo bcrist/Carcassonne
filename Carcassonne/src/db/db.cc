@@ -28,6 +28,8 @@
 
 #include <cassert>
 
+#include "db/stmt.h"
+
 namespace carcassonne {
 
 namespace db {
@@ -65,6 +67,18 @@ void DB::exec(const std::string& sql)
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Compiles & executes an SQL query which generates at least one row whose
+// first field is convertible to integer, and returns that integer.  If no
+// rows are returned by the query, returns default_value
+int DB::getInt(const std::string& sql, int default_value)
+{
+   db::Stmt stmt(*this, sql);
+   if (stmt.step())
+      return stmt.getInt(0);
+
+   return default_value;
+}
 
 } // namespace db
 

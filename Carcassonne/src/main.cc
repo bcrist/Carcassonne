@@ -54,7 +54,7 @@ int main()
    }
    catch (const carcassonne::db::DB::error& err)
    {
-      std::cerr << "Could not load carcassonne.config!" << std::endl
+      std::cerr << "Could not load carcassonne.ccconfig database!" << std::endl
                 << err.what() << std::endl;
       return -1;
    }

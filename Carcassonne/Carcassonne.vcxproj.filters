@@ -36,6 +36,9 @@
     <ClCompile Include="src\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics_configuration.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\game.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files\db</Filter>
     </ClInclude>
     <ClInclude Include="include\sqlite3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics_configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

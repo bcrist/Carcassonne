@@ -33,6 +33,8 @@
 
 #include "db/db.h"
 
+#include "graphics_configuration.h"
+
 namespace carcassonne {
 
 class Game
@@ -40,8 +42,11 @@ class Game
 public:
    Game();
    int run();
+   int close();
 
+   void createWindow();
    void initOpenGL();
+   
 
    void resize(const glm::ivec2& new_size);
 
@@ -54,8 +59,9 @@ public:
 private:
    db::DB config_db_;
 
-   sf::Window wnd_;
-   glm::ivec2 viewport_size_;
+   GraphicsConfiguration gfx_cfg_;
+   sf::Window window_;
+  
 
    bool simulation_running_;
    sf::Time min_simulate_interval_;
