@@ -23,8 +23,9 @@
 
 #include "carcassonne/assets/texture_font.h"
 
-BMC_BEGIN
-
+namespace carcassonne {
+namespace assets {
+   /*
 TextureFont::TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined)
 {
 	listBase = glGenLists(TEXTUREFONT_LIST_COUNT);
@@ -102,6 +103,7 @@ void TextureFont::print(const std::string &str, GLfloat scaleX, GLfloat scaleY) 
 	glCallLists(str.length(), GL_BYTE, str.c_str());
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
-}
+}*/
 
-BMC_END
+} // namespace assets
+} // namespace carcassonne

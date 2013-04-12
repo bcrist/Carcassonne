@@ -32,8 +32,9 @@
 #include <SFML/Window.hpp>
 
 #include "carcassonne/db/db.h"
-
 #include "carcassonne/graphics_configuration.h"
+#include "carcassonne/assets/asset_manager.h"
+
 
 namespace carcassonne {
 
@@ -62,6 +63,7 @@ private:
    GraphicsConfiguration gfx_cfg_;
    sf::Window window_;
   
+   assets::AssetManager assets_;
 
    bool simulation_running_;
    sf::Time min_simulate_interval_;

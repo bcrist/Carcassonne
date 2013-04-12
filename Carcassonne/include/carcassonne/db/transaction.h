@@ -62,6 +62,6 @@ private:
 
 } // namespace carcassonne
 
-#include "db/transaction.inl"
+#include "carcassonne/db/transaction.inl"
 
 #endif

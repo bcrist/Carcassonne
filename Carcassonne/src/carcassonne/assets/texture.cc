@@ -24,50 +24,79 @@
 #include "carcassonne/assets/texture.h"
 
 #include <cassert>
+#include <algorithm>
+
 #include "stb_image.h"
 
-namespace bmc {
+#include "carcassonne/db/stmt.h"
+
+namespace carcassonne {
+namespace assets {
 
 Texture::State Texture::state_(UNKNOWN);
 GLuint Texture::bound_id_(0);
 GLenum Texture::mode_(GL_MODULATE);
 glm::vec4 Texture::color_(0,0,0,0);
 
-Texture::Texture(const std::string& filename)
-{
-   int comps;
-   GLubyte* data = stbi_load(filename.c_str(), &width_, &height_, &comps, 4);
-
-   if (data == nullptr)
-      throw std::exception("Could not load texture file!");
-
-   upload(data);
-}
-
-Texture::Texture(const char* filename)
-{
-   int comps;
-   GLubyte* data = stbi_load(filename, &width_, &height_, &comps, 4);
-
-   if (data == nullptr)
-      throw std::exception("Could not load texture file!");
-
-   upload(data);
-}
-
-Texture::Texture(const GLubyte* data, int width, int height)
-   : width_(width),
-     height_(height)
+Texture::Texture(const GLubyte* data, const glm::ivec2& size)
+   : size_(size)
 {
    assert(data != nullptr);
-   assert(width > 0);
-   assert(height > 0);
+   assert(size.x > 0);
+   assert(size.y > 0);
+
    upload(data);
+}
+
+Texture::Texture(db::DB& db, const std::string& name)
+{
+   db::Stmt stmt(db, "SELECT format, width, height, data "
+                     "FROM cc_textures "
+                     "WHERE name = ? LIMIT 1");
+
+   if (!stmt.step())
+      throw db::DB::error("Texture not found!");
+
+   std::string format = stmt.getText(0);
+   std::transform(format.begin(), format.end(), format.begin(), tolower);
+   size_.x = stmt.getInt(1);
+   size_.y = stmt.getInt(2);
+
+   const void* data;
+   void* stbi_data = nullptr;
+
+   if (format == "raw")
+   {
+      int length = stmt.getBlob(3, data);
+
+      if (size_.x * size_.y * 4 > length)
+         throw std::runtime_error("Raw texture data corrupted or incomplete!");
+   }
+   else
+   {
+      // load texture data using STB Image library
+      int length = stmt.getBlob(3, data);
+      int comps;
+
+      stbi_data = stbi_load_from_memory(static_cast<const stbi_uc*>(data),
+                                        length, &size_.x, &size_.y, &comps, 4);
+      if (stbi_data == nullptr)
+         throw std::runtime_error(stbi_failure_reason());
+
+      data = stbi_data;
+   }
+
+   if (size_.x <= 0 || size_.y <= 0)
+      throw std::runtime_error("Texture must have nonzero width and height!");
+
+   upload(static_cast<const GLubyte*>(data));
+
+   if (stbi_data != nullptr)
+      stbi_image_free(stbi_data);
 }
 
 void Texture::upload(const GLubyte* data)
 {
-
    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
    glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -76,7 +105,7 @@ void Texture::upload(const GLubyte* data)
    glGenTextures(1, &texture_id_);
    glBindTexture(GL_TEXTURE_2D, texture_id_);
 
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size_.x, size_.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -84,7 +113,7 @@ void Texture::upload(const GLubyte* data)
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
    if (glGetError() != GL_NO_ERROR)
-      throw std::exception("Failed to upload texture data to GPU!");
+      throw std::runtime_error("Failed to upload texture data to GPU!");
 }
 
 Texture::~Texture()
@@ -183,4 +212,5 @@ void Texture::checkMode(GLenum mode)
    }
 }
 
-} // namespace bmc
+} // namespace assets
+} // namespace carcassonne

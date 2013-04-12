@@ -41,16 +41,17 @@
 
 #endif
 
+#include <memory>
+
 #include "carcassonne/game.h"
 
 int main()
 {
-   carcassonne::Game* game;
-
+   std::unique_ptr<carcassonne::Game> game;
+   
    try
    {
-      carcassonne::Game g;
-      game = &g;
+      game.reset(new carcassonne::Game());
    }
    catch (const carcassonne::db::DB::error& err)
    {

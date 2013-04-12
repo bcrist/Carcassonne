@@ -32,7 +32,7 @@
 namespace carcassonne {
 
 namespace assets {
-
+   /*
 struct TextureFontCharacterSpec
 {
 	GLubyte code;
@@ -59,7 +59,7 @@ private:
 	// font info for calculating metrics
 	GLfloat charWidths[TEXTUREFONT_LIST_COUNT];
 	GLfloat baseline;
-};
+};*/
 
 } // namespace assets
 

@@ -39,9 +39,6 @@
     <ClCompile Include="src\carcassonne\db\stmt.cc">
       <Filter>Source Files\carcassonne\db</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\assets\assets.cc">
-      <Filter>Source Files\carcassonne\assets</Filter>
-    </ClCompile>
     <ClCompile Include="src\carcassonne\assets\texture.cc">
       <Filter>Source Files\carcassonne\assets</Filter>
     </ClCompile>
@@ -63,6 +60,9 @@
     <ClCompile Include="src\stb_image.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\assets\asset_manager.cc">
+      <Filter>Source Files\carcassonne\assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\sqlite3.h">
@@ -80,9 +80,6 @@
     <ClInclude Include="include\carcassonne\graphics_configuration.h">
       <Filter>Header Files\carcassonne</Filter>
     </ClInclude>
-    <ClInclude Include="include\carcassonne\assets\assets.h">
-      <Filter>Header Files\carcassonne\assets</Filter>
-    </ClInclude>
     <ClInclude Include="include\carcassonne\assets\texture.h">
       <Filter>Header Files\carcassonne\assets</Filter>
     </ClInclude>
@@ -97,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\db\transaction.h">
       <Filter>Header Files\carcassonne\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\assets\asset_manager.h">
+      <Filter>Header Files\carcassonne\assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Carcassonne", "Carcassonne\Carcassonne.vcxproj", "{8FD4D4BE-A710-4A9B-A8D1-1219A84C17B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cameraTest", "cameraTest\cameraTest.vcxproj", "{01987B23-D232-47CD-B588-9A8B5D801FAF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CCAssets", "CCAssets\CCAssets.vcxproj", "{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{01987B23-D232-47CD-B588-9A8B5D801FAF}.Debug|Win32.Build.0 = Debug|Win32
 		{01987B23-D232-47CD-B588-9A8B5D801FAF}.Release|Win32.ActiveCfg = Release|Win32
 		{01987B23-D232-47CD-B588-9A8B5D801FAF}.Release|Win32.Build.0 = Release|Win32
+		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Debug|Win32.Build.0 = Debug|Win32
+		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Release|Win32.ActiveCfg = Release|Win32
+		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

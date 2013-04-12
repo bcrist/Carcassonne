@@ -26,17 +26,19 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <string>
-#include <GL/freeglut.h>
 #include <glm/glm.hpp>
+#include <SFML/OpenGL.hpp>
 
-namespace bmc {
+#include "carcassonne/db/db.h"
+
+namespace carcassonne {
+namespace assets {
 
 class Texture
 {
 public:
-   Texture(const std::string& filename);
-   Texture(const char* filename);
-   Texture(const GLubyte* data, int width, int height);
+   Texture(const GLubyte* data, const glm::ivec2& size);
+   Texture(db::DB& db, const std::string& name);
    ~Texture();
 
    GLuint getTextureGlId() const;
@@ -62,15 +64,14 @@ private:
    static GLenum mode_;
    static glm::vec4 color_;
 
-   int width_;
-   int height_;
-
+   glm::ivec2 size_;
    GLuint texture_id_;
 
-   Texture(const Texture& other);  // disable copy construction
-   void operator=(const Texture& other); // disable assignment
+   Texture(const Texture&);
+   void operator=(const Texture&);
 };
 
-} // namespace bmc
+} // namespace assets
+} // namespace carcassonne
 
 #endif

@@ -37,6 +37,7 @@ namespace carcassonne {
 Game::Game()
    : config_db_("carcassonne.ccconfig"),
      gfx_cfg_(GraphicsConfiguration::load(config_db_)),
+     assets_("carcassonne.ccassets"),
      simulation_running_(true),
      min_simulate_interval_(sf::milliseconds(5))
 {
@@ -44,11 +45,11 @@ Game::Game()
 
 int Game::run()
 {
-   gfx_cfg_.window_mode = GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED;
-
    createWindow();
    initOpenGL();
    clock_.restart();
+
+   assets_.getTexture("test");
 
    while (window_.isOpen())
    {

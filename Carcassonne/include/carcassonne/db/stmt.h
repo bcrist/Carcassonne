@@ -129,6 +129,6 @@ private:
 
 } // namespace carcassonne
 
-#include "db/stmt.inl"
+#include "carcassonne/db/stmt.inl"
 
 #endif

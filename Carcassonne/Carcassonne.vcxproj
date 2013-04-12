@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\carcassonne\assets\assets.cc" />
+    <ClCompile Include="src\carcassonne\assets\asset_manager.cc" />
     <ClCompile Include="src\carcassonne\assets\texture.cc" />
     <ClCompile Include="src\carcassonne\assets\texture_font.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
@@ -23,7 +23,7 @@
     <ClCompile Include="src\stb_image.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\carcassonne\assets\assets.h" />
+    <ClInclude Include="include\carcassonne\assets\asset_manager.h" />
     <ClInclude Include="include\carcassonne\assets\texture.h" />
     <ClInclude Include="include\carcassonne\assets\texture_font.h" />
     <ClInclude Include="include\carcassonne\db\db.h" />
