@@ -13,83 +13,101 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\db">
-      <UniqueIdentifier>{4b6e15b6-0ea7-419f-9cc7-3cfa8e76ddea}</UniqueIdentifier>
+    <Filter Include="Source Files\carcassonne">
+      <UniqueIdentifier>{3c3a6a02-4344-4fbc-a092-a814885f8854}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\db">
+    <Filter Include="Source Files\carcassonne\assets">
+      <UniqueIdentifier>{73e2ed3a-4e28-45e1-a801-dcbcc77eb7c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\carcassonne\db">
       <UniqueIdentifier>{5260f6b4-cace-4581-b95f-ecac31f2db30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\assets">
+    <Filter Include="Header Files\carcassonne">
+      <UniqueIdentifier>{3e61e14d-b967-4e42-8ff0-80efb2e77c51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\carcassonne\assets">
       <UniqueIdentifier>{594ba77e-b5ba-4977-aa35-df5547cff614}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\assets">
-      <UniqueIdentifier>{73e2ed3a-4e28-45e1-a801-dcbcc77eb7c4}</UniqueIdentifier>
+    <Filter Include="Header Files\carcassonne\db">
+      <UniqueIdentifier>{4b6e15b6-0ea7-419f-9cc7-3cfa8e76ddea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\carcassonne\db\db.cc">
+      <Filter>Source Files\carcassonne\db</Filter>
     </ClCompile>
-    <ClCompile Include="src\game.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\carcassonne\db\stmt.cc">
+      <Filter>Source Files\carcassonne\db</Filter>
     </ClCompile>
-    <ClCompile Include="src\db\db.cc">
-      <Filter>Source Files\db</Filter>
+    <ClCompile Include="src\carcassonne\assets\assets.cc">
+      <Filter>Source Files\carcassonne\assets</Filter>
     </ClCompile>
-    <ClCompile Include="src\db\stmt.cc">
-      <Filter>Source Files\db</Filter>
+    <ClCompile Include="src\carcassonne\assets\texture.cc">
+      <Filter>Source Files\carcassonne\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\assets\texture_font.cc">
+      <Filter>Source Files\carcassonne\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\game.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\main.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\graphics_configuration.cc">
+      <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
     <ClCompile Include="src\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics_configuration.cc">
+    <ClCompile Include="src\stb_image.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\msvc\Carcassonne\Carcassonne\src\assets\texture_font.cc">
-      <Filter>Source Files\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\assets\assets.cc">
-      <Filter>Source Files\assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\_carcassonne.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\db\db.h">
-      <Filter>Header Files\db</Filter>
-    </ClInclude>
-    <ClInclude Include="include\db\stmt.h">
-      <Filter>Header Files\db</Filter>
-    </ClInclude>
-    <ClInclude Include="include\db\transaction.h">
-      <Filter>Header Files\db</Filter>
-    </ClInclude>
     <ClInclude Include="include\sqlite3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics_configuration.h">
+    <ClInclude Include="include\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\msvc\Carcassonne\Carcassonne\include\assets\texture_font.h">
-      <Filter>Header Files\assets</Filter>
+    <ClInclude Include="include\carcassonne\_carcassonne.h">
+      <Filter>Header Files\carcassonne</Filter>
     </ClInclude>
-    <ClInclude Include="include\assets\assets.h">
-      <Filter>Header Files\assets</Filter>
+    <ClInclude Include="include\carcassonne\game.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\graphics_configuration.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\assets\assets.h">
+      <Filter>Header Files\carcassonne\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\assets\texture.h">
+      <Filter>Header Files\carcassonne\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\assets\texture_font.h">
+      <Filter>Header Files\carcassonne\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\db\db.h">
+      <Filter>Header Files\carcassonne\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\db\stmt.h">
+      <Filter>Header Files\carcassonne\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\db\transaction.h">
+      <Filter>Header Files\carcassonne\db</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\db\db.inl">
-      <Filter>Header Files\db</Filter>
+    <None Include="include\carcassonne\db\db.inl">
+      <Filter>Header Files\carcassonne\db</Filter>
     </None>
-    <None Include="include\db\stmt.inl">
-      <Filter>Header Files\db</Filter>
+    <None Include="include\carcassonne\db\stmt.inl">
+      <Filter>Header Files\carcassonne\db</Filter>
     </None>
-    <None Include="include\db\transaction.inl">
-      <Filter>Header Files\db</Filter>
+    <None Include="include\carcassonne\db\transaction.inl">
+      <Filter>Header Files\carcassonne\db</Filter>
     </None>
   </ItemGroup>
 </Project>

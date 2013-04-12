@@ -19,45 +19,49 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-//         Josh Douglas
-// File: main.cc
+// File: carcassonne/db/transaction.h
 //
-// Application entry point.
+// RAII transaction wrapper for DB and Stmt objects.  When a Transaction object
+// is destroyed (goes out of scope) it will automatically roll back the transaction
+// if it has not been comitted yet.
 
+#ifndef CARCASSONNE_DB_TRANSACTION_H_
+#define CARCASSONNE_DB_TRANSACTION_H_
+#include "carcassonne/_carcassonne.h"
 
-#ifdef DEBUG
+#include "carcassonne/db/db.h"
 
-//#pragma comment (lib, "sfml-main-d.lib")
-#pragma comment (lib, "sfml-system-d.lib")
-#pragma comment (lib, "sfml-window-d.lib")
-#pragma comment (lib, "opengl32.lib")
+namespace carcassonne {
 
-#else
+namespace db {
 
-//#pragma comment (lib, "sfml-main.lib")
-#pragma comment (lib, "sfml-system.lib")
-#pragma comment (lib, "sfml-window.lib")
-#pragma comment (lib, "opengl32.lib")
+class Transaction
+{   
+public:
+   enum TransactionType { TT_DEFERRED, TT_IMMEDIATE, TT_EXCLUSIVE };
+
+   // create a new deferred transaction
+   explicit Transaction(DB& db);
+   // create a new transaction
+   explicit Transaction(DB& db, TransactionType t);
+   // destructor
+   ~Transaction();
+
+   void commit();
+   void rollback();
+
+private:
+   DB& db_;
+   bool pending_;
+
+   Transaction(const Transaction&);
+   void operator=(const Transaction&);
+};
+
+} // namespace db
+
+} // namespace carcassonne
+
+#include "db/transaction.inl"
 
 #endif
-
-#include "game.h"
-
-int main()
-{
-   carcassonne::Game* game;
-
-   try
-   {
-      carcassonne::Game g;
-      game = &g;
-   }
-   catch (const carcassonne::db::DB::error& err)
-   {
-      std::cerr << "Could not load carcassonne.ccconfig database!" << std::endl
-                << err.what() << std::endl;
-      return -1;
-   }
-
-   return game->run();
-}

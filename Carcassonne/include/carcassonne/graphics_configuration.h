@@ -19,17 +19,18 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: graphics_configuration.cc
+// File: carcassonne/graphics_configuration.cc
 //
 // GraphicsConfiguration is a DAO for accessing graphics configuration data
 // stored in a Carcassonne configuration database.
 
 #ifndef CARCASSONNE_GRAPHICS_CONFIGURATION_H_
 #define CARCASSONNE_GRAPHICS_CONFIGURATION_H_
+#include "carcassonne/_carcassonne.h"
 
 #include <SFML/Window.hpp>
 
-#include "db/db.h"
+#include "carcassonne/db/db.h"
 
 namespace carcassonne {
 

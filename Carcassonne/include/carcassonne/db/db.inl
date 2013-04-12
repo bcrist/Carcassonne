@@ -28,7 +28,7 @@
 #define CARCASSONNE_DB_DB_INL_
 
 #ifndef CARCASSONNE_DB_DB_H_
-#include "db/db.h"
+#include "carcassonne/db/db.h"
 #endif
 
 namespace carcassonne {

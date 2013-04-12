@@ -20,20 +20,20 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: game.h
+// File: carcassonne/game.h
 //
 // Main game logic.
 
 #ifndef CARCASSONNE_GAME_H_
 #define CARCASSONNE_GAME_H_
-#include "_carcassonne.h"
+#include "carcassonne/_carcassonne.h"
 
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-#include "db/db.h"
+#include "carcassonne/db/db.h"
 
-#include "graphics_configuration.h"
+#include "carcassonne/graphics_configuration.h"
 
 namespace carcassonne {
 

@@ -19,49 +19,58 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: transaction.h
-//
-// RAII transaction wrapper for DB and Stmt objects.  When a Transaction object
-// is destroyed (goes out of scope) it will automatically roll back the transaction
-// if it has not been comitted yet.
+// File: carcassonne/assets/texture.h
 
-#ifndef CARCASSONNE_DB_TRANSACTION_H_
-#define CARCASSONNE_DB_TRANSACTION_H_
-#include "_carcassonne.h"
+#ifndef CARCASSONNE_ASSETS_TEXTURE_H_
+#define CARCASSONNE_ASSETS_TEXTURE_H_
+#include "carcassonne/_carcassonne.h"
 
-#include "db/db.h"
+#include <string>
+#include <GL/freeglut.h>
+#include <glm/glm.hpp>
 
-namespace carcassonne {
+namespace bmc {
 
-namespace db {
-
-class Transaction
-{   
+class Texture
+{
 public:
-   enum TransactionType { TT_DEFERRED, TT_IMMEDIATE, TT_EXCLUSIVE };
+   Texture(const std::string& filename);
+   Texture(const char* filename);
+   Texture(const GLubyte* data, int width, int height);
+   ~Texture();
 
-   // create a new deferred transaction
-   explicit Transaction(DB& db);
-   // create a new transaction
-   explicit Transaction(DB& db, TransactionType t);
-   // destructor
-   ~Transaction();
+   GLuint getTextureGlId() const;
 
-   void commit();
-   void rollback();
+   void enable() const;
+   void enable(GLenum mode) const;
+   void enable(GLenum mode, const glm::vec4& color) const;
+   void disable() const;
+
+   static void disableAny();
 
 private:
-   DB& db_;
-   bool pending_;
+   void upload(const GLubyte* data);
 
-   Transaction(const Transaction&);
-   void operator=(const Transaction&);
+   static void checkUnknown();
+   static void checkMode(GLenum mode);
+   void checkTexture() const;
+   
+   enum State { UNKNOWN, DISABLED, ENABLED };
+
+   static State state_;
+   static GLuint bound_id_;
+   static GLenum mode_;
+   static glm::vec4 color_;
+
+   int width_;
+   int height_;
+
+   GLuint texture_id_;
+
+   Texture(const Texture& other);  // disable copy construction
+   void operator=(const Texture& other); // disable assignment
 };
 
-} // namespace db
-
-} // namespace carcassonne
-
-#include "db/transaction.inl"
+} // namespace bmc
 
 #endif

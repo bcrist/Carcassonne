@@ -20,17 +20,17 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: game.cc
+// File: carcassonne/game.cc
 //
 // Main game logic.
 
-#include "game.h"
+#include "carcassonne/game.h"
 
 #include <limits>
 #include <SFML/OpenGL.hpp>
 
-#include "db/transaction.h"
-#include "db/stmt.h"
+#include "carcassonne/db/transaction.h"
+#include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
 

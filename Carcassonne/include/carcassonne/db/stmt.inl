@@ -30,7 +30,7 @@
 #define CARCASSONNE_DB_STMT_INL_
 
 #ifndef CARCASSONNE_DB_STMT_H_
-#include "db/stmt.h"
+#include "carcassonne/db/stmt.h"
 #endif
 
 namespace carcassonne {

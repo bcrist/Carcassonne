@@ -19,16 +19,16 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: db.cc
+// File: carcassonne/db/db.cc
 //
 // RAII wrapper for SQLite's sqlite3 API.  DB objects are non-copyable and 
 // non-moveable and represent an open connection with an sqlite database file.
 
-#include "db/db.h"
+#include "carcassonne/db/db.h"
 
 #include <cassert>
 
-#include "db/stmt.h"
+#include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
 

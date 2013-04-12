@@ -29,7 +29,7 @@
 #define CARCASSONNE_DB_TRANSACTION_INL_
 
 #ifndef CARCASSONNE_DB_TRANSACTION_H_
-#include "db/transaction.h"
+#include "carcassonne/db/transaction.h"
 #endif
 
 namespace carcassonne {

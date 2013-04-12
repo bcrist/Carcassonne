@@ -19,72 +19,50 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: db.h
-//
-// RAII wrapper for SQLite's sqlite3 API.  DB objects are non-copyable and 
-// non-moveable and represent an open connection with an sqlite database file.
+// File: carcassonne/assets/texture_font.h
 
-#ifndef CARCASSONNE_DB_DB_H_
-#define CARCASSONNE_DB_DB_H_
-#include "_carcassonne.h"
+#ifndef CARCASSONNE_ASSETS_TEXTURE_FONT_H_
+#define CARCASSONNE_ASSETS_TEXTURE_FONT_H_
+#include "carcassonne/_carcassonne.h"
 
-#include <string>
-#include "sqlite3.h"
+//#include "TextureLoader.h"
+
+#define TEXTUREFONT_LIST_COUNT 256
 
 namespace carcassonne {
 
-namespace db {
+namespace assets {
 
-namespace detail {
-class _db_error;
-}
-
-class Stmt;
-
-class DB
+struct TextureFontCharacterSpec
 {
-   friend class Stmt;
+	GLubyte code;
+	GLuint row;
+	GLuint col;
+	GLfloat width;
+};
+
+class TextureFont
+{
 public:
-   typedef detail::_db_error error;
+	TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined);
+	~TextureFont();
 
-   DB();
-   explicit DB(const std::string& path);
-   explicit DB(const std::string& path, int flags);
-   explicit DB(const std::string& path, int flags, const std::string& vfs_name);
-   ~DB();
-
-   void begin();
-   void commit();
-   void rollback();
-
-   void vacuum();
-
-   void exec(const std::string& sql);
-
-   int getInt(const std::string& sql, int default_value);
+	void metrics(const std::string &str, GLfloat scaleX, GLfloat scaleY, GLfloat &width, GLfloat &y0, GLfloat &y1) const;
+	void print(const std::string &str, GLfloat scaleX, GLfloat scaleY) const;
 
 private:
-   sqlite3* db_;
+	GLuint listBase;	// first displaylist
 
-   DB(const DB&);
-   void operator=(const DB&);
+	// displaylist for getting ready to print a string
+	GLuint initList;
+
+	// font info for calculating metrics
+	GLfloat charWidths[TEXTUREFONT_LIST_COUNT];
+	GLfloat baseline;
 };
 
-//namespace detail {
-
-class detail::_db_error : public std::runtime_error
-{
-public:
-   explicit _db_error(const std::string& what_arg);
-   explicit _db_error(const char* what_arg);
-};
-
-//} // namespace detail
-
-} // namespace db
+} // namespace assets
 
 } // namespace carcassonne
-
-#include "db/db.inl"
 
 #endif

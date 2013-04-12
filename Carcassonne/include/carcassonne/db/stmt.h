@@ -19,7 +19,7 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: stmt.h
+// File: carcassonne/db/stmt.h
 //
 // RAII wrapper for SQLite's sqlite3_stmt API.  Stmt objects are non-copyable and 
 // non-moveable and represent a prepared statement -- a compiled SQL query -- along
@@ -28,7 +28,7 @@
 
 #ifndef CARCASSONNE_DB_STMT_H_
 #define CARCASSONNE_DB_STMT_H_
-#include "_carcassonne.h"
+#include "carcassonne/_carcassonne.h"
 
 #include <string>
 #include <memory>
@@ -36,7 +36,7 @@
 #include <cassert>
 #include "sqlite3.h"
 
-#include "db/db.h"
+#include "carcassonne/db/db.h"
 
 namespace carcassonne {
 

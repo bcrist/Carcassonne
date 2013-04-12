@@ -19,14 +19,14 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: stmt.h
+// File: carcassonne/db/stmt.h
 //
 // RAII wrapper for SQLite's sqlite3_stmt API.  Stmt objects are non-copyable and 
 // non-moveable and represent a prepared statement -- a compiled SQL query -- along
 // with its currently bound parameters and the resultset returned when the query is
 // executed.
 
-#include "db/stmt.h"
+#include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
 
