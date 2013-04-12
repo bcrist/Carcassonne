@@ -44,6 +44,8 @@ Game::Game()
 
 int Game::run()
 {
+   gfx_cfg_.window_mode = GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED;
+
    createWindow();
    initOpenGL();
    clock_.restart();

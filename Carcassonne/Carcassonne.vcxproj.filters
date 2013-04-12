@@ -19,6 +19,12 @@
     <Filter Include="Source Files\db">
       <UniqueIdentifier>{5260f6b4-cace-4581-b95f-ecac31f2db30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\assets">
+      <UniqueIdentifier>{594ba77e-b5ba-4977-aa35-df5547cff614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets">
+      <UniqueIdentifier>{73e2ed3a-4e28-45e1-a801-dcbcc77eb7c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cc">
@@ -38,6 +44,12 @@
     </ClCompile>
     <ClCompile Include="src\graphics_configuration.cc">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\msvc\Carcassonne\Carcassonne\src\assets\texture_font.cc">
+      <Filter>Source Files\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\assets\assets.cc">
+      <Filter>Source Files\assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="include\graphics_configuration.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\msvc\Carcassonne\Carcassonne\include\assets\texture_font.h">
+      <Filter>Header Files\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\assets\assets.h">
+      <Filter>Header Files\assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
