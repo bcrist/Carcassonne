@@ -26,6 +26,23 @@
 
 namespace carcassonne {
 
+   // TODO: add rect specifying minimum client area
+OrthoCamera::OrthoCamera(const GraphicsConfiguration& gfx_cfg)
+   : gfx_cfg_(gfx_cfg)
+{
+}
 
+void OrthoCamera::recalculate()
+{
+   // TODO: calculate projection to fit client area inside viewport
+
+   // TODO: use identity view matrix
+}
+
+// calculate the world position at the window coordinates provided
+glm::vec3 OrthoCamera::windowToWorld(const glm::vec2& window_coords) const
+{
+   return glm::vec3();
+}
 
 } // namespace carcassonne

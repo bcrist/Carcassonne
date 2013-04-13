@@ -36,6 +36,8 @@ class OrthoCamera : public Camera
 public:
    OrthoCamera(const GraphicsConfiguration& gfx_cfg);
 
+   void recalculate();
+
    glm::vec3 windowToWorld(const glm::vec2& window_coords) const;
 
 private:

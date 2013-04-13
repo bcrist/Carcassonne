@@ -14,7 +14,6 @@
     <ClCompile Include="src\carcassonne\assets\asset_manager.cc" />
     <ClCompile Include="src\carcassonne\assets\texture.cc" />
     <ClCompile Include="src\carcassonne\assets\texture_font.cc" />
-    <ClCompile Include="src\carcassonne\camera.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
     <ClCompile Include="src\carcassonne\db\stmt.cc" />
     <ClCompile Include="src\carcassonne\game.cc" />
@@ -42,6 +41,7 @@
     <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\carcassonne\camera.inl" />
     <None Include="include\carcassonne\db\db.inl" />
     <None Include="include\carcassonne\db\stmt.inl" />
     <None Include="include\carcassonne\db\transaction.inl" />

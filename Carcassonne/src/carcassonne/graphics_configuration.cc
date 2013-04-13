@@ -80,7 +80,7 @@ GraphicsConfiguration GraphicsConfiguration::load(db::DB& db)
             cfg.gl_version_major = s.getInt(11);
             cfg.gl_version_minor = s.getInt(12);
 
-            cfg.vertical_fov = s.getDouble(13);
+            cfg.vertical_fov = static_cast<float>(s.getDouble(13));
             
             mode = s.getInt(14);
             if (mode < FOG_MODE_DISABLED || mode > FOG_MODE_EXP2)
@@ -88,9 +88,9 @@ GraphicsConfiguration GraphicsConfiguration::load(db::DB& db)
             cfg.fog_mode = static_cast<FogMode>(mode);
 
             cfg.fog_color = glm::vec4(s.getDouble(15), s.getDouble(16), s.getDouble(17), s.getDouble(18));
-            cfg.fog_density = s.getDouble(19);
-            cfg.fog_start = s.getDouble(20);
-            cfg.fog_end = s.getDouble(21);
+            cfg.fog_density = static_cast<float>(s.getDouble(19));
+            cfg.fog_start = static_cast<float>(s.getDouble(20));
+            cfg.fog_end = static_cast<float>(s.getDouble(21));
 
             return cfg;
          }
@@ -121,7 +121,7 @@ GraphicsConfiguration::GraphicsConfiguration()
      vertical_fov(50),
      fog_mode(FOG_MODE_DISABLED),
      fog_color(0,0,0,0),
-     fog_density(0.001),
+     fog_density(0.001f),
      fog_start(10),
      fog_end(100)
 {

@@ -19,8 +19,13 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-//         Josh Douglas
 // File: carcassonne/camera.h
+//
+// Represents a camera and allows conversion between various coordinate spaces
+//  - World space - The global space where absolute positions are relative to.
+//  - Eye space - The global space transformed by the view matrix.
+//  - Clip space - The eye space transformed by the projection matrix.
+//  - Device space - Clip space after applying the perspective divide.
 
 #ifndef CARCASSONNE_CAMERA_H_
 #define CARCASSONNE_CAMERA_H_
@@ -35,31 +40,47 @@ public:
 
    void setProjection(const glm::mat4& projection);
    void setView(const glm::mat4& view);
+   void setViewProjection(const glm::mat4& view, const glm::mat4& projection);
 
    const glm::mat4& getProjection() const;
    const glm::mat4& getView() const;
+   const glm::mat4& getViewProjection() const;
+   const glm::mat4& getInverseProjection() const;
+   const glm::mat4& getInverseView() const;
+   const glm::mat4& getInverseViewProjection() const;
 
-   void draw() const;
+   void use() const;
 
-   glm::vec3 worldToEye(const glm::vec3& world_coords) const;
-   glm::vec3 worldToClip(const glm::vec3& world_coords) const;
-   glm::vec2 worldToWindow(const glm::vec3& world_coords) const;
-   glm::vec3 eyeToClip(const glm::vec3& eye_coords) const;
-   glm::vec2 eyeToWindow(const glm::vec3& eye_coords) const;
-   glm::vec2 clipToWindow(const glm::vec3& clip_coords) const;
+   glm::vec4 worldToEye(const glm::vec4& world_coords) const;
+   glm::vec4 worldToClip(const glm::vec4& world_coords) const;
+   glm::vec4 worldToDevice(const glm::vec4& world_coords) const;
+   glm::vec4 eyeToClip(const glm::vec4& eye_coords) const;
+   glm::vec4 eyeToDevice(const glm::vec4& eye_coords) const;
+   glm::vec4 clipToDevice(const glm::vec4& clip_coords) const;
 
-   glm::vec3 clipToEye(const glm::vec3& clip_coords) const;
-   glm::vec3 clipToWorld(const glm::vec3& clip_coords) const;
-   glm::vec3 eyeToWorld(const glm::vec3& eye_coords) const;   
+   glm::vec4 clipToEye(const glm::vec4& clip_coords) const;
+   glm::vec4 clipToWorld(const glm::vec4& clip_coords) const;
+   glm::vec4 eyeToWorld(const glm::vec4& eye_coords) const;   
 
 private:
    glm::mat4 projection_;
    glm::mat4 view_;
+   glm::mat4 view_projection_;
+
+   // lazy initialization for inverse matrices
+   mutable bool inv_projection_valid_;
+   mutable bool inv_view_valid_;
+   mutable bool inv_view_projection_valid_;
+   mutable glm::mat4 inv_projection_;
+   mutable glm::mat4 inv_view_;
+   mutable glm::mat4 inv_view_projection_;
 
    Camera(const Camera&);
    void operator=(const Camera&);
 };
 
 } // namespace carcassonne
+
+#include "carcassonne/camera.inl"
 
 #endif

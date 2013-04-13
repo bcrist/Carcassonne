@@ -36,6 +36,10 @@ class PerspectiveCamera : public Camera
 public:
    PerspectiveCamera(const GraphicsConfiguration& gfx_cfg);
 
+   void setPosition(const glm::vec3& position);
+   void setTarget(const glm::vec3& target);
+   void setUp(const glm::vec3& up);
+
    void recalculatePerspective();
    void recalculateView();
 
@@ -44,9 +48,15 @@ public:
 private:
    const GraphicsConfiguration& gfx_cfg_;
 
-   glm::vec3 eye_;
+   glm::vec3 position_;
    glm::vec3 target_;
    glm::vec3 up_;
+
+   float z_near_;  // the z-coordinate of the near clipping plane
+   float z_far_;   // the z-coordinate of the far clipping plane
+
+   float top_;     // the eye-space y-coord where the top clipping plane intersects z = -1
+   float right_;   // the eye-space x-coord where the right clipping plane intersects z = -1
 
    PerspectiveCamera(const PerspectiveCamera&);
    void operator=(const PerspectiveCamera&);

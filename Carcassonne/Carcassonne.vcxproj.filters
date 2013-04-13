@@ -63,13 +63,10 @@
     <ClCompile Include="src\carcassonne\assets\asset_manager.cc">
       <Filter>Source Files\carcassonne\assets</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\camera.cc">
+    <ClCompile Include="src\carcassonne\ortho_camera.cc">
       <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
     <ClCompile Include="src\carcassonne\perspective_camera.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\ortho_camera.cc">
       <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
   </ItemGroup>
@@ -126,6 +123,9 @@
     </None>
     <None Include="include\carcassonne\db\transaction.inl">
       <Filter>Header Files\carcassonne\db</Filter>
+    </None>
+    <None Include="include\carcassonne\camera.inl">
+      <Filter>Header Files\carcassonne</Filter>
     </None>
   </ItemGroup>
 </Project>

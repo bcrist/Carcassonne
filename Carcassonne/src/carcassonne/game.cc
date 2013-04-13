@@ -41,7 +41,9 @@ Game::Game()
      gfx_cfg_(GraphicsConfiguration::load(config_db_)),
      assets_("carcassonne.ccassets"),
      simulation_running_(true),
-     min_simulate_interval_(sf::milliseconds(5))
+     min_simulate_interval_(sf::milliseconds(5)),
+     game_camera_(gfx_cfg_),
+     gui_camera_(gfx_cfg_)
 {
 }
 
@@ -50,11 +52,9 @@ int Game::run()
    graphicsConfigChanged();
    clock_.restart();
 
-   std::shared_ptr<assets::Texture> tex = assets_.getTexture("test");
-
-   if (tex)
-         tex->enable(GL_REPLACE);
-
+   game_camera_.setPosition(glm::vec3(10, 10, 10));
+   game_camera_.setTarget(glm::vec3(0,0,0));
+   
    while (window_.isOpen())
    {
       sf::Event event;
@@ -66,7 +66,13 @@ int Game::run()
             resize(glm::ivec2(se.width, se.height));
          }
 
-         if (event.type == sf::Event::Closed)
+         else if (event.type == sf::Event::MouseMoved)
+         {
+            sf::Event::MouseMoveEvent& mme = event.mouseMove;
+            mouseMove(glm::ivec2(mme.x, mme.y));
+         }
+
+         else if (event.type == sf::Event::Closed)
             return close();
       }
   
@@ -212,14 +218,16 @@ void Game::resize(const glm::ivec2& new_size)
 {
    gfx_cfg_.viewport_size = new_size;
    glViewport(0, 0, new_size.x, new_size.y);
-   
-   float aspect = new_size.x / (float)new_size.y;
 
-   glm::mat4 projection = glm::perspective(gfx_cfg_.vertical_fov * 0.5f, aspect, 0.1f, 1000.0f);
-   glMatrixMode(GL_PROJECTION);
-   glLoadMatrixf(glm::value_ptr(projection));
+   game_camera_.recalculatePerspective();
+   gui_camera_.recalculate();
+}
 
-   glMatrixMode(GL_MODELVIEW);
+void Game::mouseMove(const glm::ivec2& window_coords)
+{
+   glm::vec3 new_hover_position = game_camera_.windowToWorld(glm::vec2(window_coords), hover_position_.y);
+   hover_position_.x = new_hover_position.x;
+   hover_position_.z = new_hover_position.z;
 }
 
 void Game::simulate(sf::Time delta)
@@ -228,14 +236,22 @@ void Game::simulate(sf::Time delta)
 
 void Game::draw()
 {
-   glm::mat4 view = glm::lookAt(
+   glClear(GL_COLOR_BUFFER_BIT);
+   game_camera_.use();
 
-         glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex2f(0, 0);
-      glTexCoord2f(0, 1); glVertex2f(0, 1);
-      glTexCoord2f(1, 1); glVertex2f(1, 1);
-      glTexCoord2f(1, 0); glVertex2f(1, 0);
-      glEnd();
+   glPushMatrix();
+   glTranslatef(hover_position_.x, hover_position_.y, hover_position_.z);
+
+   glColor3f(0,1,1);
+
+   glBegin(GL_QUADS);
+      glVertex3f(-0.5, 0, -0.5);
+      glVertex3f(-0.5, 0,  0.5);
+      glVertex3f( 0.5, 0,  0.5);
+      glVertex3f( 0.5, 0, -0.5);
+   glEnd();
+
+   glPopMatrix();
 }
 
 bool Game::isSimulationRunning() const

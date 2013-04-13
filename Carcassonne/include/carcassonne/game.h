@@ -35,6 +35,8 @@
 #include "carcassonne/graphics_configuration.h"
 #include "carcassonne/assets/asset_manager.h"
 
+#include "carcassonne/perspective_camera.h"
+#include "carcassonne/ortho_camera.h"
 
 namespace carcassonne {
 
@@ -51,6 +53,8 @@ public:
    
 
    void resize(const glm::ivec2& new_size);
+
+   void mouseMove(const glm::ivec2& window_coords);
 
    void simulate(sf::Time delta);
    void draw();
@@ -70,8 +74,10 @@ private:
    sf::Time min_simulate_interval_;
    sf::Clock clock_;
 
-   Camera game_camera_;
-   GuiCamera gui_camera_;
+   PerspectiveCamera game_camera_;
+   OrthoCamera gui_camera_;
+
+   glm::vec3 hover_position_;
 
 };
 
