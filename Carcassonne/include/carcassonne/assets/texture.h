@@ -20,6 +20,20 @@
 //
 // Author: Benjamin Crist
 // File: carcassonne/assets/texture.h
+//
+// TODO:
+//  - Allow different filtering modes
+//  - Allow mipmap generation
+//     - option to skip levels based on texture quality in GraphicsConfiguration
+//  - GL_TEXTURE_BASE_LEVEL, GL_TEXTURE_MAX_LEVEL, 
+//    GL_TEXTURE_MIN_LOD, GL_TEXTURE_MAX_LOD,
+//    GL_TEXTURE_LOD_BIAS
+//  - Texture prioritization
+//  - OpenGL texture compression & hints based on quality in GraphicsConfiguration
+//  - Anisotropic filtering
+//  - 1D/3D/Cubemap textures
+//  - more database formats
+//  - database texture data compression (zlib)
 
 #ifndef CARCASSONNE_ASSETS_TEXTURE_H_
 #define CARCASSONNE_ASSETS_TEXTURE_H_

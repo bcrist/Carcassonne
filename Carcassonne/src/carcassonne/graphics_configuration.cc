@@ -52,7 +52,11 @@ GraphicsConfiguration GraphicsConfiguration::load(db::DB& db)
                         "window_mode, "   // 5
                         "v_sync, msaa_level, " // 6, 7
                         "color_bits, depth_bits, stencil_bits, " // 8, 9, 10
-                        "gl_version_major, gl_version_minor " // 11, 12
+                        "gl_version_major, gl_version_minor, " // 11, 12
+                        "vertical_fov, " // 13
+                        "fog_mode, " // 14
+                        "fog_color_r, fog_color_g, fog_color_b, fog_color_a, " // 15, 16, 17, 18
+                        "fog_density, fog_start, fog_end" // 19, 20, 21
                         "FROM cc_gfx_cfg LIMIT 1");
          if (s.step())
          {
@@ -75,6 +79,18 @@ GraphicsConfiguration GraphicsConfiguration::load(db::DB& db)
             cfg.stencil_bits = s.getInt(10);
             cfg.gl_version_major = s.getInt(11);
             cfg.gl_version_minor = s.getInt(12);
+
+            cfg.vertical_fov = s.getDouble(13);
+            
+            mode = s.getInt(14);
+            if (mode < FOG_MODE_DISABLED || mode > FOG_MODE_EXP2)
+               mode = FOG_MODE_DISABLED;
+            cfg.fog_mode = static_cast<FogMode>(mode);
+
+            cfg.fog_color = glm::vec4(s.getDouble(15), s.getDouble(16), s.getDouble(17), s.getDouble(18));
+            cfg.fog_density = s.getDouble(19);
+            cfg.fog_start = s.getDouble(20);
+            cfg.fog_end = s.getDouble(21);
 
             return cfg;
          }
@@ -101,7 +117,13 @@ GraphicsConfiguration::GraphicsConfiguration()
      depth_bits(0),
      stencil_bits(0),
      gl_version_major(2),
-     gl_version_minor(0)
+     gl_version_minor(0),
+     vertical_fov(50),
+     fog_mode(FOG_MODE_DISABLED),
+     fog_color(0,0,0,0),
+     fog_density(0.001),
+     fog_start(10),
+     fog_end(100)
 {
 }
 
@@ -117,7 +139,13 @@ GraphicsConfiguration::GraphicsConfiguration(bool save_window_location,
                                              unsigned int depth_bits,
                                              unsigned int stencil_bits,
                                              unsigned int gl_version_major,
-                                             unsigned int gl_version_minor)
+                                             unsigned int gl_version_minor,
+                                             float vertical_fov,
+                                             FogMode fog_mode,
+                                             const glm::vec4& fog_color,
+                                             float fog_density,
+                                             float fog_start,
+                                             float fog_end)
    : save_window_location(save_window_location),
      window_position(window_position),
      viewport_size(viewport_size),
@@ -128,7 +156,13 @@ GraphicsConfiguration::GraphicsConfiguration(bool save_window_location,
      depth_bits(depth_bits),
      stencil_bits(stencil_bits),
      gl_version_major(gl_version_major),
-     gl_version_minor(gl_version_minor)
+     gl_version_minor(gl_version_minor),
+     vertical_fov(vertical_fov),
+     fog_mode(fog_mode),
+     fog_color(fog_color),
+     fog_density(fog_density),
+     fog_start(fog_start),
+     fog_end(fog_end)
 {
 }
 
@@ -160,7 +194,16 @@ bool GraphicsConfiguration::save(db::DB& db)
               "depth_bits INTEGER, "
               "stencil_bits INTEGER, "
               "gl_version_major INTEGER, "
-              "gl_version_minor INTEGER)");
+              "gl_version_minor INTEGER, "
+              "vertical_fov NUMERIC, "
+              "fog_mode INTEGER, "
+              "fog_color_r NUMERIC, "
+              "fog_color_g NUMERIC, "
+              "fog_color_b NUMERIC, "
+              "fog_color_a NUMERIC, "
+              "fog_density NUMERIC, "
+              "fog_start NUMERIC, "
+              "fog_end NUMERIC)");
 
       // Save config data to database
       db::Stmt s(db, "INSERT INTO cc_gfx_cfg ("
@@ -169,8 +212,14 @@ bool GraphicsConfiguration::save(db::DB& db)
                      "window_mode, " // 6
                      "v_sync, msaa_level, " // 7, 8
                      "color_bits, depth_bits, stencil_bits, " // 9, 10, 11
-                     "gl_version_major, gl_version_minor" // 12, 13
-                     ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                     "gl_version_major, gl_version_minor," // 12, 13
+                     "vertical_fov, " // 14
+                     "fog_mode, " // 15
+                     "fog_color_r, fog_color_g, fog_color_b, fog_color_a, " // 16, 17, 18, 19
+                     "fog_density, fog_start, fog_end" // 20, 21, 22
+                     ") VALUES (?,?,?,?,?,?,?,?,?,?,"
+                               "?,?,?,?,?,?,?,?,?,?,"
+                               "?,?)");
       s.bind(1, save_window_location ? 1 : 0);
       s.bind(2, window_position.x);
       s.bind(3, window_position.y);
@@ -184,6 +233,16 @@ bool GraphicsConfiguration::save(db::DB& db)
       s.bind(11, static_cast<int>(stencil_bits));
       s.bind(12, static_cast<int>(gl_version_major));
       s.bind(13, static_cast<int>(gl_version_minor));
+      s.bind(14, vertical_fov);
+      s.bind(15, fog_mode);
+      s.bind(16, fog_color.r);
+      s.bind(17, fog_color.g);
+      s.bind(18, fog_color.b);
+      s.bind(19, fog_color.a);
+      s.bind(20, fog_density);
+      s.bind(21, fog_start);
+      s.bind(22, fog_end);
+
       s.step();
 
       return true;

@@ -20,6 +20,12 @@
 //
 // Author: Benjamin Crist
 // File: carcassonne/assets/asset_manager.h
+//
+// TODO:
+//  - option to save an extra shared_ptr to prevent weak_ptr from expiring
+//     - get*Stable() to request with extra shared_ptr
+//     - drop*() to remove extra shared_ptr
+//     - dropAll() to remove all extra shared_ptrs
 
 #ifndef CARCASSONNE_ASSETS_ASSET_MANAGER_H_
 #define CARCASSONNE_ASSETS_ASSET_MANAGER_H_

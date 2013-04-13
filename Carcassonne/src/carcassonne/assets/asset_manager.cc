@@ -33,12 +33,7 @@ AssetManager::AssetManager(const std::string& filename)
 
 std::shared_ptr<Texture> AssetManager::getTexture(const std::string& name)
 {
-   auto i(textures_.find(name));
-   if (i == textures_.end())
-      textures_.insert(std::make_pair(name, std::weak_ptr<Texture>()));
-
    std::weak_ptr<Texture>& wptr = textures_[name];
-
    std::shared_ptr<Texture> sptr = wptr.lock();
 
    if (!sptr)

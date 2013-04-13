@@ -53,7 +53,7 @@ Texture::Texture(db::DB& db, const std::string& name)
    db::Stmt stmt(db, "SELECT format, width, height, data "
                      "FROM cc_textures "
                      "WHERE name = ? LIMIT 1");
-
+   stmt.bind(1, name);
    if (!stmt.step())
       throw db::DB::error("Texture not found!");
 

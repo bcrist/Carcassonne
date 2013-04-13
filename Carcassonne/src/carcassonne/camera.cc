@@ -20,61 +20,12 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: carcassonne/game.h
-//
-// Main game logic.
+// File: carcassonne/camera.h
 
-#ifndef CARCASSONNE_GAME_H_
-#define CARCASSONNE_GAME_H_
-#include "carcassonne/_carcassonne.h"
-
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-
-#include "carcassonne/db/db.h"
-#include "carcassonne/graphics_configuration.h"
-#include "carcassonne/assets/asset_manager.h"
-
+#include "carcassonne/camera.h"
 
 namespace carcassonne {
 
-class Game
-{
-public:
-   Game();
-   int run();
-   int close();
 
-   void graphicsConfigChanged();
-   void createWindow();
-   void initOpenGL();
-   
-
-   void resize(const glm::ivec2& new_size);
-
-   void simulate(sf::Time delta);
-   void draw();
-
-   bool isSimulationRunning() const;
-   void setSimulationRunning(bool running);
-
-private:
-   db::DB config_db_;
-
-   GraphicsConfiguration gfx_cfg_;
-   sf::Window window_;
-  
-   assets::AssetManager assets_;
-
-   bool simulation_running_;
-   sf::Time min_simulate_interval_;
-   sf::Clock clock_;
-
-   Camera game_camera_;
-   GuiCamera gui_camera_;
-
-};
 
 } // namespace carcassonne
-
-#endif

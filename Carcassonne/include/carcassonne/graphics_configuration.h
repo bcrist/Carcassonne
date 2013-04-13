@@ -47,6 +47,14 @@ public:
       WINDOW_MODE_FULLSCREEN_EXCLUSIVE = 3
    };
 
+   enum FogMode
+   {
+      FOG_MODE_DISABLED = 0,
+      FOG_MODE_LINEAR = 1,
+      FOG_MODE_EXP = 2,
+      FOG_MODE_EXP2 = 3
+   };
+
    GraphicsConfiguration();
    GraphicsConfiguration(bool save_window_position,
                          const glm::ivec2& window_position,
@@ -58,7 +66,13 @@ public:
                          unsigned int depth_bits,
                          unsigned int stencil_bits,
                          unsigned int gl_version_major,
-                         unsigned int gl_version_minor);
+                         unsigned int gl_version_minor,
+                         float vertical_field_of_view,
+                         FogMode fog_mode,
+                         const glm::vec4& fog_color,
+                         float fog_density,
+                         float fog_start,
+                         float fog_end);
 
    bool save(db::DB& db);
    bool saveWindowLocation(db::DB& db);
@@ -78,6 +92,15 @@ public:
    
    unsigned int gl_version_major;   // The major part of the OpenGL version number requested.
    unsigned int gl_version_minor;   // The minor part of the OpenGL version number requested.
+
+   float vertical_fov;           // The vertical field of view to use for a projection matrix
+
+   FogMode fog_mode;             // The fog mode to use
+   glm::vec4 fog_color;          // The color of the fog
+   float fog_density;            // The density to use for EXP and EXP2 fog modes
+   float fog_start;              // The clip-space z-coordinate where fog should start
+   float fog_end;                // The clip-space z-coordinate where fog should end
+
 };
 
 } // namespace carcassonne

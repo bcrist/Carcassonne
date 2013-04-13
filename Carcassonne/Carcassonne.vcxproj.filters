@@ -63,6 +63,12 @@
     <ClCompile Include="src\carcassonne\assets\asset_manager.cc">
       <Filter>Source Files\carcassonne\assets</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\camera.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gui_camera.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\sqlite3.h">
@@ -97,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\assets\asset_manager.h">
       <Filter>Header Files\carcassonne\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\camera.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gui_camera.h">
+      <Filter>Header Files\carcassonne</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

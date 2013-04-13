@@ -14,10 +14,12 @@
     <ClCompile Include="src\carcassonne\assets\asset_manager.cc" />
     <ClCompile Include="src\carcassonne\assets\texture.cc" />
     <ClCompile Include="src\carcassonne\assets\texture_font.cc" />
+    <ClCompile Include="src\carcassonne\camera.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
     <ClCompile Include="src\carcassonne\db\stmt.cc" />
     <ClCompile Include="src\carcassonne\game.cc" />
     <ClCompile Include="src\carcassonne\graphics_configuration.cc" />
+    <ClCompile Include="src\carcassonne\gui_camera.cc" />
     <ClCompile Include="src\carcassonne\main.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
@@ -26,11 +28,13 @@
     <ClInclude Include="include\carcassonne\assets\asset_manager.h" />
     <ClInclude Include="include\carcassonne\assets\texture.h" />
     <ClInclude Include="include\carcassonne\assets\texture_font.h" />
+    <ClInclude Include="include\carcassonne\camera.h" />
     <ClInclude Include="include\carcassonne\db\db.h" />
     <ClInclude Include="include\carcassonne\db\stmt.h" />
     <ClInclude Include="include\carcassonne\db\transaction.h" />
     <ClInclude Include="include\carcassonne\game.h" />
     <ClInclude Include="include\carcassonne\graphics_configuration.h" />
+    <ClInclude Include="include\carcassonne\gui_camera.h" />
     <ClInclude Include="include\carcassonne\_carcassonne.h" />
     <ClInclude Include="include\sqlite3.h" />
     <ClInclude Include="include\stb_image.h" />

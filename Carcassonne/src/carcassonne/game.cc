@@ -27,6 +27,8 @@
 #include "carcassonne/game.h"
 
 #include <limits>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <SFML/OpenGL.hpp>
 
 #include "carcassonne/db/transaction.h"
@@ -45,11 +47,13 @@ Game::Game()
 
 int Game::run()
 {
-   createWindow();
-   initOpenGL();
+   graphicsConfigChanged();
    clock_.restart();
 
-   assets_.getTexture("test");
+   std::shared_ptr<assets::Texture> tex = assets_.getTexture("test");
+
+   if (tex)
+         tex->enable(GL_REPLACE);
 
    while (window_.isOpen())
    {
@@ -96,6 +100,12 @@ int Game::close()
    window_.close();
 
    return return_value;
+}
+
+void Game::graphicsConfigChanged()
+{
+   createWindow();
+   initOpenGL();
 }
 
 void Game::createWindow()
@@ -167,7 +177,7 @@ void Game::createWindow()
 
    if (gfx_cfg_.window_mode == GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED)
    {
-      //window_.setPosition(sf::Vector2i(0, 0));
+      window_.setPosition(sf::Vector2i(0, 0));
    }
    else if (gfx_cfg_.window_mode != GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE &&
             gfx_cfg_.save_window_location)
@@ -192,15 +202,22 @@ void Game::initOpenGL()
 {
    glClearColor(0,0,0,0);
 
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
    resize(gfx_cfg_.viewport_size);
 }
 
 void Game::resize(const glm::ivec2& new_size)
 {
    gfx_cfg_.viewport_size = new_size;
+   glViewport(0, 0, new_size.x, new_size.y);
+   
+   float aspect = new_size.x / (float)new_size.y;
 
-   // TODO: reset projection matrix
+   glm::mat4 projection = glm::perspective(gfx_cfg_.vertical_fov * 0.5f, aspect, 0.1f, 1000.0f);
    glMatrixMode(GL_PROJECTION);
+   glLoadMatrixf(glm::value_ptr(projection));
 
    glMatrixMode(GL_MODELVIEW);
 }
@@ -211,6 +228,14 @@ void Game::simulate(sf::Time delta)
 
 void Game::draw()
 {
+   glm::mat4 view = glm::lookAt(
+
+         glBegin(GL_QUADS);
+      glTexCoord2f(0, 0); glVertex2f(0, 0);
+      glTexCoord2f(0, 1); glVertex2f(0, 1);
+      glTexCoord2f(1, 1); glVertex2f(1, 1);
+      glTexCoord2f(1, 0); glVertex2f(1, 0);
+      glEnd();
 }
 
 bool Game::isSimulationRunning() const
