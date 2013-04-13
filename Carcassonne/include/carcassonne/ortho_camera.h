@@ -26,10 +26,23 @@
 #define CARCASSONNE_ORTHO_CAMERA_H_
 #include "carcassonne/_carcassonne.h"
 
+#include "carcassonne/camera.h"
+#include "carcassonne/graphics_configuration.h"
+
 namespace carcassonne {
 
-class OrthoCamera
+class OrthoCamera : public Camera
 {
+public:
+   OrthoCamera(const GraphicsConfiguration& gfx_cfg);
+
+   glm::vec3 windowToWorld(const glm::vec2& window_coords) const;
+
+private:
+   const GraphicsConfiguration& gfx_cfg_;
+
+   OrthoCamera(const OrthoCamera&);
+   void operator=(const OrthoCamera&);
 };
 
 } // namespace carcassonne

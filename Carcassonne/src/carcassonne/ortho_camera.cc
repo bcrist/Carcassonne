@@ -20,9 +20,9 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: carcassonne/gui_camera.h
+// File: carcassonne/ortho_camera.h
 
-#include "carcassonne/gui_camera.h"
+#include "carcassonne/ortho_camera.h"
 
 namespace carcassonne {
 
