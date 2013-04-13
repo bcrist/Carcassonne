@@ -1,0 +1,16 @@
+lib/
+include/
+Debug/
+Release/
+ipch/
+.git/
+Carcassonne/Debug/
+Carcassonne/include/sqlite3.h
+Carcassonne/include/stb_image.h
+Carcassonne/src/sqlite3.c
+Carcassonne/src/stb_image.c
+CCAssets/Debug/
+CCAssets/src/sqlite3.c
+CCAssets/src/stb_image.c
+CCAssets/src/carcassonne/db/db.cc
+CCAssets/src/carcassonne/db/stmt.cc
