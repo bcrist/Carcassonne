@@ -22,45 +22,10 @@
 //         Josh Douglas
 // File: carcassonne/camera.h
 
-#ifndef CARCASSONNE_CAMERA_H_
-#define CARCASSONNE_CAMERA_H_
-#include "carcassonne/_carcassonne.h"
+#include "carcassonne/perspective_camera.h"
 
 namespace carcassonne {
 
-class Camera
-{
-public:
-   Camera();
 
-   void draw() const;
-
-   const glm::mat4& getProjection() const;
-   const glm::mat4& getView() const;
-
-
-   glm::vec3 worldToEye(const glm::vec3& world_coords) const;
-   glm::vec3 worldToClip(const glm::vec3& world_coords) const;
-   glm::vec2 worldToWindow(const glm::vec3& world_coords) const;
-   glm::vec3 eyeToClip(const glm::vec3& eye_coords) const;
-   glm::vec2 eyeToWindow(const glm::vec3& eye_coords) const;
-   glm::vec2 clipToWindow(const glm::vec3& clip_coords) const;
-
-
-   //glm::vec3 windowToWorld(const glm::vec2& window_coords, float plane_y) const;
-   glm::vec3 clipToEye(const glm::vec3& clip_coords) const;
-   glm::vec3 clipToWorld(const glm::vec3& clip_coords) const;
-   glm::vec3 eyeToWorld(const glm::vec3& eye_coords) const;
-   
-
-private:
-   glm::mat4 projection_;
-   glm::mat4 view_;
-
-   Camera(const Camera&);
-   void operator=(const Camera&);
-};
 
 } // namespace carcassonne
-
-#endif

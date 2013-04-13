@@ -20,15 +20,15 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: carcassonne/gui_camera.h
+// File: carcassonne/ortho_camera.h
 
-#ifndef CARCASSONNE_CAMERA_H_
-#define CARCASSONNE_CAMERA_H_
+#ifndef CARCASSONNE_ORTHO_CAMERA_H_
+#define CARCASSONNE_ORTHO_CAMERA_H_
 #include "carcassonne/_carcassonne.h"
 
 namespace carcassonne {
 
-class GuiCamera
+class OrthoCamera
 {
 };
 
