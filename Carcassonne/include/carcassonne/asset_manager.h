@@ -20,12 +20,6 @@
 //
 // Author: Benjamin Crist
 // File: carcassonne/asset_manager.h
-//
-// TODO:
-//  - option to save an extra shared_ptr to prevent weak_ptr from expiring
-//     - get*Stable() to request with extra shared_ptr
-//     - drop*() to remove extra shared_ptr
-//     - dropAll() to remove all extra shared_ptrs
 
 #ifndef CARCASSONNE_ASSET_MANAGER_H_
 #define CARCASSONNE_ASSET_MANAGER_H_
@@ -43,15 +37,12 @@ class AssetManager
 public:
    AssetManager(const std::string& filename);
 
-   std::shared_ptr<gfx::Texture> getTexture(const std::string& name);
-
-   void vacuum();
+   gfx::Texture* getTexture(const std::string& name);
 
 private:
    db::DB db_;
 
-   std::map<std::string, std::weak_ptr<gfx::Texture> > textures_;
-
+   std::map<std::string, std::unique_ptr<gfx::Texture> > textures_;
 
    AssetManager(const AssetManager&);
    void operator=(const AssetManager&);

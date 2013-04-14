@@ -30,17 +30,15 @@ AssetManager::AssetManager(const std::string& filename)
 {
 }
 
-std::shared_ptr<gfx::Texture> AssetManager::getTexture(const std::string& name)
+gfx::Texture* AssetManager::getTexture(const std::string& name)
 {
-   std::weak_ptr<gfx::Texture>& wptr = textures_[name];
-   std::shared_ptr<gfx::Texture> sptr = wptr.lock();
+   std::unique_ptr<gfx::Texture>& ptr = textures_[name];
 
-   if (!sptr)
+   if (!ptr)
    {
       try
       {
-         sptr.reset(new gfx::Texture(db_, name));
-         wptr = sptr;
+         ptr.reset(new gfx::Texture(db_, name));
       }
       catch (const std::runtime_error& err)
       {
@@ -48,18 +46,7 @@ std::shared_ptr<gfx::Texture> AssetManager::getTexture(const std::string& name)
       }
    }
 
-   return sptr;
-}
-
-void AssetManager::vacuum()
-{
-   for (auto i(textures_.begin()), end(textures_.end()); i != end;)
-   {
-      if (i->second.expired())
-         i = textures_.erase(i);
-      else
-         ++i;
-   }
+   return ptr.get();
 }
 
 } // namespace carcassonne
