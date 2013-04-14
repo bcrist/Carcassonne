@@ -1,1 +1,1 @@
-@cloc --exclude-list-file=./cloc-exclude.txt ./
+@cloc --exclude-list-file=./cloc-exclude.txt %* ./
