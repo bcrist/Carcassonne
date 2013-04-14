@@ -32,7 +32,6 @@
 #include "sqlite3.h"
 
 namespace carcassonne {
-
 namespace db {
 
 namespace detail {
@@ -70,8 +69,6 @@ private:
    void operator=(const DB&);
 };
 
-//namespace detail {
-
 class detail::_db_error : public std::runtime_error
 {
 public:
@@ -79,10 +76,7 @@ public:
    explicit _db_error(const char* what_arg);
 };
 
-//} // namespace detail
-
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne
 
 #include "carcassonne/db/db.inl"

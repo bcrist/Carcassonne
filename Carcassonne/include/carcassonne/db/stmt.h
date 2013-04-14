@@ -39,7 +39,6 @@
 #include "carcassonne/db/db.h"
 
 namespace carcassonne {
-
 namespace db {
 
 class Stmt;
@@ -125,8 +124,7 @@ private:
    void operator=(const Stmt&);
 };
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne
 
 #include "carcassonne/db/stmt.inl"

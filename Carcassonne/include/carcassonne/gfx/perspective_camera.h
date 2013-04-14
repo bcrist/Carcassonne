@@ -19,50 +19,51 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/assets/texture_font.h
+//         Josh Douglas
+// File: carcassonne/gfx/perspective_camera.h
 
-#ifndef CARCASSONNE_ASSETS_TEXTURE_FONT_H_
-#define CARCASSONNE_ASSETS_TEXTURE_FONT_H_
+#ifndef CARCASSONNE_GFX_PERSPECTIVE_CAMERA_H_
+#define CARCASSONNE_GFX_PERSPECTIVE_CAMERA_H_
 #include "carcassonne/_carcassonne.h"
 
-//#include "TextureLoader.h"
-
-#define TEXTUREFONT_LIST_COUNT 256
+#include "carcassonne/gfx/camera.h"
+#include "carcassonne/gfx/graphics_configuration.h"
 
 namespace carcassonne {
+namespace gfx {
 
-namespace assets {
-   /*
-struct TextureFontCharacterSpec
-{
-	GLubyte code;
-	GLuint row;
-	GLuint col;
-	GLfloat width;
-};
-
-class TextureFont
+class PerspectiveCamera : public Camera
 {
 public:
-	TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined);
-	~TextureFont();
+   PerspectiveCamera(const GraphicsConfiguration& gfx_cfg);
 
-	void metrics(const std::string &str, GLfloat scaleX, GLfloat scaleY, GLfloat &width, GLfloat &y0, GLfloat &y1) const;
-	void print(const std::string &str, GLfloat scaleX, GLfloat scaleY) const;
+   void setPosition(const glm::vec3& position);
+   void setTarget(const glm::vec3& target);
+   void setUp(const glm::vec3& up);
+
+   void recalculatePerspective();
+   void recalculateView();
+
+   glm::vec3 windowToWorld(const glm::vec2& window_coords, float plane_y) const;
 
 private:
-	GLuint listBase;	// first displaylist
+   const GraphicsConfiguration& gfx_cfg_;
 
-	// displaylist for getting ready to print a string
-	GLuint initList;
+   glm::vec3 position_;
+   glm::vec3 target_;
+   glm::vec3 up_;
 
-	// font info for calculating metrics
-	GLfloat charWidths[TEXTUREFONT_LIST_COUNT];
-	GLfloat baseline;
-};*/
+   float z_near_;  // the z-coordinate of the near clipping plane
+   float z_far_;   // the z-coordinate of the far clipping plane
 
-} // namespace assets
+   float top_;     // the eye-space y-coord where the top clipping plane intersects z = -1
+   float right_;   // the eye-space x-coord where the right clipping plane intersects z = -1
 
+   PerspectiveCamera(const PerspectiveCamera&);
+   void operator=(const PerspectiveCamera&);
+};
+
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
 #endif

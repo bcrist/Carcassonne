@@ -16,20 +16,26 @@
     <Filter Include="Source Files\carcassonne">
       <UniqueIdentifier>{3c3a6a02-4344-4fbc-a092-a814885f8854}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\carcassonne\assets">
-      <UniqueIdentifier>{73e2ed3a-4e28-45e1-a801-dcbcc77eb7c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\carcassonne\db">
       <UniqueIdentifier>{5260f6b4-cace-4581-b95f-ecac31f2db30}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\carcassonne">
       <UniqueIdentifier>{3e61e14d-b967-4e42-8ff0-80efb2e77c51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\carcassonne\assets">
-      <UniqueIdentifier>{594ba77e-b5ba-4977-aa35-df5547cff614}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\carcassonne\db">
       <UniqueIdentifier>{4b6e15b6-0ea7-419f-9cc7-3cfa8e76ddea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\carcassonne\gfx">
+      <UniqueIdentifier>{22b318a1-ac27-4bcf-864e-8fe6e10f53da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\carcassonne\gfx">
+      <UniqueIdentifier>{74118b2c-5a2a-4af4-874c-98e6414a35d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\_lib">
+      <UniqueIdentifier>{edfd75e2-b785-4f8b-89a4-978d00b07daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_lib">
+      <UniqueIdentifier>{32e6e180-f644-4afb-ac8d-db9899784ffa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,58 +45,43 @@
     <ClCompile Include="src\carcassonne\db\stmt.cc">
       <Filter>Source Files\carcassonne\db</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\assets\texture.cc">
-      <Filter>Source Files\carcassonne\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\assets\texture_font.cc">
-      <Filter>Source Files\carcassonne\assets</Filter>
-    </ClCompile>
     <ClCompile Include="src\carcassonne\game.cc">
       <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
     <ClCompile Include="src\carcassonne\main.cc">
       <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\graphics_configuration.cc">
-      <Filter>Source Files\carcassonne</Filter>
+    <ClCompile Include="src\carcassonne\gfx\perspective_camera.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
     </ClCompile>
-    <ClCompile Include="src\sqlite3.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\carcassonne\gfx\texture.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gfx\texture_font.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gfx\graphics_configuration.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gfx\ortho_camera.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\asset_manager.cc">
+      <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
     <ClCompile Include="src\stb_image.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\_lib</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\assets\asset_manager.cc">
-      <Filter>Source Files\carcassonne\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\ortho_camera.cc">
-      <Filter>Source Files\carcassonne</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\perspective_camera.cc">
-      <Filter>Source Files\carcassonne</Filter>
+    <ClCompile Include="src\sqlite3.c">
+      <Filter>Source Files\_lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\sqlite3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
       <Filter>Header Files\carcassonne</Filter>
     </ClInclude>
     <ClInclude Include="include\carcassonne\game.h">
       <Filter>Header Files\carcassonne</Filter>
-    </ClInclude>
-    <ClInclude Include="include\carcassonne\graphics_configuration.h">
-      <Filter>Header Files\carcassonne</Filter>
-    </ClInclude>
-    <ClInclude Include="include\carcassonne\assets\texture.h">
-      <Filter>Header Files\carcassonne\assets</Filter>
-    </ClInclude>
-    <ClInclude Include="include\carcassonne\assets\texture_font.h">
-      <Filter>Header Files\carcassonne\assets</Filter>
     </ClInclude>
     <ClInclude Include="include\carcassonne\db\db.h">
       <Filter>Header Files\carcassonne\db</Filter>
@@ -101,17 +92,32 @@
     <ClInclude Include="include\carcassonne\db\transaction.h">
       <Filter>Header Files\carcassonne\db</Filter>
     </ClInclude>
-    <ClInclude Include="include\carcassonne\assets\asset_manager.h">
-      <Filter>Header Files\carcassonne\assets</Filter>
+    <ClInclude Include="include\carcassonne\gfx\graphics_configuration.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
     </ClInclude>
-    <ClInclude Include="include\carcassonne\camera.h">
+    <ClInclude Include="include\carcassonne\gfx\ortho_camera.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\perspective_camera.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\texture.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\texture_font.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\camera.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\asset_manager.h">
       <Filter>Header Files\carcassonne</Filter>
     </ClInclude>
-    <ClInclude Include="include\carcassonne\perspective_camera.h">
-      <Filter>Header Files\carcassonne</Filter>
+    <ClInclude Include="include\sqlite3.h">
+      <Filter>Header Files\_lib</Filter>
     </ClInclude>
-    <ClInclude Include="include\carcassonne\ortho_camera.h">
-      <Filter>Header Files\carcassonne</Filter>
+    <ClInclude Include="include\stb_image.h">
+      <Filter>Header Files\_lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,8 +130,8 @@
     <None Include="include\carcassonne\db\transaction.inl">
       <Filter>Header Files\carcassonne\db</Filter>
     </None>
-    <None Include="include\carcassonne\camera.inl">
-      <Filter>Header Files\carcassonne</Filter>
+    <None Include="include\carcassonne\gfx\camera.inl">
+      <Filter>Header Files\carcassonne\gfx</Filter>
     </None>
   </ItemGroup>
 </Project>

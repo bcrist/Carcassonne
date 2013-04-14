@@ -19,18 +19,19 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/graphics_configuration.cc
+// File: carcassonne/gfx/graphics_configuration.cc
 //
 // GraphicsConfiguration is a DAO for accessing graphics configuration data
 // stored in a Carcassonne configuration database.
 
-#include "carcassonne/graphics_configuration.h"
+#include "carcassonne/gfx/graphics_configuration.h"
 
 #include <SFML/OpenGL.hpp>
 
 #include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
+namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Loads and returns the active GraphicsConfiguration from the database
@@ -318,4 +319,5 @@ bool GraphicsConfiguration::saveWindowLocation(db::DB& db)
    return false;
 }
 
+} // namespace carcassonne::gfx
 } // namespace carcassonne

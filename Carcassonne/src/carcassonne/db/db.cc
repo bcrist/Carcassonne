@@ -31,7 +31,6 @@
 #include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
-
 namespace db {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,6 +79,5 @@ int DB::getInt(const std::string& sql, int default_value)
    return default_value;
 }
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne

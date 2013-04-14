@@ -33,7 +33,6 @@
 #endif
 
 namespace carcassonne {
-
 namespace db {
 
 inline Transaction::Transaction(DB& db)
@@ -93,8 +92,7 @@ inline void Transaction::rollback()
    db_.rollback();
 }
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne
 
 #endif

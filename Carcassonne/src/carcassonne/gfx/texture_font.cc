@@ -19,12 +19,12 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/assets/texture_font.cc
+// File: carcassonne/gfx/texture_font.cc
 
-#include "carcassonne/assets/texture_font.h"
+#include "carcassonne/gfx/texture_font.h"
 
 namespace carcassonne {
-namespace assets {
+namespace gfx {
    /*
 TextureFont::TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined)
 {
@@ -105,5 +105,5 @@ void TextureFont::print(const std::string &str, GLfloat scaleX, GLfloat scaleY) 
 	glDisable(GL_TEXTURE_2D);
 }*/
 
-} // namespace assets
+} // namespace gfx
 } // namespace carcassonne

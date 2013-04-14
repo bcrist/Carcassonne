@@ -32,11 +32,10 @@
 #include <SFML/Window.hpp>
 
 #include "carcassonne/db/db.h"
-#include "carcassonne/graphics_configuration.h"
-#include "carcassonne/assets/asset_manager.h"
-
-#include "carcassonne/perspective_camera.h"
-#include "carcassonne/ortho_camera.h"
+#include "carcassonne/gfx/graphics_configuration.h"
+#include "carcassonne/gfx/perspective_camera.h"
+#include "carcassonne/gfx/ortho_camera.h"
+#include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
 
@@ -65,17 +64,17 @@ public:
 private:
    db::DB config_db_;
 
-   GraphicsConfiguration gfx_cfg_;
+   gfx::GraphicsConfiguration gfx_cfg_;
    sf::Window window_;
   
-   assets::AssetManager assets_;
+   AssetManager assets_;
 
    bool simulation_running_;
    sf::Time min_simulate_interval_;
    sf::Clock clock_;
 
-   PerspectiveCamera game_camera_;
-   OrthoCamera gui_camera_;
+   gfx::PerspectiveCamera game_camera_;
+   gfx::OrthoCamera gui_camera_;
 
    glm::vec3 hover_position_;
 

@@ -19,34 +19,31 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-//         Josh Douglas
-// File: carcassonne/ortho_camera.h
+// File: carcassonne/gfx/ortho_camera.h
 
-#ifndef CARCASSONNE_ORTHO_CAMERA_H_
-#define CARCASSONNE_ORTHO_CAMERA_H_
-#include "carcassonne/_carcassonne.h"
-
-#include "carcassonne/camera.h"
-#include "carcassonne/graphics_configuration.h"
+#include "carcassonne/gfx/ortho_camera.h"
 
 namespace carcassonne {
+namespace gfx {
 
-class OrthoCamera : public Camera
+   // TODO: add rect specifying minimum client area
+OrthoCamera::OrthoCamera(const GraphicsConfiguration& gfx_cfg)
+   : gfx_cfg_(gfx_cfg)
 {
-public:
-   OrthoCamera(const GraphicsConfiguration& gfx_cfg);
+}
 
-   void recalculate();
+void OrthoCamera::recalculate()
+{
+   // TODO: calculate projection to fit client area inside viewport
 
-   glm::vec3 windowToWorld(const glm::vec2& window_coords) const;
+   // TODO: use identity view matrix
+}
 
-private:
-   const GraphicsConfiguration& gfx_cfg_;
+// calculate the world position at the window coordinates provided
+glm::vec3 OrthoCamera::windowToWorld(const glm::vec2& window_coords) const
+{
+   return glm::vec3();
+}
 
-   OrthoCamera(const OrthoCamera&);
-   void operator=(const OrthoCamera&);
-};
-
+} // namespace carcassonne::gfx
 } // namespace carcassonne
-
-#endif

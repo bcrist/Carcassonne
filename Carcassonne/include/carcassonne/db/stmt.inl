@@ -34,9 +34,7 @@
 #endif
 
 namespace carcassonne {
-
 namespace db {
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Compiles the provided SQL query against the provided database and constructs
@@ -251,8 +249,7 @@ inline std::ostream& operator<<(std::ostream& os, Stmt& s)
    return os << s.getSQL();
 }
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne
 
 #endif

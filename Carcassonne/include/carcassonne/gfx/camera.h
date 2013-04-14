@@ -19,7 +19,7 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/camera.h
+// File: carcassonne/gfx/camera.h
 //
 // Represents a camera and allows conversion between various coordinate spaces
 //  - World space - The global space where absolute positions are relative to.
@@ -27,11 +27,12 @@
 //  - Clip space - The eye space transformed by the projection matrix.
 //  - Device space - Clip space after applying the perspective divide.
 
-#ifndef CARCASSONNE_CAMERA_H_
-#define CARCASSONNE_CAMERA_H_
+#ifndef CARCASSONNE_GFX_CAMERA_H_
+#define CARCASSONNE_GFX_CAMERA_H_
 #include "carcassonne/_carcassonne.h"
 
 namespace carcassonne {
+namespace gfx {
 
 class Camera
 {
@@ -79,8 +80,9 @@ private:
    void operator=(const Camera&);
 };
 
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
-#include "carcassonne/camera.inl"
+#include "carcassonne/gfx/camera.inl"
 
 #endif

@@ -38,7 +38,7 @@ namespace carcassonne {
 
 Game::Game()
    : config_db_("carcassonne.ccconfig"),
-     gfx_cfg_(GraphicsConfiguration::load(config_db_)),
+     gfx_cfg_(gfx::GraphicsConfiguration::load(config_db_)),
      assets_("carcassonne.ccassets"),
      simulation_running_(true),
      min_simulate_interval_(sf::milliseconds(5)),
@@ -119,10 +119,10 @@ void Game::createWindow()
    sf::VideoMode mode(gfx_cfg_.viewport_size.x, gfx_cfg_.viewport_size.y,
                       gfx_cfg_.color_bits > 0 ? gfx_cfg_.color_bits : sf::VideoMode::getDesktopMode().bitsPerPixel);
    
-   if (gfx_cfg_.window_mode == GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED)
+   if (gfx_cfg_.window_mode == gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED)
       mode = sf::VideoMode::getDesktopMode();
 
-   else if (gfx_cfg_.window_mode == GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE)
+   else if (gfx_cfg_.window_mode == gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE)
    {
       const std::vector<sf::VideoMode>& modes = sf::VideoMode::getFullscreenModes();
 
@@ -155,15 +155,15 @@ void Game::createWindow()
    sf::Uint32 style;
    switch (gfx_cfg_.window_mode)
    {
-      case GraphicsConfiguration::WINDOW_MODE_FIXED:
+      case gfx::GraphicsConfiguration::WINDOW_MODE_FIXED:
          style = sf::Style::Titlebar | sf::Style::Close;
          break;
 
-      case GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED:
+      case gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED:
          style = sf::Style::None;
          break;
 
-      case GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE:
+      case gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE:
          style = sf::Style::Fullscreen;
          break;
 
@@ -181,11 +181,11 @@ void Game::createWindow()
    window_.create(mode, "Carcassonne!", style, settings);
    window_.setVerticalSyncEnabled(gfx_cfg_.v_sync);
 
-   if (gfx_cfg_.window_mode == GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED)
+   if (gfx_cfg_.window_mode == gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED)
    {
       window_.setPosition(sf::Vector2i(0, 0));
    }
-   else if (gfx_cfg_.window_mode != GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE &&
+   else if (gfx_cfg_.window_mode != gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_EXCLUSIVE &&
             gfx_cfg_.save_window_location)
    {
       window_.setPosition(sf::Vector2i(gfx_cfg_.window_position.x, gfx_cfg_.window_position.y));
@@ -269,6 +269,5 @@ void Game::setSimulationRunning(bool running)
          clock_.restart();
    }
 }
-
 
 } // namespace carcassonne

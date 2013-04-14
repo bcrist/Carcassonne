@@ -19,9 +19,9 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/assets/texture.cc
+// File: carcassonne/gfx/texture.cc
 
-#include "carcassonne/assets/texture.h"
+#include "carcassonne/gfx/texture.h"
 
 #include <cassert>
 #include <algorithm>
@@ -31,7 +31,7 @@
 #include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
-namespace assets {
+namespace gfx {
 
 Texture::State Texture::state_(UNKNOWN);
 GLuint Texture::bound_id_(0);
@@ -212,5 +212,5 @@ void Texture::checkMode(GLenum mode)
    }
 }
 
-} // namespace assets
+} // namespace gfx
 } // namespace carcassonne

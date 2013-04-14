@@ -19,47 +19,42 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-//         Josh Douglas
-// File: carcassonne/perspective_camera.h
+// File: carcassonne/asset_manager.h
+//
+// TODO:
+//  - option to save an extra shared_ptr to prevent weak_ptr from expiring
+//     - get*Stable() to request with extra shared_ptr
+//     - drop*() to remove extra shared_ptr
+//     - dropAll() to remove all extra shared_ptrs
 
-#ifndef CARCASSONNE_PERSPECTIVE_CAMERA_H_
-#define CARCASSONNE_PERSPECTIVE_CAMERA_H_
+#ifndef CARCASSONNE_ASSET_MANAGER_H_
+#define CARCASSONNE_ASSET_MANAGER_H_
 #include "carcassonne/_carcassonne.h"
 
-#include "carcassonne/camera.h"
-#include "carcassonne/graphics_configuration.h"
+#include <map>
+
+#include "carcassonne/gfx/texture.h"
+#include "carcassonne/db/db.h"
 
 namespace carcassonne {
 
-class PerspectiveCamera : public Camera
+class AssetManager
 {
 public:
-   PerspectiveCamera(const GraphicsConfiguration& gfx_cfg);
+   AssetManager(const std::string& filename);
 
-   void setPosition(const glm::vec3& position);
-   void setTarget(const glm::vec3& target);
-   void setUp(const glm::vec3& up);
+   std::shared_ptr<gfx::Texture> getTexture(const std::string& name);
 
-   void recalculatePerspective();
-   void recalculateView();
-
-   glm::vec3 windowToWorld(const glm::vec2& window_coords, float plane_y) const;
+   void vacuum();
 
 private:
-   const GraphicsConfiguration& gfx_cfg_;
+   db::DB db_;
 
-   glm::vec3 position_;
-   glm::vec3 target_;
-   glm::vec3 up_;
+   std::map<std::string, std::weak_ptr<gfx::Texture> > textures_;
 
-   float z_near_;  // the z-coordinate of the near clipping plane
-   float z_far_;   // the z-coordinate of the far clipping plane
 
-   float top_;     // the eye-space y-coord where the top clipping plane intersects z = -1
-   float right_;   // the eye-space x-coord where the right clipping plane intersects z = -1
-
-   PerspectiveCamera(const PerspectiveCamera&);
-   void operator=(const PerspectiveCamera&);
+   AssetManager(const AssetManager&);
+   void operator=(const AssetManager&);
 };
 
 } // namespace carcassonne

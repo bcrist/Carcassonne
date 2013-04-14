@@ -32,7 +32,6 @@
 #include "carcassonne/db/db.h"
 
 namespace carcassonne {
-
 namespace db {
 
 class Transaction
@@ -58,8 +57,7 @@ private:
    void operator=(const Transaction&);
 };
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne
 
 #include "carcassonne/db/transaction.inl"

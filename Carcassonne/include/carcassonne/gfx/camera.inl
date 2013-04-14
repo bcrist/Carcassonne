@@ -19,7 +19,7 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/camera.inl
+// File: carcassonne/gfx/camera.inl
 //
 // Represents a camera and allows conversion between various coordinate spaces
 //  - World space - The global space where absolute positions are relative to.
@@ -27,17 +27,18 @@
 //  - Clip space - The eye space transformed by the projection matrix.
 //  - Device space - Clip space after applying the perspective divide.
 
-#ifndef CARCASSONNE_CAMERA_INL_
-#define CARCASSONNE_CAMERA_INL_
+#ifndef CARCASSONNE_GFX_CAMERA_INL_
+#define CARCASSONNE_GFX_CAMERA_INL_
 
-#ifndef CARCASSONNE_CAMERA_H_
-#include "carcassonne/camera.h"
+#ifndef CARCASSONNE_GFX_CAMERA_H_
+#include "carcassonne/gfx/camera.h"
 #endif
 
 #include <glm/gtc/type_ptr.hpp>
 #include <SFML/OpenGL.hpp>
 
 namespace carcassonne {
+namespace gfx {
 
 inline Camera::Camera()
    : inv_projection_valid_(false),
@@ -185,6 +186,7 @@ inline glm::vec4 Camera::eyeToWorld(const glm::vec4& eye_coords) const
    return inv_view_ * eye_coords;
 }
 
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
 #endif

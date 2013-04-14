@@ -32,7 +32,6 @@
 #endif
 
 namespace carcassonne {
-
 namespace db {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,8 +127,7 @@ inline void DB::vacuum()
    exec("VACUUM");
 }
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne
 
 #endif

@@ -19,7 +19,7 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/assets/texture.h
+// File: carcassonne/gfx/texture.h
 //
 // TODO:
 //  - Allow different filtering modes
@@ -35,8 +35,8 @@
 //  - more database formats
 //  - database texture data compression (zlib)
 
-#ifndef CARCASSONNE_ASSETS_TEXTURE_H_
-#define CARCASSONNE_ASSETS_TEXTURE_H_
+#ifndef CARCASSONNE_GFX_TEXTURE_H_
+#define CARCASSONNE_GFX_TEXTURE_H_
 #include "carcassonne/_carcassonne.h"
 
 #include <string>
@@ -46,7 +46,7 @@
 #include "carcassonne/db/db.h"
 
 namespace carcassonne {
-namespace assets {
+namespace gfx {
 
 class Texture
 {
@@ -85,7 +85,7 @@ private:
    void operator=(const Texture&);
 };
 
-} // namespace assets
+} // namespace gfx
 } // namespace carcassonne
 
 #endif

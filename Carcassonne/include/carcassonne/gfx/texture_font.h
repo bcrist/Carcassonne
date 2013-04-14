@@ -19,30 +19,48 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-//         Josh Douglas
-// File: carcassonne/ortho_camera.h
+// File: carcassonne/gfx/texture_font.h
 
-#include "carcassonne/ortho_camera.h"
+#ifndef CARCASSONNE_GFX_TEXTURE_FONT_H_
+#define CARCASSONNE_GFX_TEXTURE_FONT_H_
+#include "carcassonne/_carcassonne.h"
+
+//#include "TextureLoader.h"
+
+#define TEXTUREFONT_LIST_COUNT 256
 
 namespace carcassonne {
-
-   // TODO: add rect specifying minimum client area
-OrthoCamera::OrthoCamera(const GraphicsConfiguration& gfx_cfg)
-   : gfx_cfg_(gfx_cfg)
+namespace gfx {
+   /*
+struct TextureFontCharacterSpec
 {
-}
+	GLubyte code;
+	GLuint row;
+	GLuint col;
+	GLfloat width;
+};
 
-void OrthoCamera::recalculate()
+class TextureFont
 {
-   // TODO: calculate projection to fit client area inside viewport
+public:
+	TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined);
+	~TextureFont();
 
-   // TODO: use identity view matrix
-}
+	void metrics(const std::string &str, GLfloat scaleX, GLfloat scaleY, GLfloat &width, GLfloat &y0, GLfloat &y1) const;
+	void print(const std::string &str, GLfloat scaleX, GLfloat scaleY) const;
 
-// calculate the world position at the window coordinates provided
-glm::vec3 OrthoCamera::windowToWorld(const glm::vec2& window_coords) const
-{
-   return glm::vec3();
-}
+private:
+	GLuint listBase;	// first displaylist
 
+	// displaylist for getting ready to print a string
+	GLuint initList;
+
+	// font info for calculating metrics
+	GLfloat charWidths[TEXTUREFONT_LIST_COUNT];
+	GLfloat baseline;
+};*/
+
+} // namespace gfx
 } // namespace carcassonne
+
+#endif

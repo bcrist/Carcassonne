@@ -19,46 +19,35 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/assets/asset_manager.h
-//
-// TODO:
-//  - option to save an extra shared_ptr to prevent weak_ptr from expiring
-//     - get*Stable() to request with extra shared_ptr
-//     - drop*() to remove extra shared_ptr
-//     - dropAll() to remove all extra shared_ptrs
+// File: carcassonne/gfx/ortho_camera.h
 
-#ifndef CARCASSONNE_ASSETS_ASSET_MANAGER_H_
-#define CARCASSONNE_ASSETS_ASSET_MANAGER_H_
+#ifndef CARCASSONNE_GFX_ORTHO_CAMERA_H_
+#define CARCASSONNE_GFX_ORTHO_CAMERA_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <map>
-
-#include "carcassonne/assets/texture.h"
-#include "carcassonne/db/db.h"
+#include "carcassonne/gfx/camera.h"
+#include "carcassonne/gfx/graphics_configuration.h"
 
 namespace carcassonne {
-namespace assets {
+namespace gfx {
 
-class AssetManager
+class OrthoCamera : public Camera
 {
 public:
-   AssetManager(const std::string& filename);
+   OrthoCamera(const GraphicsConfiguration& gfx_cfg);
 
-   std::shared_ptr<Texture> getTexture(const std::string& name);
+   void recalculate();
 
-   void vacuum();
+   glm::vec3 windowToWorld(const glm::vec2& window_coords) const;
 
 private:
-   db::DB db_;
+   const GraphicsConfiguration& gfx_cfg_;
 
-   std::map<std::string, std::weak_ptr<Texture> > textures_;
-
-
-   AssetManager(const AssetManager&);
-   void operator=(const AssetManager&);
+   OrthoCamera(const OrthoCamera&);
+   void operator=(const OrthoCamera&);
 };
 
-} // namespace assets
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
 #endif

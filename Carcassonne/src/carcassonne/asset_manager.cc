@@ -19,28 +19,27 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/assets/asset_manager.cc
+// File: carcassonne/asset_manager.cc
 
-#include "carcassonne/assets/asset_manager.h"
+#include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
-namespace assets {
 
 AssetManager::AssetManager(const std::string& filename)
    : db_(filename)
 {
 }
 
-std::shared_ptr<Texture> AssetManager::getTexture(const std::string& name)
+std::shared_ptr<gfx::Texture> AssetManager::getTexture(const std::string& name)
 {
-   std::weak_ptr<Texture>& wptr = textures_[name];
-   std::shared_ptr<Texture> sptr = wptr.lock();
+   std::weak_ptr<gfx::Texture>& wptr = textures_[name];
+   std::shared_ptr<gfx::Texture> sptr = wptr.lock();
 
    if (!sptr)
    {
       try
       {
-         sptr.reset(new Texture(db_, name));
+         sptr.reset(new gfx::Texture(db_, name));
          wptr = sptr;
       }
       catch (const std::runtime_error& err)
@@ -63,5 +62,4 @@ void AssetManager::vacuum()
    }
 }
 
-} // namespace assets
 } // namespace carcassonne

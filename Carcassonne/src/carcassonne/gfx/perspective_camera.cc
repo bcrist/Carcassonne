@@ -20,13 +20,14 @@
 //
 // Author: Benjamin Crist
 //         Josh Douglas
-// File: carcassonne/camera.h
+// File: carcassonne/gfx/camera.h
 
-#include "carcassonne/perspective_camera.h"
+#include "carcassonne/gfx/perspective_camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace carcassonne {
+namespace gfx {
 
 PerspectiveCamera::PerspectiveCamera(const GraphicsConfiguration& gfx_cfg)
    : gfx_cfg_(gfx_cfg),
@@ -103,4 +104,5 @@ glm::vec3 PerspectiveCamera::windowToWorld(const glm::vec2& window_coords, float
    return glm::vec3();
 }
 
+} // namespace carcassonne::gfx
 } // namespace carcassonne

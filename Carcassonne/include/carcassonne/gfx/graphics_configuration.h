@@ -19,13 +19,13 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/graphics_configuration.cc
+// File: carcassonne/gfx/graphics_configuration.cc
 //
 // GraphicsConfiguration is a DAO for accessing graphics configuration data
 // stored in a Carcassonne configuration database.
 
-#ifndef CARCASSONNE_GRAPHICS_CONFIGURATION_H_
-#define CARCASSONNE_GRAPHICS_CONFIGURATION_H_
+#ifndef CARCASSONNE_GFX_GRAPHICS_CONFIGURATION_H_
+#define CARCASSONNE_GFX_GRAPHICS_CONFIGURATION_H_
 #include "carcassonne/_carcassonne.h"
 
 #include <SFML/Window.hpp>
@@ -33,6 +33,7 @@
 #include "carcassonne/db/db.h"
 
 namespace carcassonne {
+namespace gfx {
 
 struct GraphicsConfiguration
 {
@@ -103,6 +104,7 @@ public:
 
 };
 
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
 #endif

@@ -29,7 +29,6 @@
 #include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
-
 namespace db {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -73,6 +72,5 @@ int Stmt::column(const std::string& name)
 }
 
 
-} // namespace db
-
+} // namespace carcassonne::db
 } // namespace carcassonne

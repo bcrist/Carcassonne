@@ -11,40 +11,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\carcassonne\assets\asset_manager.cc" />
-    <ClCompile Include="src\carcassonne\assets\texture.cc" />
-    <ClCompile Include="src\carcassonne\assets\texture_font.cc" />
+    <ClCompile Include="src\carcassonne\asset_manager.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
     <ClCompile Include="src\carcassonne\db\stmt.cc" />
     <ClCompile Include="src\carcassonne\game.cc" />
-    <ClCompile Include="src\carcassonne\graphics_configuration.cc" />
-    <ClCompile Include="src\carcassonne\ortho_camera.cc" />
+    <ClCompile Include="src\carcassonne\gfx\graphics_configuration.cc" />
+    <ClCompile Include="src\carcassonne\gfx\ortho_camera.cc" />
+    <ClCompile Include="src\carcassonne\gfx\perspective_camera.cc" />
+    <ClCompile Include="src\carcassonne\gfx\texture.cc" />
+    <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
     <ClCompile Include="src\carcassonne\main.cc" />
-    <ClCompile Include="src\carcassonne\perspective_camera.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\carcassonne\assets\asset_manager.h" />
-    <ClInclude Include="include\carcassonne\assets\texture.h" />
-    <ClInclude Include="include\carcassonne\assets\texture_font.h" />
-    <ClInclude Include="include\carcassonne\camera.h" />
+    <ClInclude Include="include\carcassonne\asset_manager.h" />
     <ClInclude Include="include\carcassonne\db\db.h" />
     <ClInclude Include="include\carcassonne\db\stmt.h" />
     <ClInclude Include="include\carcassonne\db\transaction.h" />
     <ClInclude Include="include\carcassonne\game.h" />
-    <ClInclude Include="include\carcassonne\graphics_configuration.h" />
-    <ClInclude Include="include\carcassonne\ortho_camera.h" />
-    <ClInclude Include="include\carcassonne\perspective_camera.h" />
+    <ClInclude Include="include\carcassonne\gfx\camera.h" />
+    <ClInclude Include="include\carcassonne\gfx\graphics_configuration.h" />
+    <ClInclude Include="include\carcassonne\gfx\ortho_camera.h" />
+    <ClInclude Include="include\carcassonne\gfx\perspective_camera.h" />
+    <ClInclude Include="include\carcassonne\gfx\texture.h" />
+    <ClInclude Include="include\carcassonne\gfx\texture_font.h" />
     <ClInclude Include="include\carcassonne\_carcassonne.h" />
     <ClInclude Include="include\sqlite3.h" />
     <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\carcassonne\camera.inl" />
     <None Include="include\carcassonne\db\db.inl" />
     <None Include="include\carcassonne\db\stmt.inl" />
     <None Include="include\carcassonne\db\transaction.inl" />
+    <None Include="include\carcassonne\gfx\camera.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8FD4D4BE-A710-4A9B-A8D1-1219A84C17B6}</ProjectGuid>
