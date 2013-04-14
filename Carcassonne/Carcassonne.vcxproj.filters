@@ -37,6 +37,12 @@
     <Filter Include="Source Files\_lib">
       <UniqueIdentifier>{32e6e180-f644-4afb-ac8d-db9899784ffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\carcassonne\features">
+      <UniqueIdentifier>{a024bb76-47d5-4df1-9d6a-1a777840ccc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\carcassonne\features">
+      <UniqueIdentifier>{5151bc06-d84e-4bbb-aa28-787ea7bbccf2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -119,6 +125,45 @@
     <ClInclude Include="include\stb_image.h">
       <Filter>Header Files\_lib</Filter>
     </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\sprite.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\board.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\pile.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\player.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scenario.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\tile.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\rect.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\features\city.h">
+      <Filter>Header Files\carcassonne\features</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\features\cloister.h">
+      <Filter>Header Files\carcassonne\features</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\features\farm.h">
+      <Filter>Header Files\carcassonne\features</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\features\feature.h">
+      <Filter>Header Files\carcassonne\features</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\features\road.h">
+      <Filter>Header Files\carcassonne\features</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\follower.h">
+      <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\carcassonne\db\db.inl">
@@ -131,6 +176,12 @@
       <Filter>Header Files\carcassonne\db</Filter>
     </None>
     <None Include="include\carcassonne\gfx\camera.inl">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </None>
+    <None Include="include\carcassonne\gfx\rect.inl">
+      <Filter>Header Files\carcassonne\gfx</Filter>
+    </None>
+    <None Include="include\carcassonne\gfx\sprite.inl">
       <Filter>Header Files\carcassonne\gfx</Filter>
     </None>
   </ItemGroup>

@@ -26,16 +26,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\asset_manager.h" />
+    <ClInclude Include="include\carcassonne\board.h" />
     <ClInclude Include="include\carcassonne\db\db.h" />
     <ClInclude Include="include\carcassonne\db\stmt.h" />
     <ClInclude Include="include\carcassonne\db\transaction.h" />
+    <ClInclude Include="include\carcassonne\features\city.h" />
+    <ClInclude Include="include\carcassonne\features\cloister.h" />
+    <ClInclude Include="include\carcassonne\features\farm.h" />
+    <ClInclude Include="include\carcassonne\features\feature.h" />
+    <ClInclude Include="include\carcassonne\features\road.h" />
+    <ClInclude Include="include\carcassonne\follower.h" />
     <ClInclude Include="include\carcassonne\game.h" />
     <ClInclude Include="include\carcassonne\gfx\camera.h" />
     <ClInclude Include="include\carcassonne\gfx\graphics_configuration.h" />
     <ClInclude Include="include\carcassonne\gfx\ortho_camera.h" />
     <ClInclude Include="include\carcassonne\gfx\perspective_camera.h" />
+    <ClInclude Include="include\carcassonne\gfx\rect.h" />
+    <ClInclude Include="include\carcassonne\gfx\sprite.h" />
     <ClInclude Include="include\carcassonne\gfx\texture.h" />
     <ClInclude Include="include\carcassonne\gfx\texture_font.h" />
+    <ClInclude Include="include\carcassonne\pile.h" />
+    <ClInclude Include="include\carcassonne\player.h" />
+    <ClInclude Include="include\carcassonne\scenario.h" />
+    <ClInclude Include="include\carcassonne\tile.h" />
     <ClInclude Include="include\carcassonne\_carcassonne.h" />
     <ClInclude Include="include\sqlite3.h" />
     <ClInclude Include="include\stb_image.h" />
@@ -45,6 +58,8 @@
     <None Include="include\carcassonne\db\stmt.inl" />
     <None Include="include\carcassonne\db\transaction.inl" />
     <None Include="include\carcassonne\gfx\camera.inl" />
+    <None Include="include\carcassonne\gfx\rect.inl" />
+    <None Include="include\carcassonne\gfx\sprite.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8FD4D4BE-A710-4A9B-A8D1-1219A84C17B6}</ProjectGuid>
