@@ -62,6 +62,14 @@ int texture(int argc, char** argv)
    return 0;
 }
 
+int sprite(int argc, char** argv)
+{
+}
+
+int mesh(int argc, char** argv)
+{
+}
+
 int runApp(int argc, char** argv)
 {
    if (argc < 2)
@@ -80,6 +88,10 @@ int runApp(int argc, char** argv)
 
    if (operation == "texture")
       return texture(argc, argv);
+   else if (operation == "sprite")
+      return sprite(argc, argv);
+   else if (operation == "mesh")
+      return mesh(argc, argv);
    else
    {
       std::cerr << "Unrecognized operation!" << std::endl;

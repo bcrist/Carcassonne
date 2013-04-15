@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cameraTest", "cameraTest\ca
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CCAssets", "CCAssets\CCAssets.vcxproj", "{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CCConfig", "CCConfig\CCConfig.vcxproj", "{DC86C9C8-0B94-4FB6-B3CB-5C5649A6B343}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Debug|Win32.Build.0 = Debug|Win32
 		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Release|Win32.ActiveCfg = Release|Win32
 		{8DFF167C-3DE1-486D-B0E2-60ABFA65D438}.Release|Win32.Build.0 = Release|Win32
+		{DC86C9C8-0B94-4FB6-B3CB-5C5649A6B343}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC86C9C8-0B94-4FB6-B3CB-5C5649A6B343}.Debug|Win32.Build.0 = Debug|Win32
+		{DC86C9C8-0B94-4FB6-B3CB-5C5649A6B343}.Release|Win32.ActiveCfg = Release|Win32
+		{DC86C9C8-0B94-4FB6-B3CB-5C5649A6B343}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
