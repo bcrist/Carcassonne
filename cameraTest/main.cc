@@ -48,20 +48,27 @@
 
 #include <iostream>
 
+
 void testCamera();
 void display();
 void keyboard();
+void onMouse();
+void initGL();
 
+float wHeight = 600;
+float wWidth  = 600;
 float dist = sqrt(1/3.0);
 const int FPS = 27;
 int bound = 100;
-glm::vec3 eye = glm::vec3 (1, 0, 0);
+glm::vec3 eye = glm::vec3 (250, 50, 0);
 glm::vec3 center = glm::vec3 (0, 0, 0);
 glm::vec3 up = glm::vec3 (0, 1, 0);
 float fovY = 60;
 float aspectX = 1;
 float zNear = 0.1;
 float zFar = 5000;
+bool isSelected = false;
+sf::Window window(sf::VideoMode(wWidth, wHeight), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
 
 void rotateCameraY(double rSpeed)
 {
@@ -109,8 +116,8 @@ void testCamera()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glMatrixMode(GL_MODELVIEW);
-	std::cerr << eye.x << ',' << eye.z << '\t';
-	std::cerr << center.x << ',' << center.z << std::endl;
+	//std::cerr << eye.x << ',' << eye.z << '\t';
+	//std::cerr << center.x << ',' << center.z << std::endl;
 	glm::mat4 isoViewMatrix = glm::lookAt(eye, center, up);
 	glLoadMatrixf(glm::value_ptr(isoViewMatrix));
 
@@ -171,14 +178,30 @@ void testCamera()
 			glVertex3fv(points[3]);
 		glEnd();
 
-		glColor3f(0,1,0);
-		//top
-		glBegin(GL_QUADS);
-			glVertex3fv(points[4]);
-			glVertex3fv(points[5]);
-			glVertex3fv(points[6]);
-			glVertex3fv(points[7]);
-		glEnd();
+		if(isSelected)
+		{
+			glColor3f(0,1,0);
+			//top
+			glBegin(GL_QUADS);
+				glVertex3fv(points[4]);
+				glVertex3fv(points[5]);
+				glVertex3fv(points[6]);
+				glVertex3fv(points[7]);
+			glEnd();
+		}
+
+		else
+		{
+			glColor3f(1,1,0);
+			//top
+			glBegin(GL_QUADS);
+				glVertex3fv(points[4]);
+				glVertex3fv(points[5]);
+				glVertex3fv(points[6]);
+				glVertex3fv(points[7]);
+			glEnd();
+
+		}
 
 	glPopMatrix();
 	glDisable(GL_DEPTH_TEST);
@@ -187,7 +210,7 @@ void testCamera()
 
 void keyboard()
 {
-	const double M_SPEED = 1.25;
+	const double M_SPEED = 0.01;
 	const double R_SPEED = 0.05;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -227,10 +250,61 @@ void keyboard()
 
 }
 
+void onMouse() 
+{
+
+	glMatrixMode(GL_PROJECTION);
+	glm::mat4 perspective = glm::perspective(fovY, aspectX, zNear, zFar);
+	glLoadMatrixf(glm::value_ptr(perspective));
+	//glLoadIdentity();
+	//glOrtho(-bound, bound,-bound, bound,-bound, bound);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glMatrixMode(GL_MODELVIEW);
+	//std::cerr << eye.x << ',' << eye.z << '\t';
+	//std::cerr << center.x << ',' << center.z << std::endl;
+	glm::mat4 isoViewMatrix = glm::lookAt(eye, center, up);
+	glLoadMatrixf(glm::value_ptr(isoViewMatrix));
+	
+
+  //if(state != GLUT_DOWN)
+  //  return;
+ 
+	double window_width = wWidth;
+	double window_height = wHeight;
+	//glm::vec2 window_width = glm::vec2(window);
+	//glm::vec2 window_height = glm::vec2(window);
+
+ 
+  GLbyte color[4];
+  GLfloat depth;
+  GLuint index;
+ 
+  glReadPixels(sf::Mouse::getPosition(window).x, window_height - sf::Mouse::getPosition(window).y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+  glReadPixels(sf::Mouse::getPosition(window).x, window_height - sf::Mouse::getPosition(window).y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+  glReadPixels(sf::Mouse::getPosition(window).x, window_height - sf::Mouse::getPosition(window).y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+ 
+  //std::cerr<<"Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n"<<
+  //       sf::Mouse::getPosition(window).x<< sf::Mouse::getPosition(window).y<< color[0]<< color[1]<< color[2]<< color[3]<< depth<< index<<std::endl;
+
+	glm::vec4 viewport = glm::vec4(0, 0, window_width, window_height);
+	glm::vec3 wincoord = glm::vec3(window.getPosition().x, window_height - window.getPosition().y - 1, depth);
+	glm::vec3 objcoord = glm::unProject(wincoord, isoViewMatrix, perspective, viewport);
+ if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+ {
+     // left click...
+	 std::cerr<<"Coordinates in object space: %f, %f, %f\n"<<
+         objcoord.x<< " "<< objcoord.y<<" "<< objcoord.z<<std::endl;
+ }
+	
+
+}
+
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 	testCamera();
 }
 
@@ -238,18 +312,24 @@ void display()
 int main()
 {
   // create the window
-    sf::Window window(sf::VideoMode(600, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
+    
     window.setVerticalSyncEnabled(true);
 
 	glClearColor(0,0,0,0);
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glm::mat4 perspective(float fovy, float aspect, float zNear,float zFar);
+	glm::mat4 perspective = glm::perspective(fovY, aspectX, zNear, zFar);
+	glLoadMatrixf(glm::value_ptr(perspective));
+	//glLoadIdentity();
+	//glOrtho(-bound, bound,-bound, bound,-bound, bound);
 
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	std::cerr << eye.x << ',' << eye.z << '\t';
+	std::cerr << center.x << ',' << center.z << std::endl;
+	glm::mat4 isoViewMatrix = glm::lookAt(eye, center, up);
+	glLoadMatrixf(glm::value_ptr(isoViewMatrix));
 
     // load resources, initialize the OpenGL states, ...
 
@@ -272,18 +352,19 @@ int main()
                 glViewport(0, 0, event.size.width, event.size.height);
             }
         }
-
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw...
 		display();
 		keyboard();
+		onMouse();
         // end the current frame (internally swaps the front and back buffers)
         window.display();
     }
-
+	
     // release resources...
+	/*glDisable(GL_DEPTH);*/
 
     return 0;
 }
