@@ -94,9 +94,9 @@ Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
 
       for (auto i(indices_.begin()), end(indices_.end()); i != end; ++i)
       {
-         if (i->x < 0 || i->x >= vertices_.size() ||
-             i->y < 0 || i->y >= normals_.size() ||
-             i->z < 0 || i->z >= texture_coords_.size())
+         if (i->x < 0 || static_cast<size_t>(i->x) >= vertices_.size() ||
+             i->y < 0 || static_cast<size_t>(i->y) >= normals_.size() ||
+             i->z < 0 || static_cast<size_t>(i->z) >= texture_coords_.size())
          {
             throw std::runtime_error("Index out of bounds!");
          }
