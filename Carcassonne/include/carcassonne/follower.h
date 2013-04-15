@@ -22,7 +22,8 @@
 // File: carcassonne/follower.h
 //
 // Represents one of a player's follower tokens which can be placed on tiles
-// to score points
+// to score points.  Followers can also have no owner player to indicate places
+// where followers can be placed on tiles.
 
 #ifndef CARCASSONNE_FOLLOWER_H_
 #define CARCASSONNE_FOLLOWER_H_
@@ -35,27 +36,27 @@ class Player;
 class Follower
 {
 public:
-   Follower(Player& owner);
+   Follower();
+   Follower(Player* owner);
 
    
-   
+   // called by Player::draw() if the follower is idle, or Tile::draw() (after
+   // setting up the tile's local transform matrix) if the follower is not idle
+   // or has no owner player.
    void draw() const;
 
 private:
-   Player& owner_;
+   Player* owner_;
 
    //gfx::Mesh* mesh_;  // the mesh used to render the follower
    glm::vec4 color_;
 
    bool idle_;       // false if this follower is currently in use.
 
-   glm::vec3 position_; // position of follower. When idle, only x and y coordinates are used.
+   glm::vec3 position_; // position of follower. When idle, position is absolute in the HUD camera's world space.
+                        // When follower is not idle, position is relative to the tile it is placed on.
    bool farming_; // followers are rendered laying down when farming.  Ignored when idle
-   float rotation_;  // rotation around y-axis.  Ignored when idle
-
-   // Disable copy-construction & assignment - do not implement
-   Follower(const Follower&);
-   void operator=(const Follower&);
+   float rotation_;  // rotation around y-axis.  Ignored when idle   
 };
 
 } // namespace carcassonne

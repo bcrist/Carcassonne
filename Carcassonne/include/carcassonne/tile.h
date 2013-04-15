@@ -30,7 +30,39 @@
 
 #include "carcassonne/gfx/sprite.h"
 
+#include "carcassonne/features/feature.h"
+#include "carcassonne/features/city.h"
+#include "carcassonne/features/cloister.h"
+#include "carcassonne/features/farm.h"
+#include "carcassonne/features/road.h"
+
 namespace carcassonne {
+
+// Structure that represents the features present on a particular side of a tile
+struct TileEdge
+{
+   TileEdge(features::Farm* farm);
+   TileEdge(features::Road* road, features::Farm* cw_farm, features::Farm* ccw_farm);
+   TileEdge(features::City* city);
+
+   enum Type {
+      TYPE_FARM = 0,  // a single farm over the entire edge
+      TYPE_ROAD = 1,  // a road in the center with 2 farms (possibly the same farm) on either side
+      TYPE_CITY = 2   // a single city over the entire edge
+   } type;
+
+   bool open;  // true if there is no tile connecting to this side
+
+   union {
+      features::Farm* farm;
+      features::Road* road;
+      features::City* city;
+   };
+
+   // these are null if type is not TYPE_ROAD
+   features::Farm* cw_farm;
+   features::Farm* ccw_farm;
+};
 
 class Tile
 {
@@ -74,9 +106,7 @@ public:
       SIDE_SOUTH = 2,
       SIDE_WEST = 3
    };
-
    
-
    // Constructs a tile of one of the TYPE_EMPTY_* types
    Tile(Type type);
 
@@ -86,24 +116,42 @@ public:
    void setType(Type type);
 
 
+   // Rotates the tile if it is a TYPE_FLOATING tile
+   void rotateClockwise();
+   void rotateCounterclockwise();
 
-   void draw();
+   // Returns the type of features which currently exist on the requested side.
+   const TileEdge& getEdge(Side side);
+
+   std::vector<features::Feature*> getFeatures();
+
+   // called when a tile is placed 
+   void closeSide(Side side, Tile* new_neighbor);
+
+   // 
+   void closeDiagonal(Side clockwise_from, Tile* new_diagonal_neighbor);
+
+
+   void draw() const;
+
+   void replaceCity(const features::City& old_city, const features::City& new_city);
+   void replaceFarm(const features::Farm& old_farm, const features::Farm& new_farm);
+   void replaceRoad(const features::Road& old_road, const features::Road& new_road);
    
 
 private:
    glm::vec4 color_;
-   gfx::Sprite* sprite_;
+   gfx::Sprite* sprite_;   // gfx::Mesh* instead perhaps?
 
    glm::vec3 position_;
    Rotation rotation_;
-   
 
-   glm::ivec2 board_position_;
+   TileEdge edges_[4];
 
-   std::vector<std::shared_ptr<City> > cities_;
-   std::vector<std::shared_ptr<Road> > roads_;
-   std::vector<std::shared_ptr<Farm> > farms_;
-   std::unique_ptr<Cloister> cloister_;
+   std::vector<std::shared_ptr<features::City> > cities_;
+   std::vector<std::shared_ptr<features::Road> > roads_;
+   std::vector<std::shared_ptr<features::Farm> > farms_;
+   std::unique_ptr<features::Cloister> cloister_;
 
    // Disable copy-construction & assignment - do not implement
    Tile(const Tile&);

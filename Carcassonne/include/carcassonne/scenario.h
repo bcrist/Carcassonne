@@ -30,6 +30,7 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <vector>
+#include <SFML/System.hpp>
 
 #include "carcassonne/board.h"
 #include "carcassonne/pile.h"
@@ -40,15 +41,28 @@ namespace carcassonne {
 class Scenario
 {
 public:
+
+   enum Phase {
+      PHASE_TILE_PLACEMENT = 0,
+      PHASE_FOLLOWER_PLACEMENT = 1
+   };
+
    Scenario(std::vector<Player*>&& players);
+
+   void simulate(sf::Time delta);
+
+   void draw() const;
+
 
 private:
    Board board_;
    Pile draw_pile_;
-
    std::vector<Player*> players_;
+
    std::vector<Player*>::iterator current_player_; // iterator to the player
                                                    // whose turn it is.
+   Phase current_phase_;                // the phase of the current player's turn
+   std::unique_ptr<Tile> current_tile_; // the tile that is currently being played
 
    // Disable copy-construction & assignment - do not implement
    Scenario(const Scenario&);

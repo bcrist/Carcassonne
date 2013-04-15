@@ -70,7 +70,7 @@ public:
    // increase score_;
    int scorePoints(int points);
 
-   // display this player's non-idle followers and HUD if it's this player's turn
+   // display this player's HUD if it's their turn
    void draw() const;
 
 private:

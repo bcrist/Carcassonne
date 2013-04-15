@@ -31,6 +31,22 @@
 
 #include "carcassonne/tile.h"
 
+namespace std {
+
+// std::hash specialization for glm::ivec2 to allow use in std::unordered_*
+// containers.
+template<>
+struct hash<glm::ivec2>
+{
+   size_t operator()(const glm::ivec2& value);
+   // size_t y = std::hash<int>()(value.y);
+   // y = (y >> (sizeof(size_t) * 4)) ^ (y << (sizeof(size_t) * 4));
+   // return std::hash<int>()(value.x) ^ y;
+};
+
+
+} // namespace std
+
 namespace carcassonne {
 
 class Board

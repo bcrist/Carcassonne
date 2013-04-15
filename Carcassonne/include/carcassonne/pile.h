@@ -45,9 +45,12 @@ public:
    // assert that tile's type is TYPE_FLOATING
    void add(std::unique_ptr<Tile>&& tile);
 
+   // move all tiles from other to the top of this pile.
+   void add(Pile&& other);
+
    void shuffle();
 
-   std::unique_ptr<Tile> draw();
+   std::unique_ptr<Tile> remove();
 
 private:
    std::mt19937 prng_; // PRNG => psudo-random number generator
