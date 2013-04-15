@@ -46,8 +46,8 @@ struct Sprite
    
    // draw the sprite in the XY plane from (0,0,0) to (1,1,0)
    void draw() const;
-   void draw(GLenum mode) const;
-   void draw(GLenum mode, const glm::vec4& color) const;
+   void draw(GLenum texture_mode) const;
+   void draw(GLenum texture_mode, const glm::vec4& texture_env_color) const;
 
    const Texture* texture;
    Rect texture_coords;

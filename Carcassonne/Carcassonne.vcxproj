@@ -16,8 +16,10 @@
     <ClCompile Include="src\carcassonne\db\stmt.cc" />
     <ClCompile Include="src\carcassonne\game.cc" />
     <ClCompile Include="src\carcassonne\gfx\graphics_configuration.cc" />
+    <ClCompile Include="src\carcassonne\gfx\mesh.cc" />
     <ClCompile Include="src\carcassonne\gfx\ortho_camera.cc" />
     <ClCompile Include="src\carcassonne\gfx\perspective_camera.cc" />
+    <ClCompile Include="src\carcassonne\gfx\sprite.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
     <ClCompile Include="src\carcassonne\main.cc" />
@@ -39,6 +41,7 @@
     <ClInclude Include="include\carcassonne\game.h" />
     <ClInclude Include="include\carcassonne\gfx\camera.h" />
     <ClInclude Include="include\carcassonne\gfx\graphics_configuration.h" />
+    <ClInclude Include="include\carcassonne\gfx\mesh.h" />
     <ClInclude Include="include\carcassonne\gfx\ortho_camera.h" />
     <ClInclude Include="include\carcassonne\gfx\perspective_camera.h" />
     <ClInclude Include="include\carcassonne\gfx\rect.h" />

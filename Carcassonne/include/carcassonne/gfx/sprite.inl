@@ -63,10 +63,10 @@ inline void Sprite::draw() const
    glEnd();
 }
 
-inline void Sprite::draw(GLenum mode) const
+inline void Sprite::draw(GLenum texture_mode) const
 {
    if (texture)
-      texture->enable(mode);
+      texture->enable(texture_mode);
    else
       Texture::disableAny();
 
@@ -78,10 +78,10 @@ inline void Sprite::draw(GLenum mode) const
    glEnd();
 }
 
-inline void Sprite::draw(GLenum mode, const glm::vec4& color) const
+inline void Sprite::draw(GLenum texture_mode, const glm::vec4& texture_env_color) const
 {
    if (texture)
-      texture->enable(mode, color);
+      texture->enable(texture_mode, texture_env_color);
    else
       Texture::disableAny();
 

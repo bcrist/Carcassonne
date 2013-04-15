@@ -81,6 +81,12 @@
     <ClCompile Include="src\sqlite3.c">
       <Filter>Source Files\_lib</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\gfx\sprite.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gfx\mesh.cc">
+      <Filter>Source Files\carcassonne\gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
@@ -163,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\follower.h">
       <Filter>Header Files\carcassonne</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gfx\mesh.h">
+      <Filter>Header Files\carcassonne\gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

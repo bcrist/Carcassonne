@@ -61,7 +61,7 @@ const gfx::Sprite& AssetManager::getSprite(const std::string& name)
    {
       try
       {
-         sprites_.insert(std::make_pair(name, Sprite(*this, name)));
+         sprites_.insert(std::make_pair(name, gfx::Sprite(*this, name)));
       }
       catch (std::runtime_error& err)
       {
@@ -70,6 +70,25 @@ const gfx::Sprite& AssetManager::getSprite(const std::string& name)
       }
    }
    return i->second;
+}
+
+gfx::Mesh* AssetManager::getMesh(const std::string& name)
+{
+   std::unique_ptr<gfx::Mesh>& ptr = meshes_[name];
+
+   if (!ptr)
+   {
+      try
+      {
+         ptr.reset(new gfx::Mesh(*this, name));
+      }
+      catch (const std::runtime_error& err)
+      {
+         std::cerr << "Failed to load mesh \"" << name << "\": " << err.what();
+      }
+   }
+
+   return ptr.get();
 }
 
 } // namespace carcassonne

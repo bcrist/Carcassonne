@@ -19,45 +19,52 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/asset_manager.h
+// File: carcassonne/gfx/mesh.h
+//
+// A mesh is a series of primitives (vertices, normals, texture coordinates) and
+// a texture to apply to them.
 
-#ifndef CARCASSONNE_ASSET_MANAGER_H_
-#define CARCASSONNE_ASSET_MANAGER_H_
+#ifndef CARCASSONNE_GFX_MESH_H_
+#define CARCASSONNE_GFX_MESH_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <unordered_map>
+#include <vector>
 
-#include "carcassonne/db/db.h"
 #include "carcassonne/gfx/texture.h"
-#include "carcassonne/gfx/sprite.h"
-#include "carcassonne/gfx/mesh.h"
 
 namespace carcassonne {
 
-class AssetManager
+class AssetManager;
+
+namespace gfx {
+
+class Mesh
 {
 public:
-   AssetManager(const std::string& filename);
+   Mesh(AssetManager& asset_mgr, const std::string& name);
 
-   db::DB& getDB();
-
-   gfx::Texture* getTexture(const std::string& name);
-
-   const gfx::Sprite& getSprite(const std::string& name);
-
-   gfx::Mesh* getMesh(const std::string& name);
-
+   // make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
+   void draw() const;
+   void draw(GLenum texture_mode) const;
+   void draw(GLenum texture_mode, const glm::vec4& texture_env_color) const;
+   
 private:
-   db::DB db_;
+   void drawCommon() const;
 
-   std::unordered_map<std::string, std::unique_ptr<gfx::Texture> > textures_;
-   std::unordered_map<std::string, gfx::Sprite> sprites_;
-   std::unordered_map<std::string, std::unique_ptr<gfx::Mesh> > meshes_;
+   GLenum primitive_type_;
 
-   AssetManager(const AssetManager&);
-   void operator=(const AssetManager&);
+   std::vector<glm::ivec3> indices_;
+   std::vector<glm::vec3> vertices_;
+   std::vector<glm::vec3> normals_;
+   std::vector<glm::vec3> texture_coords_;
+
+   const Texture* texture_;
+
+   Mesh(const Mesh&);
+   void operator=(const Mesh&);
 };
 
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
 #endif
