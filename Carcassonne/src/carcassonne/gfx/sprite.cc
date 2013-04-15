@@ -19,41 +19,34 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gfx/rect.h
+// File: carcassonne/gfx/sprite.cc
 //
-// Represents an axis-aligned rectangle as the location of its top-left corner,
-// along with its width and height.
+// A sprite is a combination of a texture and a set of coordinates specifying
+// which part of the texture to draw.
 
-#ifndef CARCASSONNE_GFX_RECT_H_
-#define CARCASSONNE_GFX_RECT_H_
-#include "carcassonne/_carcassonne.h"
+#include "carcassonne/gfx/sprite.h"
+
+#include "carcassonne/db/stmt.h"
+#include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
 namespace gfx {
 
-struct Rect
+Sprite::Sprite(AssetManager& asset_mgr, const std::string& name)
 {
-   Rect();
-   Rect(const glm::vec2& position, const glm::vec2& size);
-   Rect(float left, float top, float width, float height);
+   db::DB& db(asset_mgr.getDB());
 
-   float top() const;
-   float bottom() const;
-   float left() const;
-   float right() const;
+   db::Stmt stmt(db, "SELECT texture, x, y, width, height "
+                     "FROM cc_sprites "
+                     "WHERE name = ? LIMIT 1");
+   stmt.bind(1, name);
+   if (!stmt.step())
+      throw db::DB::error("Sprite not found!");
 
-   float width() const;
-   float height() const;
-
-   glm::vec2 center() const;
-
-   glm::vec2 position;
-   glm::vec2 size;
-};
+   texture = asset_mgr.getTexture(stmt.getText(0));
+   this->texture_coords = Rect(float(stmt.getDouble(1)), float(stmt.getDouble(2)),
+                               float(stmt.getDouble(3)), float(stmt.getDouble(4)));
+}
 
 } // namespace carcassonne::gfx
 } // namespace carcassonne
-
-#include "carcassonne/gfx/rect.inl"
-
-#endif

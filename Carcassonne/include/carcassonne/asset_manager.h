@@ -25,10 +25,11 @@
 #define CARCASSONNE_ASSET_MANAGER_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <map>
+#include <unordered_map>
 
-#include "carcassonne/gfx/texture.h"
 #include "carcassonne/db/db.h"
+#include "carcassonne/gfx/texture.h"
+#include "carcassonne/gfx/sprite.h"
 
 namespace carcassonne {
 
@@ -37,12 +38,17 @@ class AssetManager
 public:
    AssetManager(const std::string& filename);
 
+   db::DB& getDB();
+
    gfx::Texture* getTexture(const std::string& name);
+
+   const gfx::Sprite& getSprite(const std::string& name);
 
 private:
    db::DB db_;
 
-   std::map<std::string, std::unique_ptr<gfx::Texture> > textures_;
+   std::unordered_map<std::string, std::unique_ptr<gfx::Texture> > textures_;
+   std::unordered_map<std::string, gfx::Sprite> sprites_;
 
    AssetManager(const AssetManager&);
    void operator=(const AssetManager&);

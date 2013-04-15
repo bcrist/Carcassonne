@@ -31,18 +31,66 @@
 #include "carcassonne/gfx/sprite.h"
 #endif
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace carcassonne {
 namespace gfx {
 
-Sprite::Sprite()
+inline Sprite::Sprite()
    : texture(nullptr)
 {
 }
 
-Sprite::Sprite(const Texture& texture, const Rect& texture_coords)
+inline Sprite::Sprite(const Texture& texture, const Rect& texture_coords)
    : texture(&texture),
      texture_coords(texture_coords)
 {
+}
+
+// draw the sprite in the XY plane from (0,0,0) to (1,1,0)
+inline void Sprite::draw() const
+{
+   if (texture)
+      texture->enable(GL_MODULATE);
+   else
+      Texture::disableAny();
+
+   glBegin(GL_QUADS);
+      glTexCoord2f(texture_coords.left(),  texture_coords.top());    glVertex2f(0, 1);
+      glTexCoord2f(texture_coords.left(),  texture_coords.bottom()); glVertex2f(0, 0);
+      glTexCoord2f(texture_coords.right(), texture_coords.bottom()); glVertex2f(1, 0);
+      glTexCoord2f(texture_coords.right(), texture_coords.top());    glVertex2f(1, 1);
+   glEnd();
+}
+
+inline void Sprite::draw(GLenum mode) const
+{
+   if (texture)
+      texture->enable(mode);
+   else
+      Texture::disableAny();
+
+   glBegin(GL_QUADS);
+      glTexCoord2f(texture_coords.left(),  texture_coords.top());    glVertex2f(0, 1);
+      glTexCoord2f(texture_coords.left(),  texture_coords.bottom()); glVertex2f(0, 0);
+      glTexCoord2f(texture_coords.right(), texture_coords.bottom()); glVertex2f(1, 0);
+      glTexCoord2f(texture_coords.right(), texture_coords.top());    glVertex2f(1, 1);
+   glEnd();
+}
+
+inline void Sprite::draw(GLenum mode, const glm::vec4& color) const
+{
+   if (texture)
+      texture->enable(mode, color);
+   else
+      Texture::disableAny();
+
+   glBegin(GL_QUADS);
+      glTexCoord2f(texture_coords.left(),  texture_coords.top());    glVertex2f(0, 1);
+      glTexCoord2f(texture_coords.left(),  texture_coords.bottom()); glVertex2f(0, 0);
+      glTexCoord2f(texture_coords.right(), texture_coords.bottom()); glVertex2f(1, 0);
+      glTexCoord2f(texture_coords.right(), texture_coords.top());    glVertex2f(1, 1);
+   glEnd();
 }
 
 } // namespace carcassonne::gfx

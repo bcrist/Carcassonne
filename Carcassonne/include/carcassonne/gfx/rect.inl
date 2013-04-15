@@ -44,6 +44,12 @@ inline Rect::Rect(const glm::vec2& position, const glm::vec2& size)
 {
 }
 
+inline Rect::Rect(float left, float top, float width, float height)
+   : position(left, top),
+     size(width, height)
+{
+}
+
 inline float Rect::top() const
 {
    return position.y;

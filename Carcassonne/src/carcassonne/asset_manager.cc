@@ -30,6 +30,11 @@ AssetManager::AssetManager(const std::string& filename)
 {
 }
 
+db::DB& AssetManager::getDB()
+{
+   return db_;
+}
+
 gfx::Texture* AssetManager::getTexture(const std::string& name)
 {
    std::unique_ptr<gfx::Texture>& ptr = textures_[name];
@@ -47,6 +52,24 @@ gfx::Texture* AssetManager::getTexture(const std::string& name)
    }
 
    return ptr.get();
+}
+
+const gfx::Sprite& AssetManager::getSprite(const std::string& name)
+{
+   auto i(sprites_.find(name));
+   if (i == sprites_.end())
+   {
+      try
+      {
+         sprites_.insert(std::make_pair(name, Sprite(*this, name)));
+      }
+      catch (std::runtime_error& err)
+      {
+         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what();
+         
+      }
+   }
+   return i->second;
 }
 
 } // namespace carcassonne

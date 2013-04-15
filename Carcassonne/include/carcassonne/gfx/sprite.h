@@ -28,17 +28,27 @@
 #define CARCASSONNE_GFX_SPRITE_H_
 #include "carcassonne/_carcassonne.h"
 
+#include "carcassonne/db/db.h"
 #include "carcassonne/gfx/texture.h"
 #include "carcassonne/gfx/rect.h"
 
 namespace carcassonne {
+
+class AssetManager;
+
 namespace gfx {
 
 struct Sprite
 {
    Sprite();
    Sprite(const Texture& texture, const Rect& texture_coords);
+   Sprite(AssetManager& asset_mgr, const std::string& name);
    
+   // draw the sprite in the XY plane from (0,0,0) to (1,1,0)
+   void draw() const;
+   void draw(GLenum mode) const;
+   void draw(GLenum mode, const glm::vec4& color) const;
+
    const Texture* texture;
    Rect texture_coords;
 };
