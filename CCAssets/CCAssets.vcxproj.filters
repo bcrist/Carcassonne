@@ -13,17 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\carcassonne">
-      <UniqueIdentifier>{698c5f80-48f4-404f-8af5-a87633c1e266}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\carcassonne\db">
-      <UniqueIdentifier>{86bcf0e9-22ef-4699-be2d-fd9c4ef274bb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\carcassonne\main.cc">
-      <Filter>Source Files\carcassonne</Filter>
-    </ClCompile>
     <ClCompile Include="..\Carcassonne\src\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,10 +22,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Carcassonne\src\carcassonne\db\db.cc">
-      <Filter>Source Files\carcassonne\db</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Carcassonne\src\carcassonne\db\stmt.cc">
-      <Filter>Source Files\carcassonne\db</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\main.cc">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
