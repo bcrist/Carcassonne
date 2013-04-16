@@ -43,6 +43,12 @@
     <Filter Include="Source Files\carcassonne\features">
       <UniqueIdentifier>{5151bc06-d84e-4bbb-aa28-787ea7bbccf2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\carcassonne\scheduling">
+      <UniqueIdentifier>{e3220cd9-d296-4851-9115-72728050cafc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\carcassonne\scheduling">
+      <UniqueIdentifier>{f9c26e5a-758a-44ed-be2d-34829d15c003}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -50,12 +56,6 @@
     </ClCompile>
     <ClCompile Include="src\carcassonne\db\stmt.cc">
       <Filter>Source Files\carcassonne\db</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\game.cc">
-      <Filter>Source Files\carcassonne</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\main.cc">
-      <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
     <ClCompile Include="src\carcassonne\gfx\perspective_camera.cc">
       <Filter>Source Files\carcassonne\gfx</Filter>
@@ -72,9 +72,6 @@
     <ClCompile Include="src\carcassonne\gfx\ortho_camera.cc">
       <Filter>Source Files\carcassonne\gfx</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\asset_manager.cc">
-      <Filter>Source Files\carcassonne</Filter>
-    </ClCompile>
     <ClCompile Include="src\stb_image.c">
       <Filter>Source Files\_lib</Filter>
     </ClCompile>
@@ -87,20 +84,77 @@
     <ClCompile Include="src\carcassonne\gfx\mesh.cc">
       <Filter>Source Files\carcassonne\gfx</Filter>
     </ClCompile>
-    <ClCompile Include="city.cc">
+    <ClCompile Include="board.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="follower.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pile.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scenario.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduler\sequence.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduling\unifier.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tile.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\feature.cc">
       <Filter>Source Files\carcassonne\features</Filter>
     </ClCompile>
-    <ClCompile Include="cloister.cc">
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\road.cc">
       <Filter>Source Files\carcassonne\features</Filter>
     </ClCompile>
-    <ClCompile Include="farm.cc">
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\city.cc">
       <Filter>Source Files\carcassonne\features</Filter>
     </ClCompile>
-    <ClCompile Include="feature.cc">
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\cloister.cc">
       <Filter>Source Files\carcassonne\features</Filter>
     </ClCompile>
-    <ClCompile Include="road.cc">
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\farm.cc">
       <Filter>Source Files\carcassonne\features</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\pile.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\player.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scenario.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\tile.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\asset_manager.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\board.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\follower.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\game.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\main.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scheduling\sequence.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scheduling\unifier.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +241,12 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\gfx\mesh.h">
       <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\github\Carcassonne\Carcassonne\include\carcassonne\scheduling\unifier.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\github\Carcassonne\Carcassonne\include\carcassonne\scheduling\sequence.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
