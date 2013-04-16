@@ -19,61 +19,29 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/board.h
+// File: carcassonne/board.inl
 //
 // Represents a map of the game world - by using a std::unordered_map of tiles
 
+#ifndef CARCASSONNE_BOARD_INL_
+#define CARCASSONNE_BOARD_INL_
+
 #ifndef CARCASSONNE_BOARD_H_
-#define CARCASSONNE_BOARD_H_
-#include "carcassonne/_carcassonne.h"
-
-#include <unordered_map>
-
-#include "carcassonne/tile.h"
+#include "carcassonne/board.h"
+#endif
 
 namespace std {
 
 // std::hash specialization for glm::ivec2 to allow use in std::unordered_*
 // containers.
 template<>
-struct hash<glm::ivec2>
+inline size_t hash<glm::ivec2>::operator()(const glm::ivec2& value)
 {
-   size_t operator()(const glm::ivec2& value);
-   // size_t y = std::hash<int>()(value.y);
-   // y = (y >> (sizeof(size_t) * 4)) ^ (y << (sizeof(size_t) * 4));
-   // return std::hash<int>()(value.x) ^ y;
+   size_t y = std::hash<int>()(value.y);
+   y = (y >> (sizeof(size_t) * 4)) ^ (y << (sizeof(size_t) * 4));
+   return std::hash<int>()(value.x) ^ y;
 };
-
 
 } // namespace std
-
-namespace carcassonne {
-
-class Board
-{
-public:
-   Board();
-
-   Tile* getTileAt(const glm::ivec2& position) const;
-
-   // If tile is a TYPE_EMPTY_* tile, return false if the position already has
-   // a tile of any kind.
-   // If tile is a TYPE_FLOATING tile, return false if the position does not
-   // currently have a TYPE_EMPTY_PLACEABLE tile.
-   bool placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile);
-
-   void draw() const;
-
-private:
-   std::unordered_map<glm::ivec2, std::unique_ptr<Tile> > board_;
-
-   // Disable copy-construction & assignment - do not implement
-   Board(const Board&);
-   void operator=(const Board&);
-};
-
-} // namespace carcassonne
-
-#include "carcassonne/board.inl"
 
 #endif
