@@ -128,6 +128,8 @@
     </ClCompile>
     <ClCompile Include="board.cc">
       <Filter>Source Files</Filter>
+    <ClCompile Include="src\carcassonne\scheduling\unifier.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

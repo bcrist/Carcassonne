@@ -19,48 +19,41 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/features/farm.h
-//
-// Represents a farm.  Farms are objects which can span multiple tiles.
-// They are scored only at the end of the game, based on the number of
-// completed cities which they border.
+// File: carcassonne/scheduling/unifier.cc
 
+#include "carcassonne/scheduling/unifier.h"
 
-#include "carcassonne\features\feature.h"
 namespace carcassonne {
-namespace features {
+namespace scheduling {
 
-Feature::Feature()
+Unifier::Unifier()
 {
+}
+
+Unifier::Unifier(const Unifier& other)
+   : deferred_functions_(other.deferred_functions_)
+{
+}
+
+Unifier& Unifier::operator=(const Unifier& other)
+{
+   deferred_functions_ = other.deferred_functions_;
+   return *this;
+}
+
    
-}
-
-Feature::~Feature(){}
-
-bool Feature::isCity()const
+void Unifier::schedule(const std::function<bool()>& deferred)
 {
-   return getType() == TYPE_CITY;
 }
 
-bool Feature::isCloister()const
+   // call each function in deferred_functions_.  Remove any functions
+   // which return true.  If any functions return false, return
+   // false, otherwise return true;
+bool Unifier::operator()()
 {
-   return getType() == TYPE_CLOISTER;
+   return true;
 }
 
-bool Feature::isFarm()const
-{
-   return getType() == TYPE_FARM;
-}
 
-bool Feature::isRoad()const
-{
-   return getType() == TYPE_ROAD;
-}
-
-void Feature::placeFollower(const Follower& follower)
-{
-
-}
-
-}
-}
+} // namespace scheduling
+} // namespace carcassonne

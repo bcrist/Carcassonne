@@ -24,7 +24,7 @@
 // Represents a cloister.  A cloister is only only on one tile, but scores 
 // points based on the 8 neighboring tiles as well.
 
-#include "include\carcassonne\features\cloister.h"
+#include "carcassonne\features\cloister.h"
 
 namespace carcassonne {
 namespace features {

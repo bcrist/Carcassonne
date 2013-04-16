@@ -25,7 +25,7 @@
 // They are scored only at the end of the game, based on the number of
 // completed cities which they border.
 
-#include "include\carcassonne\features\farm.h"
+#include "carcassonne\features\farm.h"
 
 namespace carcassonne {
 namespace features {
