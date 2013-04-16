@@ -238,6 +238,8 @@ void Game::simulate(sf::Time delta)
 
 void Game::draw()
 {
+   sf::Clock clock;
+
    glClear(GL_COLOR_BUFFER_BIT);
    game_camera_.use();
 
@@ -248,6 +250,8 @@ void Game::draw()
    mesh_->draw();
 
    glPopMatrix();
+
+   std::cerr << clock.getElapsedTime().asMicroseconds() << std::endl;
 }
 
 bool Game::isSimulationRunning() const
