@@ -18,7 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-// Author: Benjamin Crist
+// Author: Benjamin Crist / Josh Douglas
 // File: carcassonne/features/road.h
 //
 // Represents a road.  Roads are objects which can span multiple tiles.

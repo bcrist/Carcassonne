@@ -18,7 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-// Author: Benjamin Crist
+// Author: Benjamin Crist / Josh Douglas
 // File: carcassonne/features/feature.h
 //
 // Base class for cities, cloisters, farms, and roads.
