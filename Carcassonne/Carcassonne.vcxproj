@@ -11,11 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="board.cc" />
     <ClCompile Include="city.cc" />
     <ClCompile Include="cloister.cc" />
     <ClCompile Include="farm.cc" />
     <ClCompile Include="feature.cc" />
+    <ClCompile Include="follower.cc" />
+    <ClCompile Include="pile.cc" />
+    <ClCompile Include="player.cc" />
     <ClCompile Include="road.cc" />
+    <ClCompile Include="scenario.cc" />
     <ClCompile Include="src\carcassonne\asset_manager.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
     <ClCompile Include="src\carcassonne\db\stmt.cc" />
@@ -31,6 +36,7 @@
     <ClCompile Include="src\carcassonne\scheduler\sequence.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
+    <ClCompile Include="tile.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\asset_manager.h" />

@@ -111,6 +111,24 @@
     <ClCompile Include="src\carcassonne\scheduler\sequence.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
+    <ClCompile Include="tile.cc">
+      <Filter>Source Files\carcassonne</Filter>
+    </ClCompile>
+    <ClCompile Include="scenario.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pile.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="follower.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
