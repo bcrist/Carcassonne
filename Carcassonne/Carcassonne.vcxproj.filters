@@ -108,6 +108,9 @@
     <ClCompile Include="road.cc">
       <Filter>Source Files\carcassonne\features</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduler\sequence.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">

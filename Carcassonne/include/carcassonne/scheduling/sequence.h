@@ -36,7 +36,7 @@ class Sequence
 public:
    Sequence();
    Sequence(const Sequence& other);
-   void operator=(const Sequence& other);
+   Sequence& operator=(const Sequence& other);
    
    void schedule(const std::function<bool()>& deferred);
 

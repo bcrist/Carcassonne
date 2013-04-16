@@ -106,7 +106,7 @@ void City::join(const City& other)
    {
       return;
    }
-   else if ()
+   //else if ()
 
 }
 

@@ -31,12 +31,14 @@ Sequence::Sequence()
 }
 
 Sequence::Sequence(const Sequence& other)
-   : deferred_functions_(
+   : deferred_functions_(other.deferred_functions_)
 {
 }
 
-void Sequence::operator=(const Sequence& other)
+Sequence& Sequence::operator=(const Sequence& other)
 {
+   deferred_functions_ = other.deferred_functions_;
+   return *this;
 }
 
    
@@ -49,6 +51,7 @@ void Sequence::schedule(const std::function<bool()>& deferred)
    // false, otherwise return true;
 bool Sequence::operator()()
 {
+   return true;
 }
 
 

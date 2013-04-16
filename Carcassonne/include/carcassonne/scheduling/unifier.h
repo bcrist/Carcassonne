@@ -36,7 +36,7 @@ class Unifier
 public:
    Unifier();
    Unifier(const Unifier& other);
-   void operator=(const Unifier& other);
+   Unifier& operator=(const Unifier& other);
 
    void schedule(const std::function<bool()>& deferred);
 

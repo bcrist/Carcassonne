@@ -502,7 +502,12 @@ int main(int argc, char** argv)
    if (result < 0)
       std::cout << std::endl
                 << "Usage: " << std::endl
-                << "   " << (argc > 0 ? argv[0] : "CCAssets") << " <database file> <operation> <operation parameters>" << std::endl;
+                << "   " << (argc > 0 ? argv[0] : "CCAssets") << " <database file> <operation> <operation parameters>" << std::endl
+                << std::endl
+                << "Operations:" << std::endl
+                << "   texture   Create a texture asset by embedding an image file." << std::endl
+                << "   sprite    Specify texture and texture coordinates for a sprite asset." << std::endl
+                << "   obj       Create a mesh asset from a Wavefront .OBJ file (only v, vn, vt, f supported)." << std::endl;
 
    return result;
 }
