@@ -68,7 +68,7 @@ public:
    Follower* getIdleFollower();
 
    // increase score_;
-   int scorePoints(int points);
+   void scorePoints(int points);
 
    // display this player's HUD if it's their turn
    void draw() const;
