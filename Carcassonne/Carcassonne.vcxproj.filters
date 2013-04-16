@@ -43,6 +43,12 @@
     <Filter Include="Source Files\carcassonne\features">
       <UniqueIdentifier>{5151bc06-d84e-4bbb-aa28-787ea7bbccf2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\carcassonne\scheduling">
+      <UniqueIdentifier>{b549ab9c-5a9c-489e-940c-9298ce009e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\carcassonne\scheduling">
+      <UniqueIdentifier>{f938d635-f493-4b11-ae4f-15c05975fd14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -187,6 +193,12 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\gfx\mesh.h">
       <Filter>Header Files\carcassonne\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\sequence.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\unifier.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
