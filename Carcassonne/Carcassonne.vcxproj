@@ -27,11 +27,6 @@
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scheduling\sequence.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scheduling\unifier.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\tile.cc" />
-    <ClCompile Include="board.cc" />
-    <ClCompile Include="follower.cc" />
-    <ClCompile Include="pile.cc" />
-    <ClCompile Include="player.cc" />
-    <ClCompile Include="scenario.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
     <ClCompile Include="src\carcassonne\db\stmt.cc" />
     <ClCompile Include="src\carcassonne\gfx\graphics_configuration.cc" />
@@ -41,11 +36,8 @@
     <ClCompile Include="src\carcassonne\gfx\sprite.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
-    <ClCompile Include="src\carcassonne\scheduler\sequence.cc" />
-    <ClCompile Include="src\carcassonne\scheduling\unifier.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
-    <ClCompile Include="tile.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\github\Carcassonne\Carcassonne\include\carcassonne\scheduling\sequence.h" />

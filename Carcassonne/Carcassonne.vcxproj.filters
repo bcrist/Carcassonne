@@ -84,30 +84,6 @@
     <ClCompile Include="src\carcassonne\gfx\mesh.cc">
       <Filter>Source Files\carcassonne\gfx</Filter>
     </ClCompile>
-    <ClCompile Include="board.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="follower.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pile.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scenario.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\scheduler\sequence.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\scheduling\unifier.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tile.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\feature.cc">
       <Filter>Source Files\carcassonne\features</Filter>
     </ClCompile>
