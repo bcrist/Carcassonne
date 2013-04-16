@@ -50,4 +50,4 @@ void Follower::draw()const
 }
 
 
-}
+}// namespace carcassonne
