@@ -31,9 +31,10 @@
 #include "carcassonne/follower.h"
 
 namespace carcassonne {
-namespace features {
 
 class Tile;
+
+namespace features {
 
 class Feature : public std::enable_shared_from_this<Feature>
 {
@@ -49,7 +50,7 @@ public:
    Feature();
    virtual ~Feature(); 
 
-   virtual Type getType() const; // returns the type of feature this is.
+   virtual Type getType() const = 0; // returns the type of feature this is.
    bool isCity() const;          // If Feature* pointers are used, this allows
    bool isCloister() const;      // them to be reliably converted to the proper
    bool isFarm() const;          // type using static_cast (avoiding use of RTTI)
@@ -58,13 +59,13 @@ public:
    // returns true if this feature is complete, and can be scored immediately.
    // After each turn, this is called on each feature of the placed tile, and
    // if it returns true, the feature's score() function is called.
-   virtual bool isComplete() const;
+   virtual bool isComplete() const = 0;
 
    // Called when a feature becomes complete and at the end of the game to
    // award points to the player(s) who have the most followers in/on the
    // feature.  After scoring, the feature's followers are returned to
    // idle state.
-   virtual void score();
+   virtual void score() = 0;
 
    void placeFollower(const Follower& follower);
 

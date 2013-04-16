@@ -11,6 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="city.cc" />
+    <ClCompile Include="cloister.cc" />
+    <ClCompile Include="farm.cc" />
+    <ClCompile Include="feature.cc" />
+    <ClCompile Include="road.cc" />
     <ClCompile Include="src\carcassonne\asset_manager.cc" />
     <ClCompile Include="src\carcassonne\db\db.cc" />
     <ClCompile Include="src\carcassonne\db\stmt.cc" />

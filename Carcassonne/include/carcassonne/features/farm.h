@@ -29,7 +29,7 @@
 #define CARCASSONNE_FEATURES_FARM_H_
 
 #include "carcassonne/features/feature.h"
-
+#include "carcassonne/features/city.h"
 namespace carcassonne {
 namespace features {
 

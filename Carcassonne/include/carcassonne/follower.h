@@ -38,6 +38,7 @@ class Follower
 public:
    Follower();
    Follower(Player* owner);
+   Player* getOwner()const;
 
    
    // called by Player::draw() if the follower is idle, or Tile::draw() (after

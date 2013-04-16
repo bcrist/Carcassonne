@@ -87,6 +87,21 @@
     <ClCompile Include="src\carcassonne\gfx\mesh.cc">
       <Filter>Source Files\carcassonne\gfx</Filter>
     </ClCompile>
+    <ClCompile Include="city.cc">
+      <Filter>Source Files\carcassonne\features</Filter>
+    </ClCompile>
+    <ClCompile Include="cloister.cc">
+      <Filter>Source Files\carcassonne\features</Filter>
+    </ClCompile>
+    <ClCompile Include="farm.cc">
+      <Filter>Source Files\carcassonne\features</Filter>
+    </ClCompile>
+    <ClCompile Include="feature.cc">
+      <Filter>Source Files\carcassonne\features</Filter>
+    </ClCompile>
+    <ClCompile Include="road.cc">
+      <Filter>Source Files\carcassonne\features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
