@@ -78,6 +78,8 @@ private:
 
    glm::vec3 hover_position_;
 
+   gfx::Mesh* mesh_;
+
 };
 
 } // namespace carcassonne

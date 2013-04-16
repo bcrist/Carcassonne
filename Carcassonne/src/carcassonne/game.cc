@@ -52,11 +52,10 @@ int Game::run()
    graphicsConfigChanged();
    clock_.restart();
 
-   game_camera_.setPosition(glm::vec3(10, 10, 10));
+   game_camera_.setPosition(glm::vec3(100, 100, 100));
    game_camera_.setTarget(glm::vec3(0,0,0));
 
-   gfx::Texture* tex(assets_.getTexture("test"));
-   tex->enable(GL_REPLACE);
+   mesh_ = assets_.getMesh("follower");
    
    while (window_.isOpen())
    {
@@ -245,14 +244,8 @@ void Game::draw()
    glPushMatrix();
    glTranslatef(hover_position_.x, hover_position_.y, hover_position_.z);
 
-   glColor3f(0,1,1);
-
-   glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex3f(-1, 0, -1);
-      glTexCoord2f(0, 1); glVertex3f(-1, 0,  1);
-      glTexCoord2f(1, 1); glVertex3f( 1, 0,  1);
-      glTexCoord2f(1, 0); glVertex3f( 1, 0, -1);
-   glEnd();
+   glColor4f(1,1,1,1);
+   mesh_->draw();
 
    glPopMatrix();
 }

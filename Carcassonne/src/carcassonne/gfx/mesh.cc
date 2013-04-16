@@ -81,7 +81,7 @@ Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
       db::Stmt stmt(db, "SELECT type, x, y, z "
                         "FROM cc_mesh_data "
                         "WHERE mesh_id = ? "
-                        "ORDER BY mesh_id, type, index");
+                        "ORDER BY mesh_id, type, n");
       stmt.bind(1, id);
       while (stmt.step())
       {
