@@ -4,10 +4,27 @@
 #include <iomanip>
 #include <algorithm>
 #include <iterator>
+#include <map>
 
 #include "carcassonne/db/db.h"
 #include "carcassonne/db/stmt.h"
 #include "carcassonne/db/transaction.h"
+
+/*
+bool operator<(const glm::vec3& a, const glm::vec3& b)
+{
+   if (a.x < b.x)
+      return true;
+   else if (a.x == b.x)
+   {
+      if (a.y < b.y)
+         return true;
+      else if (a.y == b.y && a.z < b.z)
+         return true;
+   }
+   return false;
+}
+*/
 
 int texture(int argc, char** argv)
 {
@@ -164,23 +181,126 @@ int mesh(int argc, char** argv)
               "CREATE TABLE IF NOT EXISTS cc_mesh_data ("
               "mesh_id INTEGER, "
               "type INTEGER, "
-              "index INTEGER, "
+              "n INTEGER, "
               "x NUMERIC, "
               "y NUMERIC, "
               "z NUMERIC, "
-              "PRIMARY KEY (mesh_id, type, index));");
+              "PRIMARY KEY (mesh_id, type, n));");
 
       
 
       carcassonne::db::Stmt s_mesh(db, "INSERT OR REPLACE INTO cc_meshes (name, primitive_type, texture, indices, vertices, normals, texture_coords) VALUES (?, ?, ?, ?, ?, ?, ?);");
-      carcassonne::db::Stmt s_data(db, "INSERT OR REPLACE INTO cc_mesh_data (mesh_id, type, index, x, y, z) VALUES (?, ?, ?, ?, ?, ?);");
+      carcassonne::db::Stmt s_data(db, "INSERT OR REPLACE INTO cc_mesh_data (mesh_id, type, n, x, y, z) VALUES (?, ?, ?, ?, ?, ?);");
 
+      std::vector<glm::dvec3> vertices;
+      std::vector<glm::dvec3> normals;
+      std::vector<glm::dvec3> texture_coords;
+      std::vector<std::vector<glm::ivec3> > faces;
 
+      std::map<int, int> v_map;
+      std::map<int, int> n_map;
+      std::map<int, int> t_map;
+
+      int next_v_index = 0;
+      int next_n_index = 0;
+      int next_t_index = 0;
 
       std::ifstream ifs(source, std::ifstream::in);
       std::string line;
       while (std::getline(ifs, line))
       {
+         if (line.length() < 1)
+            continue;   // skip blank lines
+
+         if (line[0] == '#')
+            continue;   // skip comment lines
+
+         std::istringstream iss(line);
+
+         std::string operation;
+
+         iss >> operation;
+
+         if (operation == "v")
+         {
+            glm::dvec3 v;
+            iss >> v.x >> v.y >> v.z;
+
+            auto i (std::find(vertices.begin(), vertices.end(), v));
+            if (i == vertices.end())
+            {
+               v_map[next_v_index++] = vertices.size();
+               vertices.push_back(v);
+            }
+            else
+            {
+               v_map[next_v_index++] = i - vertices.begin();
+            }
+         }
+         else if (operation == "vn")
+         {
+            glm::dvec3 n;
+            iss >> n.x >> n.y >> n.z;
+
+            auto i (std::find(normals.begin(), normals.end(), n));
+            if (i == normals.end())
+            {
+               n_map[next_n_index++] = normals.size();
+               normals.push_back(n);
+            }
+            else
+            {
+               n_map[next_n_index++] = i - normals.begin();
+            }
+         }
+         else if (operation == "vt")
+         {
+            glm::dvec3 t;
+            iss >> t.x >> t.y;
+
+            auto i (std::find(texture_coords.begin(), texture_coords.end(), t));
+            if (i == texture_coords.end())
+            {
+               t_map[next_t_index++] = texture_coords.size();
+               texture_coords.push_back(t);
+            }
+            else
+            {
+               t_map[next_t_index++] = i - texture_coords.begin();
+            }
+         }
+         else if (operation == "f")
+         {
+            std::cout << "f: ";
+            
+            glm::ivec3 i;
+
+            std::string str;
+            {
+               std::getline(iss, str, '/');
+               std::istringstream iss2(str);
+               iss2 >> i.x;
+               i.x = v_map[i.x];
+            }
+
+            {
+               std::getline(iss, str, '/');
+               std::istringstream iss2(str);
+               iss2 >> i.y;
+               i.x = n_map[i.y];
+            }
+
+            {
+               std::getline(iss, str, '/');
+               std::istringstream iss2(str);
+               iss2 >> i.z;
+            }
+
+            std::cout << i.x << ',' << i.y << ',' << i.z;
+
+            std::cout << std::endl;
+
+         }
       }
 
 
