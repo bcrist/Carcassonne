@@ -19,11 +19,9 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/features/farm.h
+// File: carcassonne/features/road.h
 //
-// Represents a farm.  Farms are objects which can span multiple tiles.
-// They are scored only at the end of the game, based on the number of
-// completed cities which they border.
+// Represents a road.  Roads are objects which can span multiple tiles.
 
 
 #include "carcassonne\features\road.h"
