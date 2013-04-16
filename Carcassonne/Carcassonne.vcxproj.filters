@@ -43,12 +43,6 @@
     <Filter Include="Source Files\carcassonne\features">
       <UniqueIdentifier>{5151bc06-d84e-4bbb-aa28-787ea7bbccf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\carcassonne\scheduling">
-      <UniqueIdentifier>{b549ab9c-5a9c-489e-940c-9298ce009e19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\carcassonne\scheduling">
-      <UniqueIdentifier>{f938d635-f493-4b11-ae4f-15c05975fd14}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -107,29 +101,6 @@
     </ClCompile>
     <ClCompile Include="road.cc">
       <Filter>Source Files\carcassonne\features</Filter>
-    </ClCompile>
-    <ClCompile Include="src\carcassonne\scheduler\sequence.cc">
-      <Filter>Source Files\carcassonne\scheduling</Filter>
-    </ClCompile>
-    <ClCompile Include="tile.cc">
-      <Filter>Source Files\carcassonne</Filter>
-    </ClCompile>
-    <ClCompile Include="scenario.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pile.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="follower.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="board.cc">
-      <Filter>Source Files</Filter>
-    <ClCompile Include="src\carcassonne\scheduling\unifier.cc">
-      <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,12 +187,6 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\gfx\mesh.h">
       <Filter>Header Files\carcassonne\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="include\carcassonne\scheduling\sequence.h">
-      <Filter>Header Files\carcassonne\scheduling</Filter>
-    </ClInclude>
-    <ClInclude Include="include\carcassonne\scheduling\unifier.h">
-      <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
