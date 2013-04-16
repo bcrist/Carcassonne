@@ -54,6 +54,9 @@ int Game::run()
 
    game_camera_.setPosition(glm::vec3(10, 10, 10));
    game_camera_.setTarget(glm::vec3(0,0,0));
+
+   gfx::Texture* tex(assets_.getTexture("test"));
+   tex->enable(GL_REPLACE);
    
    while (window_.isOpen())
    {
@@ -245,10 +248,10 @@ void Game::draw()
    glColor3f(0,1,1);
 
    glBegin(GL_QUADS);
-      glVertex3f(-0.5, 0, -0.5);
-      glVertex3f(-0.5, 0,  0.5);
-      glVertex3f( 0.5, 0,  0.5);
-      glVertex3f( 0.5, 0, -0.5);
+      glTexCoord2f(0, 0); glVertex3f(-1, 0, -1);
+      glTexCoord2f(0, 1); glVertex3f(-1, 0,  1);
+      glTexCoord2f(1, 1); glVertex3f( 1, 0,  1);
+      glTexCoord2f(1, 0); glVertex3f( 1, 0, -1);
    glEnd();
 
    glPopMatrix();
