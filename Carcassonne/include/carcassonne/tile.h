@@ -41,6 +41,7 @@ namespace carcassonne {
 // Structure that represents the features present on a particular side of a tile
 struct TileEdge
 {
+   TileEdge();
    TileEdge(features::Farm* farm);
    TileEdge(features::Road* road, features::Farm* cw_farm, features::Farm* ccw_farm);
    TileEdge(features::City* city);
@@ -141,7 +142,7 @@ public:
 
 private:
    glm::vec4 color_;
-   gfx::Sprite* sprite_;   // gfx::Mesh* instead perhaps?
+   gfx::Mesh* mesh_;
 
    glm::vec3 position_;
    Rotation rotation_;
