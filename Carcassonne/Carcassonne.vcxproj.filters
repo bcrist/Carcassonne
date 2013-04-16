@@ -244,8 +244,5 @@
     <None Include="include\carcassonne\gfx\sprite.inl">
       <Filter>Header Files\carcassonne\gfx</Filter>
     </None>
-    <None Include="include\carcassonne\board.inl">
-      <Filter>Header Files\carcassonne</Filter>
-    </None>
   </ItemGroup>
 </Project>

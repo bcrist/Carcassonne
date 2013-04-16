@@ -28,7 +28,7 @@
 #define CARCASSONNE_TILE_H_
 #include "carcassonne/_carcassonne.h"
 
-#include "carcassonne/gfx/sprite.h"
+#include "carcassonne/gfx/mesh.h"
 
 #include "carcassonne/features/feature.h"
 #include "carcassonne/features/city.h"

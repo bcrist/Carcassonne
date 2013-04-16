@@ -41,7 +41,7 @@ Follower::Follower(Player* owner)
 
 Player* Follower::getOwner()const
 {
-
+   return nullptr;
 }
 
 void Follower::draw()const

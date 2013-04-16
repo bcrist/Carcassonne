@@ -29,6 +29,8 @@
 #define CARCASSONNE_PLAYER_H_
 #include "carcassonne/_carcassonne.h"
 
+#include <vector>
+
 #include "carcassonne/follower.h"
 
 namespace carcassonne {

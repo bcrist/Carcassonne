@@ -35,7 +35,7 @@ Player::Player(const std::string& name, bool human)
 
 const std::string& Player::getName() const
 {
-   return "Hitler";
+   return name_;
 }
 
 bool Player::isHuman() const
@@ -82,6 +82,7 @@ int Player::getHighScore() const
 // get an idle follower, or null if there are none
 Follower* Player::getIdleFollower()
 {
+   return nullptr;
 }
 
 // increase score_;

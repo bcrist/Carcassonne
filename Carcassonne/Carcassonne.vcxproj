@@ -72,7 +72,6 @@
     <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\carcassonne\board.inl" />
     <None Include="include\carcassonne\db\db.inl" />
     <None Include="include\carcassonne\db\stmt.inl" />
     <None Include="include\carcassonne\db\transaction.inl" />
