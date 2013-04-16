@@ -40,8 +40,9 @@ Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
    db::DB& db(asset_mgr.getDB());
 
    int id;
+   int n_indices, n_vertices, n_normals, n_texture_coords;
    {
-      db::Stmt stmt(db, "SELECT texture, primitive_type, id "
+      db::Stmt stmt(db, "SELECT texture, primitive_type, id, indices, vertices, normals, texture_coords "
                         "FROM cc_meshes "
                         "WHERE name = ? LIMIT 1");
       stmt.bind(1, name);
@@ -65,17 +66,14 @@ Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
       }
 
       id = stmt.getInt(2);
+
+      n_indices = stmt.getInt(3);
+      n_vertices = stmt.getInt(4);
+      n_normals = stmt.getInt(5);
+      n_texture_coords = stmt.getInt(6);
    }
 
    {
-      // CREATE TABLE IF NOT EXISTS cc_mesh_data (
-      // mesh_id INTEGER,
-      // type INTEGER,
-      // index INTEGER,
-      // x INTEGER,
-      // y INTEGER,
-      // z INTEGER,
-      // PRIMARY KEY (mesh_id, type, index)
       db::Stmt stmt(db, "SELECT type, x, y, z "
                         "FROM cc_mesh_data "
                         "WHERE mesh_id = ? "
@@ -85,20 +83,23 @@ Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
       {
          switch (stmt.getInt(0))
          {
-            case 0: indices_.push_back(glm::ivec3(stmt.getInt(1), stmt.getInt(2), stmt.getInt(3))); break;
+            case 0:
+               indices_.push_back(glm::ivec3(stmt.getInt(1), stmt.getInt(2), stmt.getInt(3)));
+               if (vertices_.back().x >= n_vertices)
+                  throw std::runtime_error("Vertex index out of range!");
+               if (normals_.back().y >= n_normals)
+                  throw std::runtime_error("Normal index out of range!");
+               if (texture_coords_.back().x >= n_texture_coords)
+                  throw std::runtime_error("Texture coordinate index out of range!");
+               break;
+
             case 1: vertices_.push_back(glm::vec3(float(stmt.getDouble(1)), float(stmt.getDouble(2)), float(stmt.getDouble(3)))); break;
             case 2: normals_.push_back(glm::vec3(float(stmt.getDouble(1)), float(stmt.getDouble(2)), float(stmt.getDouble(3)))); break;
             case 3: texture_coords_.push_back(glm::vec3(float(stmt.getDouble(1)), float(stmt.getDouble(2)), float(stmt.getDouble(3)))); break;
-         }
-      }
-
-      for (auto i(indices_.begin()), end(indices_.end()); i != end; ++i)
-      {
-         if (i->x < 0 || static_cast<size_t>(i->x) >= vertices_.size() ||
-             i->y < 0 || static_cast<size_t>(i->y) >= normals_.size() ||
-             i->z < 0 || static_cast<size_t>(i->z) >= texture_coords_.size())
-         {
-            throw std::runtime_error("Index out of bounds!");
+            default: 
+               // unknown mesh data type
+               std::cerr << "Unrecognized mesh data type '" << stmt.getInt(0) << "', skipping..." << std::endl;
+               break; 
          }
       }
    }
