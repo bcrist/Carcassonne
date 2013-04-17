@@ -38,9 +38,9 @@ class Pile
 {
 public:
    Pile(); //
-   Pile(int seed);
+   Pile(unsigned int seed);
 
-   void setSeed(int seed);
+   void setSeed(unsigned int seed);
 
    // assert that tile's type is TYPE_FLOATING
    void add(std::unique_ptr<Tile>&& tile);

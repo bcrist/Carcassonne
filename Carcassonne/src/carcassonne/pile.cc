@@ -31,18 +31,18 @@
 namespace carcassonne {
 
 Pile::Pile()
-   : prng_(time(nullptr))
+   : prng_(static_cast<std::mt19937::result_type>(time(nullptr)))
 {
 }
 
-Pile::Pile(int seed)
-   : prng_(seed)
+Pile::Pile(unsigned int seed)
+   : prng_(static_cast<std::mt19937::result_type>(seed))
 {
 }
 
-void Pile::setSeed(int seed)
+void Pile::setSeed(unsigned int seed)
 {
-   prng_.seed(seed);
+   prng_.seed(static_cast<std::mt19937::result_type>(seed));
 }
 
 void Pile::add(std::unique_ptr<Tile>&& tile)
