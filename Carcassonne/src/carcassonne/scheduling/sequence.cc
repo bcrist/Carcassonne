@@ -44,14 +44,24 @@ Sequence& Sequence::operator=(const Sequence& other)
    
 void Sequence::schedule(const std::function<bool()>& deferred)
 {
+   deferred_functions_.push_back(deferred);
 }
 
-   // call each function in deferred_functions_.  Remove any functions
-   // which return true.  If any functions return false, return
-   // false, otherwise return true;
+   // call the first function in deferred_functions_.  Remove it and return true
+   // if it returns true.  Otherwise return false
 bool Sequence::operator()()
 {
-   return true;
+   if (deferred_functions_.empty())
+      return true;
+
+   if (deferred_functions_.front()())
+   {
+      deferred_functions_.erase(deferred_functions_.begin());
+
+      if (deferred_functions_.empty())
+         return true;
+   }
+   return false;
 }
 
 

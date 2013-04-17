@@ -35,7 +35,7 @@ PerspectiveCamera::PerspectiveCamera(const GraphicsConfiguration& gfx_cfg)
      position_(0,0,0),
      target_(0,0,1),
      up_(0,1,0),
-     z_near_(0.1f),
+     z_near_(1.0f),
      z_far_(1000.0f),
      right_(0),
      top_(0)

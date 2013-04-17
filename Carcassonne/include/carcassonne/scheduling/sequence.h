@@ -25,7 +25,7 @@
 #define CARCASSONNE_SCHEDULING_SEQUENCE_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <vector>
+#include <deque>
 #include <functional>
 
 namespace carcassonne {
@@ -40,13 +40,10 @@ public:
    
    void schedule(const std::function<bool()>& deferred);
 
-   // call each function in deferred_functions_.  Remove any functions
-   // which return true.  If any functions return false, return
-   // false, otherwise return true;
    bool operator()();
 
 private:
-   std::vector<std::function<bool()> > deferred_functions_;
+   std::deque<std::function<bool()> > deferred_functions_;
 };
 
 } // namespace scheduling

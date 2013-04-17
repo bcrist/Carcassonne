@@ -44,14 +44,26 @@ Unifier& Unifier::operator=(const Unifier& other)
    
 void Unifier::schedule(const std::function<bool()>& deferred)
 {
+   deferred_functions_.push_back(deferred);
 }
 
-   // call each function in deferred_functions_.  Remove any functions
-   // which return true.  If any functions return false, return
-   // false, otherwise return true;
+// call each function in deferred_functions_.  Remove any functions
+// which return true.  If any functions return false, return
+// false, otherwise return true;
 bool Unifier::operator()()
 {
-   return true;
+   for (auto i(deferred_functions_.begin()), end(deferred_functions_.end()); i != end;)
+   {
+      if ((*i)())
+         i = deferred_functions_.erase(i);
+      else
+         ++i;
+   }
+
+   if (deferred_functions_.empty())
+      return true;
+
+   return false;
 }
 
 

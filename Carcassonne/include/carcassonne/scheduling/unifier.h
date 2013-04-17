@@ -25,7 +25,7 @@
 #define CARCASSONNE_SCHEDULING_UNIFIER_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <vector>
+#include <deque>
 #include <functional>
 
 namespace carcassonne {
@@ -46,7 +46,7 @@ public:
    bool operator()();
 
 private:
-   std::vector<std::function<bool()> > deferred_functions_;
+   std::deque<std::function<bool()> > deferred_functions_;
 };
 
 } // namespace scheduling

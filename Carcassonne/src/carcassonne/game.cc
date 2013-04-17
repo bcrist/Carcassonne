@@ -49,6 +49,9 @@ Game::Game()
 
 int Game::run()
 {
+   gfx_cfg_.v_sync = false;
+   gfx_cfg_.depth_bits = 32;
+
    graphicsConfigChanged();
    clock_.restart();
 
@@ -95,7 +98,7 @@ int Game::run()
 int Game::close()
 {
    int return_value = 0;
-
+   
    if (gfx_cfg_.save_window_location)
    {
       sf::Vector2i pos(window_.getPosition());
@@ -213,6 +216,30 @@ void Game::initOpenGL()
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+   const glm::vec4 material_specular(1,1,1,1);
+   float material_shininess = 25.0f;
+
+   const glm::vec4 light_ambient(0.6f, 0.6f, 0.6f, 1);
+   const glm::vec4 light_diffuse(0.4f, 0.4f, 0.4f, 1);
+   const glm::vec4 light_specular(0.2f, 0.2f, 0.2f, 1);
+   const glm::vec4 light_pos(1, -1, 1, 0);
+   
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(material_specular));
+   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material_shininess);
+
+   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, glm::value_ptr(light_ambient));
+
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, glm::value_ptr(light_diffuse));
+   glLightfv(GL_LIGHT0, GL_SPECULAR, glm::value_ptr(light_specular));
+   glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(light_pos));
+
+   glEnable(GL_DEPTH_TEST);
+   glEnable(GL_LIGHT0);
+   glEnable(GL_COLOR_MATERIAL);
+
+   
+
+
    resize(gfx_cfg_.viewport_size);
 }
 
@@ -240,13 +267,14 @@ void Game::draw()
 {
    sf::Clock clock;
 
-   glClear(GL_COLOR_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    game_camera_.use();
+   glEnable(GL_LIGHTING);
 
    glPushMatrix();
    glTranslatef(hover_position_.x, hover_position_.y, hover_position_.z);
 
-   glColor4f(1,1,1,1);
+   glColor4f(1,0.5,0,1);
    mesh_->draw();
 
    glPopMatrix();
