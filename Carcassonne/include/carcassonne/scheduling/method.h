@@ -19,31 +19,34 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/sequence.h
+// File: carcassonne/scheduling/method.h
 
-#ifndef CARCASSONNE_SCHEDULING_SEQUENCE_H_
-#define CARCASSONNE_SCHEDULING_SEQUENCE_H_
+#ifndef CARCASSONNE_SCHEDULING_METHOD_H_
+#define CARCASSONNE_SCHEDULING_METHOD_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <deque>
 #include <functional>
 
 namespace carcassonne {
 namespace scheduling {
 
-class Sequence
+template <typename F>
+class Method
 {
 public:
-   Sequence();
-   
-   void schedule(const std::function<bool()>& deferred);
+   Method() {}
+   Method(const std::function<F> method) : method_(method) {}
 
-   void clear();
+   bool operator()()
+   {
+      if (method_)
+         method_();
 
-   bool operator()();
+      return true;
+   }
 
 private:
-   std::deque<std::function<bool()> > deferred_functions_;
+   std::function<F> method_;
 };
 
 } // namespace scheduling

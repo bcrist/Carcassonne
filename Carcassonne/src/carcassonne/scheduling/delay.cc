@@ -19,34 +19,53 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/sequence.h
+// File: carcassonne/scheduling/delay.cc
 
-#ifndef CARCASSONNE_SCHEDULING_SEQUENCE_H_
-#define CARCASSONNE_SCHEDULING_SEQUENCE_H_
-#include "carcassonne/_carcassonne.h"
-
-#include <deque>
-#include <functional>
+#include "carcassonne/scheduling/delay.h"
 
 namespace carcassonne {
 namespace scheduling {
 
-class Sequence
+Delay::Delay()
+   : duration_(sf::Time::Zero)
 {
-public:
-   Sequence();
+}
+
+Delay::Delay(sf::Time duration)
+   : duration_(duration)
+{
+}
    
-   void schedule(const std::function<bool()>& deferred);
+sf::Time Delay::getDuration() const
+{
+   return duration_;
+}
 
-   void clear();
+sf::Time Delay::getElapsed() const
+{
+   return timer_.getElapsedTime();
+}
 
-   bool operator()();
+void Delay::reset()
+{
+   timer_.restart();
+}
 
-private:
-   std::deque<std::function<bool()> > deferred_functions_;
-};
+void Delay::reset(sf::Time duration)
+{
+   duration_ = duration;
+   timer_.restart();
+}
+
+void Delay::add(sf::Time duration)
+{
+   duration_ += duration;
+}
+
+bool Delay::operator()()
+{
+   return timer_.getElapsedTime() > duration_;
+}
 
 } // namespace scheduling
 } // namespace carcassonne
-
-#endif

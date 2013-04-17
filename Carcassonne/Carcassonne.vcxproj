@@ -36,6 +36,7 @@
     <ClCompile Include="src\carcassonne\gfx\sprite.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
+    <ClCompile Include="src\carcassonne\scheduling\delay.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
   </ItemGroup>
@@ -66,6 +67,8 @@
     <ClInclude Include="include\carcassonne\pile.h" />
     <ClInclude Include="include\carcassonne\player.h" />
     <ClInclude Include="include\carcassonne\scenario.h" />
+    <ClInclude Include="include\carcassonne\scheduling\delay.h" />
+    <ClInclude Include="include\carcassonne\scheduling\method.h" />
     <ClInclude Include="include\carcassonne\tile.h" />
     <ClInclude Include="include\carcassonne\_carcassonne.h" />
     <ClInclude Include="include\sqlite3.h" />

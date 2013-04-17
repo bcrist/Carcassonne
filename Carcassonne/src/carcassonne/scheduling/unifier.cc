@@ -29,22 +29,15 @@ namespace scheduling {
 Unifier::Unifier()
 {
 }
-
-Unifier::Unifier(const Unifier& other)
-   : deferred_functions_(other.deferred_functions_)
-{
-}
-
-Unifier& Unifier::operator=(const Unifier& other)
-{
-   deferred_functions_ = other.deferred_functions_;
-   return *this;
-}
-
    
 void Unifier::schedule(const std::function<bool()>& deferred)
 {
    deferred_functions_.push_back(deferred);
+}
+
+void Unifier::clear()
+{
+   deferred_functions_.clear();
 }
 
 // call each function in deferred_functions_.  Remove any functions

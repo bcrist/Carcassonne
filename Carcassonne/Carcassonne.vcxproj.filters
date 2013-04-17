@@ -132,6 +132,9 @@
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scheduling\unifier.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduling\delay.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
@@ -222,6 +225,12 @@
       <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\github\Carcassonne\Carcassonne\include\carcassonne\scheduling\sequence.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\delay.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\method.h">
       <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
   </ItemGroup>

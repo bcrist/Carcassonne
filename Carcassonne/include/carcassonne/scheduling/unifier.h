@@ -35,10 +35,10 @@ class Unifier
 {
 public:
    Unifier();
-   Unifier(const Unifier& other);
-   Unifier& operator=(const Unifier& other);
 
    void schedule(const std::function<bool()>& deferred);
+
+   void clear();
 
    // call each function in deferred_functions_.  Remove any functions
    // which return true.  If any functions return false, return

@@ -29,22 +29,15 @@ namespace scheduling {
 Sequence::Sequence()
 {
 }
-
-Sequence::Sequence(const Sequence& other)
-   : deferred_functions_(other.deferred_functions_)
-{
-}
-
-Sequence& Sequence::operator=(const Sequence& other)
-{
-   deferred_functions_ = other.deferred_functions_;
-   return *this;
-}
-
    
 void Sequence::schedule(const std::function<bool()>& deferred)
 {
    deferred_functions_.push_back(deferred);
+}
+
+void Sequence::clear()
+{
+   deferred_functions_.clear();
 }
 
    // call the first function in deferred_functions_.  Remove it and return true
