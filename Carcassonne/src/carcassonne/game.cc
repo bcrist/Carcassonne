@@ -37,6 +37,7 @@
 #include "carcassonne/scheduling/delay.h"
 #include "carcassonne/scheduling/sequence.h"
 #include "carcassonne/scheduling/interpolator.h"
+#include "carcassonne/scheduling/easing/easing.h"
 
 namespace carcassonne {
 
@@ -55,21 +56,72 @@ int Game::run()
 {
    gfx_cfg_.v_sync = false;
    gfx_cfg_.depth_bits = 32;
+   gfx_cfg_.msaa_level = 4;
+   gfx_cfg_.window_mode = gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED;
 
    graphicsConfigChanged();
    clock_.restart();
 
-   game_camera_.setPosition(glm::vec3(100, 100, 100));
+   game_camera_.setPosition(glm::vec3(100, 100, 0));
    game_camera_.setTarget(glm::vec3(0,0,0));
 
    mesh_ = assets_.getMesh("follower");
+   
 
    scheduling::Sequence seq;
-   seq.schedule(scheduling::Delay(sf::seconds(3)));
+   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
+
    seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
       ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
-      glm::vec3(100, 100, 100), glm::vec3(300,1,-200))); 
+      glm::vec3(100, 100, 0), glm::vec3(0,100,100), scheduling::easing::QuadraticInOut())); 
 
+   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
+
+   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
+      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
+      glm::vec3(0, 100, 100), glm::vec3(-100,100,0), scheduling::easing::QuarticInOut())); 
+
+   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
+
+   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
+      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
+      glm::vec3(-100, 100, 0), glm::vec3(0,100,-100), scheduling::easing::SinusoidalInOut())); 
+
+   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
+
+   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
+      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
+      glm::vec3(0, 100, -100), glm::vec3(100,100,0), scheduling::easing::SteppedLinear<16>())); 
+
+   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
+
+   updater_.schedule(seq);
+
+   seq = scheduling::Sequence();
+
+   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
+      ([=](const glm::vec4& color) { follower_color_ = color; }),
+      glm::vec4(1, 0, 0, 1), glm::vec4(0,1,0,1))); 
+
+   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
+      ([=](const glm::vec4& color) { follower_color_ = color; }),
+      glm::vec4(0, 1, 0, 1), glm::vec4(0,0,1,1), scheduling::easing::SteppedLinear<5>())); 
+
+   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
+      ([=](const glm::vec4& color) { follower_color_ = color; }),
+      glm::vec4(0, 0, 1, 1), glm::vec4(1,0,0,1), scheduling::easing::QuinticInOut())); 
+
+   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
+      ([=](const glm::vec4& color) { follower_color_ = color; }),
+      glm::vec4(1, 0, 0, 1), glm::vec4(0,1,0,1))); 
+
+   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
+      ([=](const glm::vec4& color) { follower_color_ = color; }),
+      glm::vec4(0, 1, 0, 1), glm::vec4(0,0,1,1))); 
+
+   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
+      ([=](const glm::vec4& color) { follower_color_ = color; }),
+      glm::vec4(0, 0, 1, 1), glm::vec4(1,0,0,1))); 
 
    updater_.schedule(seq);
    
@@ -88,6 +140,12 @@ int Game::run()
          {
             sf::Event::MouseMoveEvent& mme = event.mouseMove;
             mouseMove(glm::ivec2(mme.x, mme.y));
+         }
+
+         else if (event.type == sf::Event::KeyPressed)
+         {
+            if (event.key.code = sf::Keyboard::Escape)
+               return close();
          }
 
          else if (event.type == sf::Event::Closed)
@@ -283,25 +341,32 @@ void Game::draw()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    game_camera_.use();
    glEnable(GL_LIGHTING);
-   const glm::vec4 light_pos(1, -1, 1, 0);
+   const glm::vec4 light_pos(-1, 1, -1, 0);
    glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(light_pos));
 
    glPushMatrix();
    glTranslatef(hover_position_.x, hover_position_.y, hover_position_.z);
 
-   glColor4f(1,0.5,0,1);
+   glColor4fv(glm::value_ptr(follower_color_));
    mesh_->draw();
 
    glPopMatrix();
 
-   glBegin(GL_QUADS);
-      glVertex3f(-10, 0, -10);
-      glVertex3f(-10, 0, 10);
-      glVertex3f(10, 0, 10);
-      glVertex3f(10, 0, -10);
+   glBegin(GL_LINES);
+      glColor3f(1, 0, 0);
+      glVertex3f(0, 0, 0);
+      glVertex3f(10, 0, 0);
+      
+      glColor3f(0, 1, 0);
+      glVertex3f(0, 0, 0);
+      glVertex3f(0, 10, 0);
+
+      glColor3f(0, 0, 1);
+      glVertex3f(0, 0, 0);
+      glVertex3f(0, 0, 10);
    glEnd();
 
-   std::cerr << clock.getElapsedTime().asMicroseconds() << std::endl;
+   //std::cerr << clock.getElapsedTime().asMicroseconds() << std::endl;
 }
 
 bool Game::isSimulationRunning() const

@@ -19,74 +19,43 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-//         Josh Douglas
-// File: carcassonne/game.h
-//
-// Main game logic.
+// File: carcassonne/scheduling/easing/sinusoidal.h
 
-#ifndef CARCASSONNE_GAME_H_
-#define CARCASSONNE_GAME_H_
+#ifndef CARCASSONNE_SCHEDULING_EASING_SINUSOIDAL_H_
+#define CARCASSONNE_SCHEDULING_EASING_SINUSOIDAL_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-
-#include "carcassonne/db/db.h"
-#include "carcassonne/gfx/graphics_configuration.h"
-#include "carcassonne/gfx/perspective_camera.h"
-#include "carcassonne/gfx/ortho_camera.h"
-#include "carcassonne/asset_manager.h"
-#include "carcassonne/scheduling/unifier.h"
-
 namespace carcassonne {
+namespace scheduling {
+namespace easing {
 
-class Game
+struct SinusoidalIn
 {
-public:
-   Game();
-   int run();
-   int close();
-
-   void graphicsConfigChanged();
-   void createWindow();
-   void initOpenGL();
-   
-
-   void resize(const glm::ivec2& new_size);
-
-   void mouseMove(const glm::ivec2& window_coords);
-
-   void simulate(sf::Time delta);
-   void draw();
-
-   bool isSimulationRunning() const;
-   void setSimulationRunning(bool running);
-
-private:
-   db::DB config_db_;
-
-   gfx::GraphicsConfiguration gfx_cfg_;
-   sf::Window window_;
-  
-   AssetManager assets_;
-
-   bool simulation_running_;
-   sf::Time min_simulate_interval_;
-   sf::Clock clock_;
-
-   gfx::PerspectiveCamera game_camera_;
-   gfx::OrthoCamera gui_camera_;
-
-   glm::vec3 hover_position_;
-
-   gfx::Mesh* mesh_;
-
-   scheduling::Unifier updater_;
-
-   glm::vec4 follower_color_;
-
+   float operator()(float f)
+   {
+      return float(1.0 - cos(f * 0.5 * M_PI));
+   }
 };
 
+struct SinusoidalOut
+{
+   float operator()(float f)
+   {
+      return float(sin(f * 0.5 * M_PI));
+   }
+};
+
+struct SinusoidalInOut
+{
+   float operator()(float f)
+   {
+      std::cerr << float(1.0 - cos(double(f) * M_PI)) << std::endl;
+      return float(0.5 * (1.0 - cos(double(f) * M_PI)));
+   }
+};
+
+} // namespace carcassonne::scheduling::easing
+} // namespace carcassonne::scheduling
 } // namespace carcassonne
 
 #endif

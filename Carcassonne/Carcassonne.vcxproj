@@ -67,6 +67,13 @@
     <ClInclude Include="include\carcassonne\pile.h" />
     <ClInclude Include="include\carcassonne\player.h" />
     <ClInclude Include="include\carcassonne\scenario.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\cubic.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\easing.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\linear.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\quadratic.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\quartic.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\quintic.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\sinusoidal.h" />
     <ClInclude Include="include\carcassonne\scheduling\interpolator.h" />
     <ClInclude Include="include\carcassonne\scheduling\delay.h" />
     <ClInclude Include="include\carcassonne\scheduling\method.h" />

@@ -239,6 +239,27 @@
     <ClInclude Include="include\carcassonne\scheduling\interpolator.h">
       <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\linear.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\quadratic.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\cubic.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\quartic.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\easing.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\quintic.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\sinusoidal.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\carcassonne\db\db.inl">
