@@ -45,7 +45,7 @@ void Unifier::clear()
 // false, otherwise return true;
 bool Unifier::operator()()
 {
-   for (auto i(deferred_functions_.begin()), end(deferred_functions_.end()); i != end;)
+   for (auto i(deferred_functions_.begin()); i != deferred_functions_.end();)
    {
       if ((*i)())
          i = deferred_functions_.erase(i);

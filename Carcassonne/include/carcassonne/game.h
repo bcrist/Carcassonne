@@ -36,6 +36,7 @@
 #include "carcassonne/gfx/perspective_camera.h"
 #include "carcassonne/gfx/ortho_camera.h"
 #include "carcassonne/asset_manager.h"
+#include "carcassonne/scheduling/unifier.h"
 
 namespace carcassonne {
 
@@ -79,6 +80,8 @@ private:
    glm::vec3 hover_position_;
 
    gfx::Mesh* mesh_;
+
+   scheduling::Unifier updater_;
 
 };
 

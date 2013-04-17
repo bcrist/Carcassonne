@@ -15,3 +15,8 @@ CCAssets/src/sqlite3.c
 CCAssets/src/stb_image.c
 CCAssets/src/carcassonne/db/db.cc
 CCAssets/src/carcassonne/db/stmt.cc
+CCConfig/Debug
+CCConfig/src/sqlite3.c
+CCConfig/src/stb_image.c
+CCConfig/src/carcassonne/db/db.cc
+CCConfig/src/carcassonne/db/stmt.cc

@@ -34,6 +34,10 @@
 #include "carcassonne/db/transaction.h"
 #include "carcassonne/db/stmt.h"
 
+#include "carcassonne/scheduling/delay.h"
+#include "carcassonne/scheduling/sequence.h"
+#include "carcassonne/scheduling/interpolator.h"
+
 namespace carcassonne {
 
 Game::Game()
@@ -59,6 +63,13 @@ int Game::run()
    game_camera_.setTarget(glm::vec3(0,0,0));
 
    mesh_ = assets_.getMesh("follower");
+
+   scheduling::Sequence seq;
+   seq.schedule(scheduling::Delay(sf::seconds(3)));
+   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5), ([=](const glm::vec3& position) { game_camera_.setPosition(position); }), glm::vec3(100, 100, 100), glm::vec3(200,200,200))); 
+
+
+   updater_.schedule(seq);
    
    while (window_.isOpen())
    {
@@ -261,6 +272,7 @@ void Game::mouseMove(const glm::ivec2& window_coords)
 
 void Game::simulate(sf::Time delta)
 {
+   updater_();
 }
 
 void Game::draw()
@@ -278,6 +290,13 @@ void Game::draw()
    mesh_->draw();
 
    glPopMatrix();
+
+   glBegin(GL_QUADS);
+      glVertex3f(-10, 0, -10);
+      glVertex3f(-10, 0, 10);
+      glVertex3f(10, 0, 10);
+      glVertex3f(10, 0, -10);
+   glEnd();
 
    std::cerr << clock.getElapsedTime().asMicroseconds() << std::endl;
 }

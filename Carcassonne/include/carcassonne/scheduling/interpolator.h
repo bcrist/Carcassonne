@@ -69,18 +69,18 @@ public:
 
    float getEased() const
    {
-      if (!easing)
+      if (!easing_)
          return getFraction();
 
-      return easing(getFraction());
+      return easing_(getFraction());
    }
 
    float getEased(float fraction) const
    {
-      if (!easing)
+      if (!easing_)
          return fraction;
 
-      return easing(fraction);
+      return easing_(fraction);
    }
 
    T get() const
@@ -93,7 +93,7 @@ public:
       float b = getEased(fraction),
             a = 1 - b;
 
-      return initial * a + final * b;
+      return initial_ * a + final_ * b;
    }
 
    bool operator()()

@@ -78,7 +78,7 @@ int Player::getGamesPlayed() const
 
 float Player::getWinLossRatio() const
 {
-   return (wins_ / games_played_);
+   return wins_ / float(games_played_);
 }
 
 int Player::getHighScore() const
