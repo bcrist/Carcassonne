@@ -66,7 +66,9 @@ int Game::run()
 
    scheduling::Sequence seq;
    seq.schedule(scheduling::Delay(sf::seconds(3)));
-   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5), ([=](const glm::vec3& position) { game_camera_.setPosition(position); }), glm::vec3(100, 100, 100), glm::vec3(200,200,200))); 
+   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
+      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
+      glm::vec3(100, 100, 100), glm::vec3(300,1,-200))); 
 
 
    updater_.schedule(seq);
@@ -233,8 +235,7 @@ void Game::initOpenGL()
    const glm::vec4 light_ambient(0.6f, 0.6f, 0.6f, 1);
    const glm::vec4 light_diffuse(0.4f, 0.4f, 0.4f, 1);
    const glm::vec4 light_specular(0.2f, 0.2f, 0.2f, 1);
-   const glm::vec4 light_pos(1, -1, 1, 0);
-   
+
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(material_specular));
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material_shininess);
 
@@ -242,7 +243,7 @@ void Game::initOpenGL()
 
    glLightfv(GL_LIGHT0, GL_DIFFUSE, glm::value_ptr(light_diffuse));
    glLightfv(GL_LIGHT0, GL_SPECULAR, glm::value_ptr(light_specular));
-   glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(light_pos));
+   
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_LIGHT0);
@@ -282,6 +283,8 @@ void Game::draw()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    game_camera_.use();
    glEnable(GL_LIGHTING);
+   const glm::vec4 light_pos(1, -1, 1, 0);
+   glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(light_pos));
 
    glPushMatrix();
    glTranslatef(hover_position_.x, hover_position_.y, hover_position_.z);
