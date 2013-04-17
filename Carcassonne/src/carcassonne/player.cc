@@ -30,8 +30,9 @@
 namespace carcassonne {
 
 Player::Player(const std::string& name, bool human)
+   : name_(),
+     human_()
 {
-    
 }
 
 const std::string& Player::getName() const

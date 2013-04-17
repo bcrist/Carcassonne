@@ -37,7 +37,7 @@ namespace carcassonne {
 class Pile
 {
 public:
-   Pile();
+   Pile(); //
    Pile(int seed);
 
    void setSeed(int seed);

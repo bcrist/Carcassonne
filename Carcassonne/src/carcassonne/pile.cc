@@ -26,21 +26,23 @@
 
 #include "carcassonne/pile.h"
 
+#include <ctime>
+
 namespace carcassonne {
 
 Pile::Pile()
+   : prng_(time(nullptr))
 {
-   
 }
 
-Pile::Pile(int speed)
+Pile::Pile(int seed)
+   : prng_(seed)
 {
-   
 }
 
-void Pile::setSeed(int speed)
+void Pile::setSeed(int seed)
 {
-
+   prng_.seed(seed);
 }
 
 void Pile::add(std::unique_ptr<Tile>&& tile)
