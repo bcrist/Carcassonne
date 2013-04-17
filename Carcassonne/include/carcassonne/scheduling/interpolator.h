@@ -40,6 +40,7 @@ class Interpolator
 public:
    Interpolator(sf::Time duration, const std::function<R(P)>& func, P initial = 0, P final = 1, const std::function<float(float)>& easing = nullptr)
       : duration_(duration),
+        running_(false),
         easing_(easing),
         initial_(initial),
         final_(final),
@@ -53,7 +54,15 @@ public:
 
    sf::Time getElapsed() const
    {
+      if (!running_)
+         return sf::Time::Zero;
+
       return timer_.getElapsedTime();
+   }
+
+   void reset()
+   {
+      running_ = false;
    }
 
    float getFraction() const
@@ -98,6 +107,11 @@ public:
 
    bool operator()()
    {
+      if (!running_)
+      {
+         running_ = true;
+         timer_.restart();
+      }
       float f = getFraction();
       function_(get(f));
       return f == 1.0f;
@@ -106,6 +120,7 @@ public:
 private:
    sf::Clock timer_;
    sf::Time duration_;
+   bool running_;
 
    std::function<float(float)> easing_;
 

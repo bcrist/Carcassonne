@@ -50,6 +50,7 @@ public:
 private:
    sf::Clock timer_;
    sf::Time duration_;
+   bool running_;
 };
 
 } // namespace scheduling
