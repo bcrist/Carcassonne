@@ -1,0 +1,15 @@
+High Priority
+=============
+Menus
+Game Logic
+AI
+
+Mid Priority
+------------
+Audio
+
+Low Priority / Optional
+-----------------------
+Lighting class(es) & lighting support in GraphicsConfiguration
+advanced texture features & support in GraphicsConfiguration
+Mesh Quality support in GraphicsConfiguration
