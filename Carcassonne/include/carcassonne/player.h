@@ -81,6 +81,7 @@ private:
    SkillLevel skill_level_;
 
    int wins_;
+   int losses_;
    int games_played_;
 
    int high_score_;

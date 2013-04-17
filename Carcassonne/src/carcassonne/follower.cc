@@ -49,5 +49,10 @@ void Follower::draw()const
 
 }
 
+bool Follower::isIdle()const
+{
+   return idle_;
+}
+
 
 }// namespace carcassonne

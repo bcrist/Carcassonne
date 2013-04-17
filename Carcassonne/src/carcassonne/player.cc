@@ -18,7 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-// Author: Benjamin Crist
+// Author: Benjamin Crist / Josh Douglas
 // File: carcassonne/player.cc
 //
 // Represents a human or AI player, including name and win/loss record, and
@@ -31,6 +31,7 @@ namespace carcassonne {
 
 Player::Player(const std::string& name, bool human)
 {
+    
 }
 
 const std::string& Player::getName() const
@@ -50,31 +51,38 @@ Player::SkillLevel Player::getSkillLevel() const
 
 void Player::recordScenarioResult(bool won)
 {
+   games_played_++;
+   if(won)
+      wins_++;
+   else
+      losses_++;
+   if(high_score_ < score_)
+      high_score_ = score_;
 }
 
 int Player::getWins() const
 {
-   return 0;
+   return wins_;
 }
 
 int Player::getLosses() const
 {
-   return 0;
+   return losses_;
 }
 
 int Player::getGamesPlayed() const
 {
-   return 0;
+   return games_played_;
 }
 
 float Player::getWinLossRatio() const
 {
-   return 0;
+   return (wins_ / games_played_);
 }
 
 int Player::getHighScore() const
 {
-   return 0;
+   return high_score_;
 }
 
 // Specific to current game:
@@ -82,17 +90,28 @@ int Player::getHighScore() const
 // get an idle follower, or null if there are none
 Follower* Player::getIdleFollower()
 {
+   if(idle_followers_ > 0)
+   {
+      for(auto i(followers_.begin()), end(followers_.end()); i != end ; ++i)
+      {
+         if (i->isIdle())
+            return &(*i);
+      }
+      
+   }
    return nullptr;
 }
 
 // increase score_;
 void Player::scorePoints(int points)
 {
+   score_ += points;
 }
 
 // display this player's HUD if it's their turn
 void Player::draw() const
 {
+
 }
 
 } // namespace carcassonne
