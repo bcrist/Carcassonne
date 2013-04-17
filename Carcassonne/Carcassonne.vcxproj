@@ -67,6 +67,7 @@
     <ClInclude Include="include\carcassonne\pile.h" />
     <ClInclude Include="include\carcassonne\player.h" />
     <ClInclude Include="include\carcassonne\scenario.h" />
+    <ClInclude Include="include\carcassonne\scheduling\interpolator.h" />
     <ClInclude Include="include\carcassonne\scheduling\delay.h" />
     <ClInclude Include="include\carcassonne\scheduling\method.h" />
     <ClInclude Include="include\carcassonne\tile.h" />

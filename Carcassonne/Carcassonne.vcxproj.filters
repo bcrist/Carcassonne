@@ -49,6 +49,9 @@
     <Filter Include="Header Files\carcassonne\scheduling">
       <UniqueIdentifier>{f9c26e5a-758a-44ed-be2d-34829d15c003}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\carcassonne\scheduling\easing">
+      <UniqueIdentifier>{dbbf590d-dbd5-4ec0-ab40-58f89b7035a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -231,6 +234,9 @@
       <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
     <ClInclude Include="include\carcassonne\scheduling\method.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\interpolator.h">
       <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
   </ItemGroup>
