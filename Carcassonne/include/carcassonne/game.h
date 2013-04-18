@@ -46,34 +46,38 @@ public:
    Game();
    int run();
 
-   bool close();
-
-   void reloadGraphicsConfiguration();
+   db::DB& getConfigurationDB();
+   const gfx::GraphicsConfiguration& getGraphicsConfiguration() const;
+   AssetManager& getAssetManager();
+   Scenario* getScenario() const;
    
-   void onResized(const glm::ivec2& new_size);
-   void onBlurred();
-   void onClosed();
    void onMouseMoved(const glm::ivec2& window_coords);
    void onMouseWheel(int delta);
    void onMouseButton(sf::Mouse::Button button, bool down);
+
    void onKey(const sf::Event::KeyEvent& event, bool down);
    void onCharacter(const sf::Event::TextEvent& event);
 
-   void update();
-   void draw();
+   void onResized(const glm::ivec2& new_size);
+   void onBlurred();
+   void onClosed();
+
+   bool close();
+   void reloadGraphicsConfiguration();
 
    void pushMenu(std::unique_ptr<gui::Menu>&& menu);
    void popMenu();
    void clearMenus();
 
-   const gfx::GraphicsConfiguration& getGraphicsConfig() const;
-   AssetManager& getAssetManager() const;
-   Scenario* getScenario() const;
+   
 
 private:
    void graphicsConfigChanged();
    void createWindow();
    void initOpenGL();
+
+   void update();
+   void draw();
 
    db::DB config_db_;
    gfx::GraphicsConfiguration gfx_cfg_;

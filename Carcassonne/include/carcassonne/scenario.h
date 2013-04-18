@@ -50,9 +50,9 @@ public:
 
    Scenario(Game& game, std::vector<Player*>&& players);
 
-   bool onClose();
+   bool onClosed();
    void onResized();
-   void onBlur();
+   void onBlurred();
    void onMouseMoved(const glm::ivec2& window_coords);
    void onMouseWheel(int delta);
 

@@ -36,12 +36,12 @@ class Menu
 public:
    Menu(Game& game);
 
-   bool onClose();
+   bool onClosed();
    void onResized();
 
-   void onBlur();
+   void onBlurred();
 
-   void mouseMove(glm::
+   void onMouseMoved(const glm::vec3& world_coords);
 
    void update();
    void draw();

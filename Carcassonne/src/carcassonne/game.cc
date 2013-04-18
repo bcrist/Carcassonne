@@ -58,38 +58,26 @@ int Game::run()
       sf::Event event;
       while (window_.pollEvent(event))
       {
-         if (event.type == sf::Event::Resized)
-            onResized(glm::ivec2(event.size.width, event.size.height));
-
-         else if (event.type == sf::Event::MouseMoved)
+         if (event.type == sf::Event::MouseMoved)
             onMouseMoved(glm::ivec2(event.mouseMove.x, event.mouseMove.y));
-
          else if (event.type == sf::Event::MouseWheelMoved)
             onMouseWheel(event.mouseWheel.delta);
-
          else if (event.type == sf::Event::MouseButtonPressed)
             onMouseButton(event.mouseButton.button, true);
-
          else if (event.type == sf::Event::MouseButtonReleased)
             onMouseButton(event.mouseButton.button, false);
 
-         else if (event.type == sf::Event::LostFocus)
-            onBlurred();
-
          else if (event.type == sf::Event::KeyPressed)
-         {
             onKey(event.key, true);
-
-            if (event.key.code == sf::Keyboard::Escape)
-               onClosed();
-         }
-
          else if (event.type == sf::Event::KeyReleased)
             onKey(event.key, false);
-
          else if (event.type == sf::Event::TextEntered)
             onCharacter(event.text);
 
+         else if (event.type == sf::Event::Resized)
+            onResized(glm::ivec2(event.size.width, event.size.height));
+         else if (event.type == sf::Event::LostFocus)
+            onBlurred();
          else if (event.type == sf::Event::Closed)
             onClosed();
       }
@@ -100,6 +88,87 @@ int Game::run()
    }
 
    return 0;
+}
+
+db::DB& Game::getConfigurationDB()
+{
+   return config_db_;
+}
+
+const gfx::GraphicsConfiguration& Game::getGraphicsConfiguration() const
+{
+   return gfx_cfg_;
+}
+
+AssetManager& Game::getAssetManager()
+{
+   return assets_;
+}
+
+Scenario* Game::getScenario() const
+{
+   return scenario_.get();
+}
+
+void Game::onMouseMoved(const glm::ivec2& window_coords)
+{
+   if (scenario_)
+      scenario_->onMouseMoved(window_coords);
+
+   if (!menu_stack_.empty())
+   {
+      glm::vec3 world_coords(menu_camera_.windowToWorld(glm::vec2(window_coords)));
+      menu_stack_.back()->onMouseMoved(world_coords);
+   }
+}
+
+void Game::onMouseWheel(int delta)
+{
+}
+
+void Game::onMouseButton(sf::Mouse::Button button, bool down)
+{
+}
+
+void Game::onKey(const sf::Event::KeyEvent& event, bool down)
+{
+}
+
+void Game::onCharacter(const sf::Event::TextEvent& event)
+{
+}
+
+void Game::onResized(const glm::ivec2& new_size)
+{
+   gfx_cfg_.viewport_size = new_size;
+   glViewport(0, 0, new_size.x, new_size.y);
+
+   menu_camera_.recalculate();
+
+   if (scenario_)
+      scenario_->onResized();
+
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onResized();
+}
+
+void Game::onBlurred()
+{
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onBlurred();
+
+   if (scenario_)
+      scenario_->onBlurred();
+}
+
+void Game::onClosed()
+{
+   if (!menu_stack_.empty())
+      if (!menu_stack_.back()->onClosed())
+         return;
+
+   if (scenario_)
+      scenario_->onClosed();
 }
 
 bool Game::close()
@@ -122,6 +191,51 @@ bool Game::close()
    window_.close();
 
    return true;
+}
+
+void Game::reloadGraphicsConfiguration()
+{
+   gfx_cfg_ = gfx::GraphicsConfiguration::load(config_db_);
+   graphicsConfigChanged();
+}
+
+void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
+{
+   assert(menu);  // menu.get() != nullptr
+
+   if (!menu_stack_.empty())
+      menu_stack_.back()->cancelInput();
+
+   menu_stack_.push_back(std::move(menu));
+
+   if (scenario_)
+      scenario_->setPaused(true);
+}
+
+void Game::popMenu()
+{
+   if (menu_stack_.empty())
+      return;
+
+   menu_stack_.pop_back();
+		
+   if (menu_stack_.empty())
+   {
+      if (scenario_)
+         scenario_->setPaused(false);
+      else
+         pushMenu(assets_.getMenu("splash"));
+   }
+}
+
+void Game::clearMenus()
+{
+	menu_stack_.clear();
+
+   if (scenario_)
+      scenario_->setPaused(false);
+   else
+      pushMenu(assets_.getMenu("splash"));
 }
 
 void Game::graphicsConfigChanged()
@@ -247,51 +361,7 @@ void Game::initOpenGL()
    glEnable(GL_LIGHT0);
    glEnable(GL_COLOR_MATERIAL);
 
-   resize(gfx_cfg_.viewport_size);
-}
-
-void Game::onResized(const glm::ivec2& new_size)
-{
-   gfx_cfg_.viewport_size = new_size;
-   glViewport(0, 0, new_size.x, new_size.y);
-
-   menu_camera_.recalculate();
-
-   if (scenario_)
-      scenario_->onResized();
-
-   if (!menu_stack_.empty())
-      menu_stack_.back()->onResized();
-}
-
-void Game::onBlurred()
-{
-   if (!menu_stack_.empty())
-      menu_stack_.back()->onBlurred();
-
-   if (scenario_)
-      scenario_->onBlurred();
-}
-
-void Game::onClosed()
-{
-   if (!menu_stack_.empty())
-      menu_stack_.back()->onClose();
-
-   if (scenario_)
-      scenario_->onClose();
-}
-
-void Game::onMouseMoved(const glm::ivec2& window_coords)
-{
-   if (scenario_)
-      scenario_->onMouseMoved(window_coords);
-
-   if (!menu_stack_.empty())
-   {
-      glm::vec3 world_coords(menu_camera_.windowToWorld(window_coords));
-      menu_stack_.back()->onMouseMoved(world_coords);
-   }
+   onResized(gfx_cfg_.viewport_size);
 }
 
 void Game::update()
@@ -317,52 +387,5 @@ void Game::draw()
       menu_stack_.back()->draw();
    }
 }
-
-void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
-{
-   assert(menu);  // menu.get() != nullptr
-
-   if (!menu_stack_.empty())
-      menu_stack_.back()->cancelInput();
-
-   menu_stack_.push_back(std::move(menu));
-
-   if (leve != NULL)
-      level->pause();
-}
-
-void Game::popMenu()
-{
-	if (!menuStack.empty())
-	{
-		menuStack.back()->setVisibility(false);
-		menuStack.pop_back();
-		
-		if (menuStack.empty())
-		{
-			if (level == NULL)
-				pushMenu(mainMenu);
-			else
-				level->resume();
-		}
-		else
-			menuStack.back()->setVisibility(true);
-	}
-}
-
-void Game::clearMenu()
-{
-	for(mstack_iter_t it = menuStack.begin(); it != menuStack.end(); ++it)
-		(*it)->setVisibility(false);
-
-	menuStack.clear();
-
-	if (level == NULL)
-		pushMenu(mainMenu);
-	else
-		level->resume();
-}
-
-
 
 } // namespace carcassonne
