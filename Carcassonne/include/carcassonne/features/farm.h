@@ -77,7 +77,7 @@ public:
    // it covers so that they now refer to the surviving farm.  This should cause
    // all shared_ptrs to the dying farm to go away, and the dying farm will be
    // destroyed.
-   void join(const Farm& other);
+   void join(Farm& other);
 
    // called by Tile::replaceCity() when cities are joined.
    void replaceCity(const features::City& old_city, const features::City& new_city);
