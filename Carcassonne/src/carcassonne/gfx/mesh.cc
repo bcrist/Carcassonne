@@ -36,7 +36,6 @@ namespace gfx {
 
 
 Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
-   : display_list_id_(0)
 {
    db::DB& db(asset_mgr.getDB());
 
@@ -112,29 +111,6 @@ Mesh::Mesh(AssetManager& asset_mgr, const std::string& name)
    }
 }
 
-void Mesh::init()
-{
-   if (display_list_id_ != 0)
-   {
-      glDeleteLists(display_list_id_, 1);
-      display_list_id_ = 0;
-   }
-}
-
-Mesh::~Mesh()
-{
-   if (display_list_id_ != 0)
-   {
-      glDeleteLists(display_list_id_, 1);
-      display_list_id_ = 0;
-   }
-}
-
-const std::string& Mesh::getName() const
-{
-   return name_;
-}
-
 void Mesh::draw() const
 {
    if (texture_)
@@ -167,25 +143,16 @@ void Mesh::draw(GLenum texture_mode, const glm::vec4& texture_env_color) const
 
 void Mesh::drawCommon() const
 {
-   if (display_list_id_ != 0)
-      glCallList(display_list_id_);
-   else
+   glBegin(primitive_type_);
+
+   for (auto i(indices_.begin()), end(indices_.end()); i != end; ++i)
    {
-      display_list_id_ = glGenLists(1);
-      glNewList(display_list_id_, GL_COMPILE_AND_EXECUTE);
-   
-      glBegin(primitive_type_);
+      glTexCoord3fv(glm::value_ptr(texture_coords_[i->z]));
+      glNormal3fv(glm::value_ptr(normals_[i->y]));
+      glVertex3fv(glm::value_ptr(vertices_[i->x]));
+   }
 
-      for (auto i(indices_.begin()), end(indices_.end()); i != end; ++i)
-      {
-         glTexCoord3fv(glm::value_ptr(texture_coords_[i->z]));
-         glNormal3fv(glm::value_ptr(normals_[i->y]));
-         glVertex3fv(glm::value_ptr(vertices_[i->x]));
-      }
-
-      glEnd();
-
-      glEndList(); 
+   glEnd();
 }
 
 } // namespace carcassonne::gfx

@@ -55,9 +55,6 @@
     <Filter Include="Header Files\carcassonne\gui">
       <UniqueIdentifier>{07660ff5-3d89-4ad5-b7ff-95377a3c75e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\carcassonne\gui">
-      <UniqueIdentifier>{4c692733-08cf-4608-90ec-31c2ed648e3c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">

@@ -36,27 +36,23 @@ namespace gui {
 class Menu
 {
 public:
-   static std::unique_ptr<Menu> load(const std::string& name);
-
    Menu(Game& game);
 
-   virtual std::unique_ptr<Menu> clone() const;
+   void onMouseMoved(const glm::vec3& world_coords);
+   void onMouseWheel(int delta);
+   void onMouseButton(sf::Mouse::Button Button, bool down);
 
-   virtual void onMouseMoved(const glm::vec3& world_coords);
-   virtual void onMouseWheel(int delta);
-   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
+   void onKey(const sf::Event::KeyEvent& event, bool down);
+   void onCharacter(const sf::Event::TextEvent& event);
 
-   virtual void onKey(const sf::Event::KeyEvent& event, bool down);
-   virtual void onCharacter(const sf::Event::TextEvent& event);
+   void onResized();
+   void onBlurred();
+   bool onClosed();
 
-   virtual void onResized();
-   virtual void onBlurred();
-   virtual bool onClosed();
+   void update();
+   void draw();
 
-   virtual void update();
-   virtual void draw();
-
-   virtual void cancelInput();
+   void cancelInput();
 
 protected:
    Menu(const Menu& other);

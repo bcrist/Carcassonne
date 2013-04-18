@@ -43,19 +43,11 @@ Texture::Texture(db::DB& db, const std::string& name)
      name_(name),
      texture_id_(0)
 {
-   init();
+   reload();
 }
 
-void Texture::init()
+void Texture::reload()
 {
-   if (texture_id_ != 0)
-   {
-      if (bound_id_ == texture_id_)
-         bound_id_ = 0;
-
-      glDeleteTextures(1, &texture_id_);
-   }
-
    db::Stmt stmt(db_, "SELECT format, width, height, data "
                      "FROM cc_textures "
                      "WHERE name = ? LIMIT 1");
@@ -124,13 +116,11 @@ void Texture::upload(const GLubyte* data)
 
 Texture::~Texture()
 {
-   if (texture_id_ != 0)
-   {
-      if (bound_id_ == texture_id_)
-         bound_id_ = 0;
+   if (bound_id_ == texture_id_)
+      bound_id_ = 0;
 
+   if (texture_id_ != 0)
       glDeleteTextures(1, &texture_id_);
-   }
 }
 
 const std::string& Texture::getName() const
