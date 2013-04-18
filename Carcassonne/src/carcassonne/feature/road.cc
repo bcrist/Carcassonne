@@ -27,6 +27,8 @@
 #include "carcassonne\features\road.h"
 
 #include "carcassonne\tile.h"
+
+#include "carcassonne\player.h"
 #include <map>
 
 namespace carcassonne {
@@ -60,19 +62,81 @@ bool Road::isComplete()const
 
 void Road::score()
 {
+   int points = 0;
+   points = tiles_.size();
+
    std::map<Player*, int> players;
+   int mostFollowers= 0;
+   std::vector<Player*> players_with_most_followers;
 
    for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
    {
       Follower* f = *i;
+      Player* owner = f->getOwner();
       
-      ++players[f->getOwner()];
+      int& count = players[owner];
+
+      ++count;
+
+      if (count > mostFollowers)
+      {
+         mostFollowers = count;
+         players_with_most_followers.clear();
+         players_with_most_followers.push_back(owner);
+      }
+      else if (count == mostFollowers)
+      {
+         //they are eating bacon and dancing
+         players_with_most_followers.push_back(owner);
+      }
    }
+   //players_with_most_followers now has all players who should receive 'points' points.
+
+   for (auto i(players_with_most_followers.begin()), 
+             end(players_with_most_followers.end()); i != end; ++i)
+   {
+      Player* p = *i;
+      p->scorePoints(points);
+   }
+      
 }
 
-void Road::join(const Road& other)
+void Road::join(Road& other)
 {
+      if (this == &other)
+   {
+      return;
+   }
 
+   Road* survivor;
+   Road* victim;
+   if (tiles_.size() > other.tiles_.size())
+   {
+      survivor = this;
+      victim = &other;
+   }
+   
+   else 
+   {
+      survivor = &other;
+      victim = this;
+   }
+
+   survivor->followers_.insert(survivor->followers_.end(),
+                               victim->followers_.begin(),
+                               victim->followers_.end());
+   victim->followers_.clear();
+
+   if (survivor->followers_.size() > 0 &&  survivor == this)
+   {
+      survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
+   }
+
+   for (auto i(victim->tiles_.begin()), end(victim->tiles_.end()); i!= end; ++i)
+   {
+      Tile* t = *i;
+      t->replaceRoad(*victim, *survivor);
+   }
 }
 
 }

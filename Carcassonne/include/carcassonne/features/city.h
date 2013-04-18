@@ -67,19 +67,21 @@ public:
    // Add the dying city's pennants_ to the surviving city's.
    //
    // All followers from the dying city's followers_ vector will be placed in
-   // the surviving city's followers_ vector.  If neither city has any followers
-   // yet, and the surviving city is (*this), follower_placeholder_ will be set
-   // to std::move(other.follower_placeholder_).  Therefore when placing a tile
-   // with a city, the already placed neighbor cities should be join()ed to the
-   // new tile's city, i.e. old_tile_city.join(new_tile_city);  (note: those are
-   // not real variable names).  This is accomplished by calling
-   // Tile::closeSide() on the existing tile before the new tile.
+   // the surviving city's followers_ vector.
+   //
+   // If neither city has any followers yet, and the surviving city is (*this),
+   // follower_placeholder_ will be set to std::move(other.follower_placeholder_).
+   // Therefore when placing a tile with a city, the already placed neighbor
+   // cities should be join()ed to the new tile's city, i.e.
+   // old_tile_city.join(new_tile_city);  (note: those are not real variable
+   // names).  This is accomplished by calling Tile::closeSide() on the existing
+   // tile before the new tile.
    // 
    // Finally, the dying city will call Tile::replaceCity() on each of the tiles
    // it covers so that they now refer to the surviving city.  This should cause
    // all shared_ptrs to the dying city to go away, and the dying city will be
    // destroyed.
-   void join(const City& other);
+   void join(City& other);
 
 private:
    int pennants_; // the number of pennants present in this city.  Each pennant

@@ -26,6 +26,8 @@
 
 #include "carcassonne\features\cloister.h"
 
+#include "carcassonne\player.h"
+
 namespace carcassonne {
 namespace features {
 
@@ -48,7 +50,11 @@ bool Cloister::isComplete()const
 
 void Cloister::score()
 {
-
+   int points = 0;
+   points = tiles_.size();
+   
+   if (!followers_.empty())
+      followers_.front()->getOwner()->scorePoints(points);
 }
 
 }

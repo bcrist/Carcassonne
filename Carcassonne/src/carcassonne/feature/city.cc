@@ -100,14 +100,45 @@ void City::score()
       
 }
 
-void City::join(const City& other)
+void City::join(City& other)
 {
    if (this == &other)
    {
       return;
    }
-   //else if ()
 
+   City* survivor;
+   City* victim;
+   if (tiles_.size() > other.tiles_.size())
+   {
+      survivor = this;
+      victim = &other;
+   }
+   
+   else 
+   {
+      survivor = &other;
+      victim = this;
+   }
+
+   survivor->pennants_ += victim->pennants_;
+   victim->pennants_ = 0;
+
+   survivor->followers_.insert(survivor->followers_.end(),
+                               victim->followers_.begin(),
+                               victim->followers_.end());
+   victim->followers_.clear();
+
+   if (survivor->followers_.size() > 0 &&  survivor == this)
+   {
+      survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
+   }
+
+   for (auto i(victim->tiles_.begin()), end(victim->tiles_.end()); i!= end; ++i)
+   {
+      Tile* t = *i;
+      t->replaceCity(*victim, *survivor);
+   }
 }
 
 }

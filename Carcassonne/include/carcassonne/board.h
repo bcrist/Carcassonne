@@ -38,7 +38,7 @@ namespace std {
 template<>
 struct hash<glm::ivec2>
 {
-   size_t operator()(const glm::ivec2& value)
+   size_t operator()(const glm::ivec2& value) const
    {
       size_t y = std::hash<int>()(value.y);
       y = (y >> (sizeof(size_t) * 4)) ^ (y << (sizeof(size_t) * 4));
