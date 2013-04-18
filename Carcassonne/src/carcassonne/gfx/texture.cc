@@ -38,22 +38,20 @@ GLuint Texture::bound_id_(0);
 GLenum Texture::mode_(GL_MODULATE);
 glm::vec4 Texture::color_(0,0,0,0);
 
-Texture::Texture(const GLubyte* data, const glm::ivec2& size)
-   : size_(size)
+Texture::Texture(db::DB& db, const std::string& name)
+   : db_(db),
+     name_(name),
+     texture_id_(0)
 {
-   assert(data != nullptr);
-   assert(size.x > 0);
-   assert(size.y > 0);
-
-   upload(data);
+   reload();
 }
 
-Texture::Texture(db::DB& db, const std::string& name)
+void Texture::reload()
 {
-   db::Stmt stmt(db, "SELECT format, width, height, data "
+   db::Stmt stmt(db_, "SELECT format, width, height, data "
                      "FROM cc_textures "
                      "WHERE name = ? LIMIT 1");
-   stmt.bind(1, name);
+   stmt.bind(1, name_);
    if (!stmt.step())
       throw db::DB::error("Texture not found!");
 
@@ -121,7 +119,13 @@ Texture::~Texture()
    if (bound_id_ == texture_id_)
       bound_id_ = 0;
 
-   glDeleteTextures(1, &texture_id_);
+   if (texture_id_ != 0)
+      glDeleteTextures(1, &texture_id_);
+}
+
+const std::string& Texture::getName() const
+{
+   return name_;
 }
 
 GLuint Texture::getTextureGlId() const

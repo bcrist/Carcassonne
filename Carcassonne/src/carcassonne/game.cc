@@ -34,11 +34,6 @@
 #include "carcassonne/db/transaction.h"
 #include "carcassonne/db/stmt.h"
 
-#include "carcassonne/scheduling/delay.h"
-#include "carcassonne/scheduling/sequence.h"
-#include "carcassonne/scheduling/interpolator.h"
-#include "carcassonne/scheduling/easing/easing.h"
-
 namespace carcassonne {
 
 Game::Game()
@@ -365,6 +360,8 @@ void Game::createWindow()
    sf::Vector2u window_size(window_.getSize());
    gfx_cfg_.viewport_size = glm::ivec2(window_size.x, window_size.y);
    gfx_cfg_.color_bits = mode.bitsPerPixel;
+
+   assets_.reload();
 }
 
 void Game::initOpenGL()

@@ -42,6 +42,8 @@ public:
 
    db::DB& getDB();
 
+   void reload();
+
    gfx::Texture* getTexture(const std::string& name);
 
    const gfx::Sprite& getSprite(const std::string& name);

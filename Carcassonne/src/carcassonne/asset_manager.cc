@@ -35,6 +35,20 @@ db::DB& AssetManager::getDB()
    return db_;
 }
 
+void AssetManager::reload()
+{
+   for (auto i(textures_.begin()), end(textures_.end()); i != end; ++i)
+   {
+      try {
+         i->second->reload();
+      }
+      catch (const std::runtime_error& err)
+      {
+         std::cerr << "Failed to load texture \"" << i->second->getName() << "\": " << err.what() << std::endl;
+      }
+   }
+}
+
 gfx::Texture* AssetManager::getTexture(const std::string& name)
 {
    std::unique_ptr<gfx::Texture>& ptr = textures_[name];
@@ -47,7 +61,7 @@ gfx::Texture* AssetManager::getTexture(const std::string& name)
       }
       catch (const std::runtime_error& err)
       {
-         std::cerr << "Failed to load texture \"" << name << "\": " << err.what();
+         std::cerr << "Failed to load texture \"" << name << "\": " << err.what() << std::endl;
       }
    }
 
@@ -65,7 +79,7 @@ const gfx::Sprite& AssetManager::getSprite(const std::string& name)
       }
       catch (std::runtime_error& err)
       {
-         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what();
+         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what() << std::endl;
          
       }
    }
@@ -84,11 +98,15 @@ gfx::Mesh* AssetManager::getMesh(const std::string& name)
       }
       catch (const std::runtime_error& err)
       {
-         std::cerr << "Failed to load mesh \"" << name << "\": " << err.what();
+         std::cerr << "Failed to load mesh \"" << name << "\": " << err.what() << std::endl;
       }
    }
 
    return ptr.get();
+}
+
+std::unique_ptr<gui::Menu> getMenu(const std::string& name)
+{
 }
 
 } // namespace carcassonne
