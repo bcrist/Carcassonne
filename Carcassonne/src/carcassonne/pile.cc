@@ -47,17 +47,34 @@ void Pile::setSeed(unsigned int seed)
 
 void Pile::add(std::unique_ptr<Tile>&& tile)
 {
-
+   tiles_.push_back(std::move(tile));
 }
 
 void Pile::add(Pile&& other)
 {
-
+   for (auto i(other.tiles_.begin()), end(other.tiles_.end()); i != end; ++i)
+   {
+      tiles_.push_back(std::move(*i));
+   }
+   other.tiles_.clear();
 }
 
 void Pile::shuffle()
 {
+   for (size_t i = 0; i < tiles_.size(); ++i)
+   {
+      size_t j = i + prng_() % (tiles_.size() -i);
+      std::swap(tiles_[i], tiles_[j]);
+   }
+}
 
+std::unique_ptr<Tile> Pile::remove()
+{
+   std::unique_ptr<Tile> tile = std::move(tiles_.back());
+
+   tiles_.pop_back();
+
+   return std::move(tile);
 }
 
 } // namespace carcassonne

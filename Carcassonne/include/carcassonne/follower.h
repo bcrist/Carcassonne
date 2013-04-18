@@ -41,6 +41,8 @@ public:
    Player* getOwner()const;
    bool isIdle()const;
 
+   void setOrientation(const Follower& other);
+
    
    // called by Player::draw() if the follower is idle, or Tile::draw() (after
    // setting up the tile's local transform matrix) if the follower is not idle

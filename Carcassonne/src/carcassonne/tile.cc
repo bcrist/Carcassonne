@@ -77,6 +77,12 @@ Tile::Tile(Type type)
 // other type.  A TYPE_FLOATING tile can only be changed to TYPE_PLACED.
 void Tile::setType(Type type)
 {
+   
+}
+
+Tile::Type Tile::getType()const
+{
+   return type_;
 }
 
 

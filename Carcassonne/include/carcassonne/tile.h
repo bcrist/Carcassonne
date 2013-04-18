@@ -115,7 +115,7 @@ public:
    // other TYPE_EMPTY_* types.  A TYPE_PLACED tile can't be changed to any
    // other type.  A TYPE_FLOATING tile can only be changed to TYPE_PLACED.
    void setType(Type type);
-
+   Type getType()const;
 
    // Rotates the tile if it is a TYPE_FLOATING tile
    void rotateClockwise();
@@ -141,6 +141,8 @@ public:
    
 
 private:
+   Type type_;
+
    glm::vec4 color_;
    gfx::Mesh* mesh_;
 

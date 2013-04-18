@@ -18,7 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-// Author: Benjamin Crist
+// Author: Benjamin Crist / Josh Douglas
 // File: carcassonne/board.cc
 //
 // Represents a map of the game world - by using a std::unordered_map of tiles
@@ -33,7 +33,8 @@ Board::Board()
 
 Tile* Board::getTileAt(const glm::ivec2& position) const
 {
-   return nullptr;
+   auto i(board_.find(position));
+   return i == board_.end() ? nullptr : i->second.get();
 }
 
 // If tile is a TYPE_EMPTY_* tile, return false if the position already has
@@ -42,7 +43,17 @@ Tile* Board::getTileAt(const glm::ivec2& position) const
 // currently have a TYPE_EMPTY_PLACEABLE tile.
 bool Board::placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile)
 {
-   return false;
+   switch (tile->getType())
+   {
+      case Tile::TYPE_EMPTY_NOT_PLACEABLE:
+      case Tile::TYPE_EMPTY_PLACEABLE_IF_ROTATED:
+      case Tile::TYPE_EMPTY_PLACEABLE:
+         if (getTileAt(position) == nullptr)
+            return false; 
+      case Tile::TYPE_FLOATING:
+      default:
+         return false;
+   }
 }
 
 void Board::draw() const

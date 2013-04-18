@@ -41,7 +41,7 @@ Follower::Follower(Player* owner)
 
 Player* Follower::getOwner()const
 {
-   return nullptr;
+   return owner_;
 }
 
 void Follower::draw()const
@@ -52,6 +52,13 @@ void Follower::draw()const
 bool Follower::isIdle()const
 {
    return idle_;
+}
+
+void Follower::setOrientation(const Follower& other)
+{
+   position_ = other.position_;
+   farming_ = other.farming_;
+   rotation_ = other.rotation_;
 }
 
 

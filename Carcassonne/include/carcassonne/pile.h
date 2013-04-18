@@ -28,6 +28,7 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <vector>
+#include <memory>
 #include <random>
 
 #include "carcassonne/tile.h"
