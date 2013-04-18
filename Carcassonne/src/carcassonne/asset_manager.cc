@@ -124,7 +124,7 @@ std::unique_ptr<gui::Menu> AssetManager::getMenu(const std::string& name)
    {
       try
       {
-         ptr = Menu::load(name);
+         ptr = gui::Menu::load(name);
       }
       catch (const std::runtime_error& err)
       {

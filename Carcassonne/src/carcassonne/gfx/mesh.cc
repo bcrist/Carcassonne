@@ -185,7 +185,8 @@ void Mesh::drawCommon() const
 
       glEnd();
 
-      glEndList(); 
+      glEndList();
+   }
 }
 
 } // namespace carcassonne::gfx

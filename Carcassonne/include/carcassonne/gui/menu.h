@@ -59,6 +59,8 @@ public:
    virtual void cancelInput();
 
 protected:
+   Menu(const Menu& other);
+
    Game& game_;
 };
 

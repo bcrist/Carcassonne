@@ -78,6 +78,7 @@ void Menu::onBlurred()
 
 bool Menu::onClosed()
 {
+   return true;
 }
 
 void update()

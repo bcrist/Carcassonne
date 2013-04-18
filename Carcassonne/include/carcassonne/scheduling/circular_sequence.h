@@ -45,7 +45,7 @@ public:
 
 private:
    std::deque<std::function<bool(sf::Time)> > deferred_functions_;
-   int position_;
+   size_t position_;
 };
 
 } // namespace scheduling
