@@ -139,7 +139,7 @@ void Tile::replaceCity(const features::City& old_city, features::City& new_city)
 {
    for (auto i(cities_.begin()), end(cities_.end()); i!= end; ++i)
    {
-      std::shared_ptr<features::City>& ptr = *i;
+      std::shared_ptr<features::Feature>& ptr = *i;
 
       ptr.get();
       if (&old_city == ptr.get())
@@ -160,7 +160,7 @@ void Tile::replaceFarm(const features::Farm& old_farm, features::Farm& new_farm)
 {
    for (auto i(farms_.begin()), end(farms_.end()); i!= end; ++i)
    {
-      std::shared_ptr<features::Farm>& ptr = *i;
+      std::shared_ptr<features::Feature>& ptr = *i;
 
       ptr.get();
       if (&old_farm == ptr.get())
@@ -181,7 +181,7 @@ void Tile::replaceRoad(const features::Road& old_road, features::Road& new_road)
 {
    for (auto i(roads_.begin()), end(roads_.end()); i!= end; ++i)
    {
-      std::shared_ptr<features::Road>& ptr = *i;
+      std::shared_ptr<features::Feature>& ptr = *i;
 
       ptr.get();
       if (&old_road == ptr.get())

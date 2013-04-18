@@ -151,9 +151,9 @@ private:
 
    TileEdge edges_[4];
 
-   std::vector<std::shared_ptr<features::City> > cities_;
-   std::vector<std::shared_ptr<features::Road> > roads_;
-   std::vector<std::shared_ptr<features::Farm> > farms_;
+   std::vector<std::shared_ptr<features::Feature> > cities_;
+   std::vector<std::shared_ptr<features::Feature> > roads_;
+   std::vector<std::shared_ptr<features::Feature> > farms_;
    std::unique_ptr<features::Cloister> cloister_;
 
    // Disable copy-construction & assignment - do not implement
