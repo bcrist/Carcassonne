@@ -55,12 +55,14 @@ bool Board::placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile
          return true;
 
       case Tile::TYPE_FLOATING:
-         Tile* old_tile = getTileAt(position);
-         if (old_tile == nullptr || old_tile->getType() != Tile::TYPE_EMPTY_PLACEABLE)
-            return false;
+         {
+            Tile* old_tile = getTileAt(position);
+            if (old_tile == nullptr || old_tile->getType() != Tile::TYPE_EMPTY_PLACEABLE)
+               return false;
 
-         board_[position] = std::move(tile);
-         return true;
+            board_[position] = std::move(tile);
+            return true;
+         }
 
       default:
          return false;

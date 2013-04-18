@@ -112,30 +112,45 @@ Scenario* Game::getScenario() const
 
 void Game::onMouseMoved(const glm::ivec2& window_coords)
 {
-   if (scenario_)
-      scenario_->onMouseMoved(window_coords);
-
    if (!menu_stack_.empty())
    {
       glm::vec3 world_coords(menu_camera_.windowToWorld(glm::vec2(window_coords)));
       menu_stack_.back()->onMouseMoved(world_coords);
    }
+   else if (scenario_)
+      scenario_->onMouseMoved(window_coords);
 }
 
 void Game::onMouseWheel(int delta)
 {
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onMouseWheel(delta);
+   else if (scenario_)
+      scenario_->onMouseWheel(delta);
 }
 
 void Game::onMouseButton(sf::Mouse::Button button, bool down)
 {
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onMouseButton(button, down);
+   else if (scenario_)
+      scenario_->onMouseButton(button, down);
 }
 
 void Game::onKey(const sf::Event::KeyEvent& event, bool down)
 {
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onKey(event, down);
+   else if (scenario_)
+      scenario_->onKey(event, down);
 }
 
 void Game::onCharacter(const sf::Event::TextEvent& event)
 {
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onCharacter(event);
+   else if (scenario_)
+      scenario_->onCharacter(event);
 }
 
 void Game::onResized(const glm::ivec2& new_size)
@@ -168,17 +183,14 @@ void Game::onClosed()
          return;
 
    if (scenario_)
-      scenario_->onClosed();
+      if (!scenario_->onClosed())
+         return;
+
+   close();
 }
 
 bool Game::close()
-{
-   if (!menu_stack_.empty() && !menu_stack_.back()->onClose())
-      return false;
-
-   if (scenario_ && !scenario_->onClose())
-      return false;
-   
+{   
    if (gfx_cfg_.save_window_location)
    {
       sf::Vector2i pos(window_.getPosition());
@@ -199,6 +211,7 @@ void Game::reloadGraphicsConfiguration()
    graphicsConfigChanged();
 }
 
+// adds 'menu' to the top of the menu stack.
 void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
 {
    assert(menu);  // menu.get() != nullptr
@@ -212,11 +225,13 @@ void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
       scenario_->setPaused(true);
 }
 
+// removes the top (visible) menu
 void Game::popMenu()
 {
    if (menu_stack_.empty())
       return;
-
+   
+   menu_stack_.back()->cancelInput();
    menu_stack_.pop_back();
 		
    if (menu_stack_.empty())
@@ -228,14 +243,32 @@ void Game::popMenu()
    }
 }
 
+// clears the menu stack, loading the "splash" menu if there is no scenario running
 void Game::clearMenus()
 {
+   if (!menu_stack_.empty())
+      menu_stack_.back()->cancelInput();
+
 	menu_stack_.clear();
 
    if (scenario_)
       scenario_->setPaused(false);
    else
       pushMenu(assets_.getMenu("splash"));
+}
+
+// clears the menu stack, replacing it with 'menu'
+void Game::setMenu(std::unique_ptr<gui::Menu>&& menu)
+{
+   if (!menu_stack_.empty())
+      menu_stack_.back()->cancelInput();
+
+   menu_stack_.clear();
+
+   if (menu)
+      pushMenu(std::move(menu));
+   else if (scenario_)
+      scenario_->setPaused(false);
 }
 
 void Game::graphicsConfigChanged()

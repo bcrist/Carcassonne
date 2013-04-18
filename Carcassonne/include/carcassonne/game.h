@@ -68,6 +68,7 @@ public:
    void pushMenu(std::unique_ptr<gui::Menu>&& menu);
    void popMenu();
    void clearMenus();
+   void setMenu(std::unique_ptr<gui::Menu>&& menu);
 
    
 

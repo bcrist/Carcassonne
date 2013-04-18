@@ -25,6 +25,8 @@
 #define CARCASSONNE_MENU_H_
 #include "carcassonne/_carcassonne.h"
 
+#include <SFML/Window.hpp>
+
 namespace carcassonne {
 
 class Game;
@@ -36,12 +38,18 @@ class Menu
 public:
    Menu(Game& game);
 
-   bool onClosed();
-   void onResized();
-
-   void onBlurred();
-
    void onMouseMoved(const glm::vec3& world_coords);
+   void onMouseWheel(int delta);
+   void onMouseButton(sf::Mouse::Button Button, bool down);
+
+   void onKey(const sf::Event::KeyEvent& event, bool down);
+   void onCharacter(const sf::Event::TextEvent& event);
+
+   void onResized();
+   void onBlurred();
+   bool onClosed();
+
+   
 
    void update();
    void draw();

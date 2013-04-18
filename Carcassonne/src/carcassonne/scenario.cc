@@ -29,8 +29,9 @@
 
 namespace carcassonne {
 
-Scenario::Scenario(std::vector<Player*>&& players)
-   : min_simulate_interval_(sf::milliseconds(5))
+Scenario::Scenario(Game& game, std::vector<Player*>&& players)
+   : game_(game),
+     min_simulate_interval_(sf::milliseconds(5))
 {
    
 }

@@ -31,6 +31,7 @@
 
 #include <vector>
 #include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 
 #include "carcassonne/board.h"
 #include "carcassonne/pile.h"
@@ -39,10 +40,11 @@
 
 namespace carcassonne {
 
+class Game;
+
 class Scenario
 {
 public:
-
    enum Phase {
       PHASE_TILE_PLACEMENT = 0,
       PHASE_FOLLOWER_PLACEMENT = 1
@@ -50,21 +52,24 @@ public:
 
    Scenario(Game& game, std::vector<Player*>&& players);
 
-   bool onClosed();
-   void onResized();
-   void onBlurred();
    void onMouseMoved(const glm::ivec2& window_coords);
    void onMouseWheel(int delta);
+   void onMouseButton(sf::Mouse::Button Button, bool down);
 
-   void simulate(sf::Time delta);
+   void onKey(const sf::Event::KeyEvent& event, bool down);
+   void onCharacter(const sf::Event::TextEvent& event);
+
+   void onResized();
+   void onBlurred();
+   bool onClosed();
 
    void draw() const;
-
    void update();
 
    bool isPaused() const;
    void setPaused(bool paused);
 
+   void simulate(sf::Time delta);
 
 private:
    Game& game_;
