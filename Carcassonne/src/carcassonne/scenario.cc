@@ -36,9 +36,36 @@ Scenario::Scenario(Game& game, std::vector<Player*>&& players)
    
 }
 
-void Scenario::simulate(sf::Time delta)
+void Scenario::onMouseMoved(const glm::ivec2& windows_coords)
 {
-   simulation_unifier_(delta);
+}
+
+void Scenario::onMouseWheel(int delta)
+{
+}
+
+void Scenario::onMouseButton(sf::Mouse::Button button, bool down)
+{
+}
+
+void Scenario::onKey(const sf::Event::KeyEvent& event, bool down)
+{
+}
+
+void Scenario::onCharacter(const sf::Event::TextEvent& event)
+{
+}
+
+void Scenario::onResized()
+{
+}
+
+void Scenario::onBlurred()
+{
+}
+
+bool Scenario::onClosed()
+{
 }
 
 void Scenario::draw()const
@@ -69,6 +96,11 @@ void Scenario::setPaused(bool paused)
       if (paused)
          clock_.restart();
    }
+}
+
+void Scenario::simulate(sf::Time delta)
+{
+   simulation_unifier_(delta);
 }
 
 }// namespace carcassonne

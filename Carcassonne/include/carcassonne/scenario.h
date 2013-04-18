@@ -54,7 +54,7 @@ public:
 
    void onMouseMoved(const glm::ivec2& window_coords);
    void onMouseWheel(int delta);
-   void onMouseButton(sf::Mouse::Button Button, bool down);
+   void onMouseButton(sf::Mouse::Button button, bool down);
 
    void onKey(const sf::Event::KeyEvent& event, bool down);
    void onCharacter(const sf::Event::TextEvent& event);

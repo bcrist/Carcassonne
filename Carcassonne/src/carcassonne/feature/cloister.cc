@@ -55,10 +55,11 @@ void Cloister::score()
    points = tiles_.size();
    
    if (!followers_.empty())
-      followers_.front()->getOwner()->scorePoints(points);
-
-   Follower* f;
-   f->setIdle(true);
+   {
+      Follower* f = followers_.front();
+      f->getOwner()->scorePoints(points);
+      f->setIdle(true);
+   }
 }
 
 }
