@@ -54,7 +54,7 @@ public:
    Texture(db::DB& db, const std::string& name);
    ~Texture();
 
-   void reload();
+   void init();
 
    const std::string& getName() const;
    GLuint getTextureGlId() const;

@@ -36,6 +36,7 @@
     <ClCompile Include="src\carcassonne\gfx\sprite.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
+    <ClCompile Include="src\carcassonne\gui\menu.cc" />
     <ClCompile Include="src\carcassonne\scheduling\delay.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />

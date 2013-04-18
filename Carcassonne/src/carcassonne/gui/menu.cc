@@ -19,50 +19,70 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gui/menu.h
+// File: carcassonne/gui/menu.cc
 
-#ifndef CARCASSONNE_MENU_H_
-#define CARCASSONNE_MENU_H_
-#include "carcassonne/_carcassonne.h"
+#include "carcassonne/gui/menu.h"
 
-#include <SFML/Window.hpp>
+#include "carcassonne/game.h"
 
 namespace carcassonne {
-
-class Game;
-
 namespace gui {
 
-class Menu
+std::unique_ptr<Menu> Menu::load(const std::string& name)
 {
-public:
-   static std::unique_ptr<Menu> load(const std::string& name);
+}
 
-   Menu(Game& game);
+Menu::Menu(Game& game)
+{
+}
 
-   virtual std::unique_ptr<Menu> clone() const;
+std::unique_ptr<Menu> Menu::clone() const
+{
+}
 
-   virtual void onMouseMoved(const glm::vec3& world_coords);
-   virtual void onMouseWheel(int delta);
-   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
+void Menu::onMouseMoved(const glm::vec3& world_coords)
+{
+}
 
-   virtual void onKey(const sf::Event::KeyEvent& event, bool down);
-   virtual void onCharacter(const sf::Event::TextEvent& event);
+void Menu::onMouseWheel(int delta)
+{
+}
 
-   virtual void onResized();
-   virtual void onBlurred();
-   virtual bool onClosed();
+void Menu::onMouseButton(sf::Mouse::Button Button, bool down)
+{
+}
 
-   virtual void update();
-   virtual void draw();
+void Menu::onKey(const sf::Event::KeyEvent& event, bool down)
+{
+}
 
-   virtual void cancelInput();
+void Menu::onCharacter(const sf::Event::TextEvent& event)
+{
+}
 
-protected:
-   Game& game_;
-};
+void Menu::onResized()
+{
+}
+
+void Menu::onBlurred()
+{
+}
+
+bool Menu::onClosed()
+{
+}
+
+void update()
+{
+}
+
+void draw()
+{
+}
+
+void cancelInput()
+{
+}
 
 } // namespace carcassonne::gui
 } // namespace carcassonne
-
-#endif
