@@ -42,6 +42,11 @@ class Mesh
 {
 public:
    Mesh(AssetManager& asset_mgr, const std::string& name);
+   ~Mesh();
+
+   void init();
+
+   const std::string& getName() const;
 
    // make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
    void draw() const;
@@ -50,6 +55,10 @@ public:
    
 private:
    void drawCommon() const;
+
+   std::string name_;
+
+   mutable GLuint display_list_id_;
 
    GLenum primitive_type_;
 
