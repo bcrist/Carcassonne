@@ -35,6 +35,31 @@ db::DB& AssetManager::getDB()
    return db_;
 }
 
+void AssetManager::reload()
+{
+   for (auto i(textures_.begin()), end(textures_.end()); i != end; ++i)
+   {
+      try {
+         i->second->init();
+      }
+      catch (const std::runtime_error& err)
+      {
+         std::cerr << "Failed to reinitialize texture \"" << i->second->getName() << "\": " << err.what() << std::endl;
+      }
+   }
+
+   for (auto i(meshes_.begin()), end(meshes_.end()); i != end; ++i)
+   {
+      try {
+         i->second->init();
+      }
+      catch (const std::runtime_error& err)
+      {
+         std::cerr << "Failed to reinitialize mesh \"" << i->second->getName() << "\": " << err.what() << std::endl;
+      }
+   }
+}
+
 gfx::Texture* AssetManager::getTexture(const std::string& name)
 {
    std::unique_ptr<gfx::Texture>& ptr = textures_[name];
@@ -47,7 +72,7 @@ gfx::Texture* AssetManager::getTexture(const std::string& name)
       }
       catch (const std::runtime_error& err)
       {
-         std::cerr << "Failed to load texture \"" << name << "\": " << err.what();
+         std::cerr << "Failed to load texture \"" << name << "\": " << err.what() << std::endl;
       }
    }
 
@@ -65,7 +90,7 @@ const gfx::Sprite& AssetManager::getSprite(const std::string& name)
       }
       catch (std::runtime_error& err)
       {
-         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what();
+         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what() << std::endl;
          
       }
    }
@@ -84,11 +109,30 @@ gfx::Mesh* AssetManager::getMesh(const std::string& name)
       }
       catch (const std::runtime_error& err)
       {
-         std::cerr << "Failed to load mesh \"" << name << "\": " << err.what();
+         std::cerr << "Failed to load mesh \"" << name << "\": " << err.what() << std::endl;
       }
    }
 
    return ptr.get();
+}
+
+std::unique_ptr<gui::Menu> AssetManager::getMenu(const std::string& name)
+{
+   std::unique_ptr<gui::Menu>& ptr = menus_[name];
+
+   if (!ptr)
+   {
+      try
+      {
+         ptr = gui::Menu::load(name);
+      }
+      catch (const std::runtime_error& err)
+      {
+         std::cerr << "Failed to load menu \"" << name << "\": " << err.what() << std::endl;
+      }
+   }
+
+   return ptr ? ptr->clone() : nullptr;
 }
 
 } // namespace carcassonne

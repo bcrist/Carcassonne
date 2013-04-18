@@ -19,35 +19,44 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/scheduling/circular_sequence.cc
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#include "carcassonne/_carcassonne.h"
+#include "carcassonne/scheduling/circular_sequence.h"
 
 namespace carcassonne {
 namespace scheduling {
-namespace easing {
 
-struct QuadraticIn
+CircularSequence::CircularSequence()
+   : position_(0)
 {
-   float operator()(float f);
-};
-
-struct QuadraticOut
+}
+   
+void CircularSequence::schedule(const std::function<bool(sf::Time)>& deferred)
 {
-   float operator()(float f);
-};
+   deferred_functions_.push_back(deferred);
+}
 
-struct QuadraticInOut
+void CircularSequence::clear()
 {
-   float operator()(float f);
-};
+   deferred_functions_.clear();
+}
 
-} // namespace carcassonne::scheduling::easing
-} // namespace carcassonne::scheduling
+   // call the first function in deferred_functions_.  Remove it and return true
+   // if it returns true.  Otherwise return false
+bool CircularSequence::operator()(sf::Time delta)
+{
+   if (deferred_functions_.empty())
+      return true;
+
+   if (position_ >= deferred_functions_.size())
+      position_ = 0;
+
+   if (deferred_functions_[position_](delta))
+      ++position_;
+
+   return false;
+}
+
+
+} // namespace scheduling
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
-
-#endif

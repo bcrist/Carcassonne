@@ -51,10 +51,12 @@ namespace gfx {
 class Texture
 {
 public:
-   Texture(const GLubyte* data, const glm::ivec2& size);
    Texture(db::DB& db, const std::string& name);
    ~Texture();
 
+   void init();
+
+   const std::string& getName() const;
    GLuint getTextureGlId() const;
 
    void enable() const;
@@ -77,6 +79,9 @@ private:
    static GLuint bound_id_;
    static GLenum mode_;
    static glm::vec4 color_;
+
+   db::DB& db_;
+   std::string name_;
 
    glm::ivec2 size_;
    GLuint texture_id_;

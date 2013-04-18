@@ -19,35 +19,79 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/gui/menu.cc
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#include "carcassonne/_carcassonne.h"
+#include "carcassonne/gui/menu.h"
+
+#include "carcassonne/game.h"
 
 namespace carcassonne {
-namespace scheduling {
-namespace easing {
+namespace gui {
 
-struct QuadraticIn
+std::unique_ptr<Menu> Menu::load(const std::string& name)
 {
-   float operator()(float f);
-};
+   throw std::runtime_error("Menu not found!");
+}
 
-struct QuadraticOut
+Menu::Menu(Game& game)
+   : game_(game)
 {
-   float operator()(float f);
-};
+}
 
-struct QuadraticInOut
+Menu::Menu(const Menu& other)
+   : game_(other.game_)
 {
-   float operator()(float f);
-};
+}
 
-} // namespace carcassonne::scheduling::easing
-} // namespace carcassonne::scheduling
+std::unique_ptr<Menu> Menu::clone() const
+{
+   return std::unique_ptr<Menu>(new Menu(*this));
+}
+
+void Menu::onMouseMoved(const glm::vec3& world_coords)
+{
+}
+
+void Menu::onMouseWheel(int delta)
+{
+}
+
+void Menu::onMouseButton(sf::Mouse::Button Button, bool down)
+{
+}
+
+void Menu::onKey(const sf::Event::KeyEvent& event, bool down)
+{
+}
+
+void Menu::onCharacter(const sf::Event::TextEvent& event)
+{
+}
+
+void Menu::onResized()
+{
+}
+
+void Menu::onBlurred()
+{
+}
+
+bool Menu::onClosed()
+{
+   return true;
+}
+
+void update()
+{
+}
+
+void draw()
+{
+}
+
+void cancelInput()
+{
+}
+
+} // namespace carcassonne::gui
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
-
-#endif

@@ -31,6 +31,7 @@
 #include "carcassonne/gfx/texture.h"
 #include "carcassonne/gfx/sprite.h"
 #include "carcassonne/gfx/mesh.h"
+#include "carcassonne/gui/menu.h"
 
 namespace carcassonne {
 
@@ -41,11 +42,15 @@ public:
 
    db::DB& getDB();
 
+   void reload();
+
    gfx::Texture* getTexture(const std::string& name);
 
    const gfx::Sprite& getSprite(const std::string& name);
 
    gfx::Mesh* getMesh(const std::string& name);
+
+   std::unique_ptr<gui::Menu> getMenu(const std::string& name);
 
 private:
    db::DB db_;
@@ -53,6 +58,7 @@ private:
    std::unordered_map<std::string, std::unique_ptr<gfx::Texture> > textures_;
    std::unordered_map<std::string, gfx::Sprite> sprites_;
    std::unordered_map<std::string, std::unique_ptr<gfx::Mesh> > meshes_;
+   std::unordered_map<std::string, std::unique_ptr<gui::Menu> > menus_;
 
    AssetManager(const AssetManager&);
    void operator=(const AssetManager&);

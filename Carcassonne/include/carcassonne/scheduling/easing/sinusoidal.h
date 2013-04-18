@@ -31,31 +31,23 @@ namespace easing {
 
 struct SinusoidalIn
 {
-   float operator()(float f)
-   {
-      return float(1.0 - cos(f * 0.5 * M_PI));
-   }
+   float operator()(float f);
 };
 
 struct SinusoidalOut
 {
-   float operator()(float f)
-   {
-      return float(sin(f * 0.5 * M_PI));
-   }
+   float operator()(float f);
 };
 
 struct SinusoidalInOut
 {
-   float operator()(float f)
-   {
-      std::cerr << float(1.0 - cos(double(f) * M_PI)) << std::endl;
-      return float(0.5 * (1.0 - cos(double(f) * M_PI)));
-   }
+   float operator()(float f);
 };
 
 } // namespace carcassonne::scheduling::easing
 } // namespace carcassonne::scheduling
 } // namespace carcassonne
+
+#include "carcassonne/scheduling/easing/sinusoidal.inl"
 
 #endif

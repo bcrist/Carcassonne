@@ -27,14 +27,11 @@ namespace carcassonne {
 namespace scheduling {
 
 Delay::Delay()
-   : duration_(sf::Time::Zero),
-     running_(false)
 {
 }
 
 Delay::Delay(sf::Time duration)
-   : duration_(duration),
-     running_(false)
+   : duration_(duration)
 {
 }
    
@@ -45,22 +42,18 @@ sf::Time Delay::getDuration() const
 
 sf::Time Delay::getElapsed() const
 {
-   if (!running_)
-      return sf::Time::Zero;
-
-   return timer_.getElapsedTime();
+   return elapsed_;
 }
 
 void Delay::reset()
 {
-   running_ = false;
+   elapsed_ = sf::Time();
 }
 
 void Delay::reset(sf::Time duration)
 {
    duration_ = duration;
-   timer_.restart();
-   running_ = false;
+   elapsed_ = sf::Time();
 }
 
 void Delay::add(sf::Time duration)
@@ -68,15 +61,10 @@ void Delay::add(sf::Time duration)
    duration_ += duration;
 }
 
-bool Delay::operator()()
+bool Delay::operator()(sf::Time delta)
 {
-   if (!running_)
-   {
-      running_ = true;
-      timer_.restart();
-   }
-
-   return timer_.getElapsedTime() > duration_;
+   elapsed_ += delta;
+   return elapsed_ > duration_;
 }
 
 } // namespace scheduling

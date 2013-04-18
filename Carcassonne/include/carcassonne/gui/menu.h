@@ -19,35 +19,52 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/gui/menu.h
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
+#ifndef CARCASSONNE_MENU_H_
+#define CARCASSONNE_MENU_H_
 #include "carcassonne/_carcassonne.h"
 
+#include <SFML/Window.hpp>
+
 namespace carcassonne {
-namespace scheduling {
-namespace easing {
 
-struct QuadraticIn
+class Game;
+
+namespace gui {
+
+class Menu
 {
-   float operator()(float f);
+public:
+   static std::unique_ptr<Menu> load(const std::string& name);
+
+   Menu(Game& game);
+
+   virtual std::unique_ptr<Menu> clone() const;
+
+   virtual void onMouseMoved(const glm::vec3& world_coords);
+   virtual void onMouseWheel(int delta);
+   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
+
+   virtual void onKey(const sf::Event::KeyEvent& event, bool down);
+   virtual void onCharacter(const sf::Event::TextEvent& event);
+
+   virtual void onResized();
+   virtual void onBlurred();
+   virtual bool onClosed();
+
+   virtual void update();
+   virtual void draw();
+
+   virtual void cancelInput();
+
+protected:
+   Menu(const Menu& other);
+
+   Game& game_;
 };
 
-struct QuadraticOut
-{
-   float operator()(float f);
-};
-
-struct QuadraticInOut
-{
-   float operator()(float f);
-};
-
-} // namespace carcassonne::scheduling::easing
-} // namespace carcassonne::scheduling
+} // namespace carcassonne::gui
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
 
 #endif

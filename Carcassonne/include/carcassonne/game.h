@@ -33,10 +33,10 @@
 
 #include "carcassonne/db/db.h"
 #include "carcassonne/gfx/graphics_configuration.h"
-#include "carcassonne/gfx/perspective_camera.h"
 #include "carcassonne/gfx/ortho_camera.h"
 #include "carcassonne/asset_manager.h"
-#include "carcassonne/scheduling/unifier.h"
+#include "carcassonne/gui/menu.h"
+#include "carcassonne/scenario.h"
 
 namespace carcassonne {
 
@@ -45,46 +45,50 @@ class Game
 public:
    Game();
    int run();
-   int close();
 
+   db::DB& getConfigurationDB();
+   const gfx::GraphicsConfiguration& getGraphicsConfiguration() const;
+   AssetManager& getAssetManager();
+   Scenario* getScenario() const;
+   
+   void onMouseMoved(const glm::ivec2& window_coords);
+   void onMouseWheel(int delta);
+   void onMouseButton(sf::Mouse::Button button, bool down);
+
+   void onKey(const sf::Event::KeyEvent& event, bool down);
+   void onCharacter(const sf::Event::TextEvent& event);
+
+   void onResized(const glm::ivec2& new_size);
+   void onBlurred();
+   void onClosed();
+
+   bool close();
+   void reloadGraphicsConfiguration();
+
+   void pushMenu(std::unique_ptr<gui::Menu>&& menu);
+   void popMenu();
+   void clearMenus();
+   void setMenu(std::unique_ptr<gui::Menu>&& menu);
+
+   
+
+private:
    void graphicsConfigChanged();
    void createWindow();
    void initOpenGL();
-   
 
-   void resize(const glm::ivec2& new_size);
-
-   void mouseMove(const glm::ivec2& window_coords);
-
-   void simulate(sf::Time delta);
+   void update();
    void draw();
 
-   bool isSimulationRunning() const;
-   void setSimulationRunning(bool running);
-
-private:
    db::DB config_db_;
-
    gfx::GraphicsConfiguration gfx_cfg_;
    sf::Window window_;
-  
    AssetManager assets_;
+   
+   gfx::OrthoCamera menu_camera_;
+   std::vector<std::unique_ptr<gui::Menu> > menu_stack_;
 
-   bool simulation_running_;
-   sf::Time min_simulate_interval_;
-   sf::Clock clock_;
-
-   gfx::PerspectiveCamera game_camera_;
-   gfx::OrthoCamera gui_camera_;
-
-   glm::vec3 hover_position_;
-
-   gfx::Mesh* mesh_;
-
-   scheduling::Unifier updater_;
-
-   glm::vec4 follower_color_;
-
+   std::unique_ptr<Scenario> scenario_;
 };
 
 } // namespace carcassonne

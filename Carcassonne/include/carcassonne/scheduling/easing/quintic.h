@@ -31,44 +31,23 @@ namespace easing {
 
 struct QuinticIn
 {
-   float operator()(float f)
-   {
-      double f2 = double(f) * f;
-      return float(f2 * f2 * f);
-   }
+   float operator()(float f);      
 };
 
 struct QuinticOut
 {
-   float operator()(float f)
-   {
-      f = 1.0f - f;
-      double f2 = double(f) * f;
-      return float(1.0 - f2 * f2 * f);
-   }
+   float operator()(float f);
 };
 
 struct QuinticInOut
 {
-   float operator()(float f)
-   {
-      f *= 2.0f;
-      if (f <= 1.0f)
-      {
-         double f2 = double(f) * f;
-         return float(0.5 * f2 * f2 * f);
-      }
-      else
-      {
-         f = 2.0f - f;
-         double f2 = double(f) * f;
-         return float(0.5 * (2.0 - f2 * f2 * f));
-      }
-   }
+   float operator()(float f);
 };
 
 } // namespace carcassonne::scheduling::easing
 } // namespace carcassonne::scheduling
 } // namespace carcassonne
+
+#include "carcassonne/scheduling/easing/quintic.inl"
 
 #endif

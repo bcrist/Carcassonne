@@ -30,20 +30,14 @@
 namespace carcassonne {
 namespace scheduling {
 
-template <typename F>
+template <typename R = void>
 class Method
 {
 public:
    Method() {}
-   Method(const std::function<F> method) : method_(method) {}
+   Method(const std::function<R()> method) : method_(method) {}
 
-   bool operator()()
-   {
-      if (method_)
-         method_();
-
-      return true;
-   }
+   bool operator()(sf::Time delta);
 
 private:
    std::function<F> method_;
@@ -51,5 +45,7 @@ private:
 
 } // namespace scheduling
 } // namespace carcassonne
+
+#include "carcassonne/scheduling/method.inl"
 
 #endif

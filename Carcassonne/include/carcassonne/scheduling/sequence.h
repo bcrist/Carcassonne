@@ -27,6 +27,7 @@
 
 #include <deque>
 #include <functional>
+#include <SFML/System.hpp>
 
 namespace carcassonne {
 namespace scheduling {
@@ -36,14 +37,14 @@ class Sequence
 public:
    Sequence();
    
-   void schedule(const std::function<bool()>& deferred);
+   void schedule(const std::function<bool(sf::Time)>& deferred);
 
    void clear();
 
-   bool operator()();
+   bool operator()(sf::Time delta);
 
 private:
-   std::deque<std::function<bool()> > deferred_functions_;
+   std::deque<std::function<bool(sf::Time)> > deferred_functions_;
 };
 
 } // namespace scheduling

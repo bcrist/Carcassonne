@@ -52,6 +52,9 @@
     <Filter Include="Header Files\carcassonne\scheduling\easing">
       <UniqueIdentifier>{dbbf590d-dbd5-4ec0-ab40-58f89b7035a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\carcassonne\gui">
+      <UniqueIdentifier>{07660ff5-3d89-4ad5-b7ff-95377a3c75e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -136,6 +139,12 @@
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
     <ClCompile Include="src\carcassonne\scheduling\delay.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gui\menu.cc">
+      <Filter>Source Files\carcassonne\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduling\circular_sequence.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,6 +269,12 @@
     <ClInclude Include="include\carcassonne\scheduling\easing\sinusoidal.h">
       <Filter>Header Files\carcassonne\scheduling\easing</Filter>
     </ClInclude>
+    <ClInclude Include="include\carcassonne\gui\menu.h">
+      <Filter>Header Files\carcassonne\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\circular_sequence.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\carcassonne\db\db.inl">
@@ -279,6 +294,30 @@
     </None>
     <None Include="include\carcassonne\gfx\sprite.inl">
       <Filter>Header Files\carcassonne\gfx</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\method.inl">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\easing\cubic.inl">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\easing\linear.inl">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\easing\quadratic.inl">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\easing\quartic.inl">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\easing\quintic.inl">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\easing\sinusoidal.inl">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </None>
+    <None Include="include\carcassonne\scheduling\interpolator.inl">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
     </None>
   </ItemGroup>
 </Project>

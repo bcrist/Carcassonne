@@ -19,35 +19,36 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/scheduling/circular_sequence.h
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
+#ifndef CARCASSONNE_SCHEDULING_CIRCULAR_SEQUENCE_H_
+#define CARCASSONNE_SCHEDULING_CIRCULAR_SEQUENCE_H_
 #include "carcassonne/_carcassonne.h"
+
+#include <deque>
+#include <functional>
+#include <SFML/System.hpp>
 
 namespace carcassonne {
 namespace scheduling {
-namespace easing {
 
-struct QuadraticIn
+class CircularSequence
 {
-   float operator()(float f);
+public:
+   CircularSequence();
+   
+   void schedule(const std::function<bool(sf::Time)>& deferred);
+
+   void clear();
+
+   bool operator()(sf::Time delta);
+
+private:
+   std::deque<std::function<bool(sf::Time)> > deferred_functions_;
+   size_t position_;
 };
 
-struct QuadraticOut
-{
-   float operator()(float f);
-};
-
-struct QuadraticInOut
-{
-   float operator()(float f);
-};
-
-} // namespace carcassonne::scheduling::easing
-} // namespace carcassonne::scheduling
+} // namespace scheduling
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
 
 #endif

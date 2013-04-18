@@ -19,35 +19,29 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/scheduling/method.inl
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#include "carcassonne/_carcassonne.h"
+#ifndef CARCASSONNE_SCHEDULING_METHOD_INL_
+#define CARCASSONNE_SCHEDULING_METHOD_INL_
+
+
+#ifndef CARCASSONNE_SCHEDULING_METHOD_H_
+#include "carcassonne/scheduling/method.h"
+#endif
 
 namespace carcassonne {
 namespace scheduling {
-namespace easing {
 
-struct QuadraticIn
+template <typename R>
+inline bool carcassonne::scheduling::Method<R>::operator()(sf::Time delta)
 {
-   float operator()(float f);
-};
+   if (method_)
+      method_();
 
-struct QuadraticOut
-{
-   float operator()(float f);
-};
+   return true;
+}
 
-struct QuadraticInOut
-{
-   float operator()(float f);
-};
-
-} // namespace carcassonne::scheduling::easing
-} // namespace carcassonne::scheduling
+} // namespace scheduling
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
 
 #endif
