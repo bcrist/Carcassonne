@@ -3,7 +3,6 @@ High Priority
 Menus
 Game Logic
 AI
-scheduling::CircularSequence
 
 Mid Priority
 ------------

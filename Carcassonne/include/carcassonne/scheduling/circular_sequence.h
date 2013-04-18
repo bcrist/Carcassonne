@@ -19,52 +19,36 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gui/menu.h
+// File: carcassonne/scheduling/circular_sequence.h
 
-#ifndef CARCASSONNE_MENU_H_
-#define CARCASSONNE_MENU_H_
+#ifndef CARCASSONNE_SCHEDULING_CIRCULAR_SEQUENCE_H_
+#define CARCASSONNE_SCHEDULING_CIRCULAR_SEQUENCE_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <SFML/Window.hpp>
+#include <deque>
+#include <functional>
+#include <SFML/System.hpp>
 
 namespace carcassonne {
+namespace scheduling {
 
-class Game;
-
-namespace gui {
-
-class Menu
+class CircularSequence
 {
 public:
-   static std::unique_ptr<Menu> load(const std::string& name);
+   CircularSequence();
+   
+   void schedule(const std::function<bool(sf::Time)>& deferred);
 
-   Menu(Game& game);
+   void clear();
 
-   virtual std::unique_ptr<Menu> clone() const;
+   bool operator()(sf::Time delta);
 
-   virtual void onMouseMoved(const glm::vec3& world_coords);
-   virtual void onMouseWheel(int delta);
-   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
-
-   virtual void onKey(const sf::Event::KeyEvent& event, bool down);
-   virtual void onCharacter(const sf::Event::TextEvent& event);
-
-   virtual void onResized();
-   virtual void onBlurred();
-   virtual bool onClosed();
-
-   virtual void update();
-   virtual void draw();
-
-   virtual void cancelInput();
-
-protected:
-   Menu(const Menu& other);
-
-   Game& game_;
+private:
+   std::deque<std::function<bool(sf::Time)> > deferred_functions_;
+   int position_;
 };
 
-} // namespace carcassonne::gui
+} // namespace scheduling
 } // namespace carcassonne
 
 #endif

@@ -19,52 +19,44 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gui/menu.h
+// File: carcassonne/scheduling/circular_sequence.cc
 
-#ifndef CARCASSONNE_MENU_H_
-#define CARCASSONNE_MENU_H_
-#include "carcassonne/_carcassonne.h"
-
-#include <SFML/Window.hpp>
+#include "carcassonne/scheduling/circular_sequence.h"
 
 namespace carcassonne {
+namespace scheduling {
 
-class Game;
-
-namespace gui {
-
-class Menu
+CircularSequence::CircularSequence()
+   : position_(0)
 {
-public:
-   static std::unique_ptr<Menu> load(const std::string& name);
+}
+   
+void CircularSequence::schedule(const std::function<bool(sf::Time)>& deferred)
+{
+   deferred_functions_.push_back(deferred);
+}
 
-   Menu(Game& game);
+void CircularSequence::clear()
+{
+   deferred_functions_.clear();
+}
 
-   virtual std::unique_ptr<Menu> clone() const;
+   // call the first function in deferred_functions_.  Remove it and return true
+   // if it returns true.  Otherwise return false
+bool CircularSequence::operator()(sf::Time delta)
+{
+   if (deferred_functions_.empty())
+      return true;
 
-   virtual void onMouseMoved(const glm::vec3& world_coords);
-   virtual void onMouseWheel(int delta);
-   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
+   if (position_ >= deferred_functions_.size())
+      position_ = 0;
 
-   virtual void onKey(const sf::Event::KeyEvent& event, bool down);
-   virtual void onCharacter(const sf::Event::TextEvent& event);
+   if (deferred_functions_[position_](delta))
+      ++position_;
 
-   virtual void onResized();
-   virtual void onBlurred();
-   virtual bool onClosed();
+   return false;
+}
 
-   virtual void update();
-   virtual void draw();
 
-   virtual void cancelInput();
-
-protected:
-   Menu(const Menu& other);
-
-   Game& game_;
-};
-
-} // namespace carcassonne::gui
+} // namespace scheduling
 } // namespace carcassonne
-
-#endif

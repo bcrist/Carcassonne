@@ -147,6 +147,9 @@
     <ClCompile Include="src\carcassonne\gui\menu.cc">
       <Filter>Source Files\carcassonne\gui</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduling\circular_sequence.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
@@ -271,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\gui\menu.h">
       <Filter>Header Files\carcassonne\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\circular_sequence.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

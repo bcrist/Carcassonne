@@ -30,14 +30,22 @@ namespace gui {
 
 std::unique_ptr<Menu> Menu::load(const std::string& name)
 {
+   throw std::runtime_error("Menu not found!");
 }
 
 Menu::Menu(Game& game)
+   : game_(game)
+{
+}
+
+Menu::Menu(const Menu& other)
+   : game_(other.game_)
 {
 }
 
 std::unique_ptr<Menu> Menu::clone() const
 {
+   return std::unique_ptr<Menu>(new Menu(*this));
 }
 
 void Menu::onMouseMoved(const glm::vec3& world_coords)
