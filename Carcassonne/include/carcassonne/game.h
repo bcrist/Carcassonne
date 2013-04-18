@@ -62,15 +62,16 @@ public:
    void onBlurred();
    void onClosed();
 
-   bool close();
+   void close();
    void reloadGraphicsConfiguration();
+
+   void newScenario(ScenarioInit& options);
+   void endScenario();
 
    void pushMenu(std::unique_ptr<gui::Menu>&& menu);
    void popMenu();
    void clearMenus();
    void setMenu(std::unique_ptr<gui::Menu>&& menu);
-
-   
 
 private:
    void graphicsConfigChanged();

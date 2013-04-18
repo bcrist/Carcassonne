@@ -60,6 +60,21 @@ void PerspectiveCamera::setUp(const glm::vec3& up)
    recalculateView();
 }
 
+const glm::vec3& PerspectiveCamera::getPosition() const
+{
+   return position_;
+}
+
+const glm::vec3& PerspectiveCamera::getTarget() const
+{
+   return target_;
+}
+
+const glm::vec3& PerspectiveCamera::getUp() const
+{
+   return up_;
+}
+
 void PerspectiveCamera::recalculatePerspective()
 {
    const float size_y = static_cast<float>(gfx_cfg_.viewport_size.y);
@@ -92,8 +107,8 @@ glm::vec3 PerspectiveCamera::windowToWorld(const glm::vec2& window_coords, float
    const float bottom = -top_;
    const float left = -right_;
 
-   // TODO: convert window coordinates to ray direction target point using z_near_, right_, top_
-   //       then convert the target point from eye coordinates to world coordinates
+   // convert window coordinates to ray direction target point using z_near_, right_, top_
+   // then convert the target point from eye coordinates to world coordinates
 
    glm::vec2 window_normalized(window_coords.x / gfx_cfg_.viewport_size.x,
                                window_coords.y / gfx_cfg_.viewport_size.y);
@@ -102,14 +117,14 @@ glm::vec3 PerspectiveCamera::windowToWorld(const glm::vec2& window_coords, float
                     -1, 1);
    glm::vec4 target_world(eyeToWorld(target));
 
-   // TODO: create ray from camera position and target point above (direction = target - position_)
+   // create ray from camera position and target point above (direction = target - position_)
 
    glm::vec3 direction(glm::vec3(target_world) - position_);
 
-   // TODO: interpolate ray intersection with the plane with constant y-coordinate plane_y
-   //       by computing float t = (plane_y - position_.y) / direction.y
-   //       then calculate the intersection by multiplying t * direction and adding that to the
-   //       camera position.
+   // interpolate ray intersection with the plane with constant y-coordinate plane_y
+   // by computing float t = (plane_y - position_.y) / direction.y
+   // then calculate the intersection by multiplying t * direction and adding that to the
+   // camera position.
 
    float delta_y = plane_y - position_.y;
    float t = -1;
@@ -121,7 +136,10 @@ glm::vec3 PerspectiveCamera::windowToWorld(const glm::vec2& window_coords, float
                        std::numeric_limits<float>::signaling_NaN(),
                        std::numeric_limits<float>::signaling_NaN());
 
-   return position_ + direction * t;
+   glm::vec3 position(position_ + direction * t);
+   position.y = plane_y;   // set y coordinate to plane y (avoids rounding errors in y)
+
+   return position;
 }
 
 } // namespace carcassonne::gfx

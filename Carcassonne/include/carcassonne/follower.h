@@ -43,6 +43,7 @@ public:
    void setIdle(bool idle);
 
    void setOrientation(const Follower& other);
+   void setPosition(const glm::vec3& position);
 
    
    // called by Player::draw() if the follower is idle, or Tile::draw() (after

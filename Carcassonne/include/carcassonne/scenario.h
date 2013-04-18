@@ -36,21 +36,30 @@
 #include "carcassonne/board.h"
 #include "carcassonne/pile.h"
 #include "carcassonne/player.h"
+#include "carcassonne/gfx/perspective_camera.h"
+#include "carcassonne/gfx/ortho_camera.h"
 #include "carcassonne/scheduling/Unifier.h"
 
 namespace carcassonne {
 
 class Game;
 
+struct ScenarioInit
+{
+   std::vector<Player*> players;
+   Pile tiles;
+   std::unique_ptr<Tile> starting_tile;
+};
+
 class Scenario
 {
 public:
-   enum Phase {
-      PHASE_TILE_PLACEMENT = 0,
-      PHASE_FOLLOWER_PLACEMENT = 1
-   };
+   Scenario(Game& game, ScenarioInit& options);
 
-   Scenario(Game& game, std::vector<Player*>&& players);
+   Player& getCurrentPlayer();
+   const Player& getCurrentPlayer() const;
+
+   void endTurn();
 
    void onMouseMoved(const glm::ivec2& window_coords);
    void onMouseWheel(int delta);
@@ -74,20 +83,23 @@ public:
 private:
    Game& game_;
 
+   gfx::PerspectiveCamera camera_;
+   gfx::OrthoCamera hud_camera_;
+   float floating_height_;
+
    sf::Clock clock_;
    sf::Time min_simulate_interval_;
    bool paused_;
    scheduling::Unifier simulation_unifier_;
    
-
    Board board_;
    Pile draw_pile_;
    std::vector<Player*> players_;
 
    std::vector<Player*>::iterator current_player_; // iterator to the player
-                                                   // whose turn it is.
-   Phase current_phase_;                // the phase of the current player's turn
+                                                   // whose turn it is
    std::unique_ptr<Tile> current_tile_; // the tile that is currently being played
+   Follower* current_follower_;
 
    // Disable copy-construction & assignment - do not implement
    Scenario(const Scenario&);

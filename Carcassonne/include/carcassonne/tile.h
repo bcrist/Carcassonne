@@ -121,6 +121,8 @@ public:
    void rotateClockwise();
    void rotateCounterclockwise();
 
+   void setPosition(const glm::vec3& position);
+
    // Returns the type of features which currently exist on the requested side.
    const TileEdge& getEdge(Side side);
 

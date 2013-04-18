@@ -70,6 +70,9 @@ void Pile::shuffle()
 
 std::unique_ptr<Tile> Pile::remove()
 {
+   if (tiles_.size() == 0)
+      return std::unique_ptr<Tile>();
+
    std::unique_ptr<Tile> tile = std::move(tiles_.back());
 
    tiles_.pop_back();

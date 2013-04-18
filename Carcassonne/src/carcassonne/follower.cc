@@ -66,5 +66,10 @@ void Follower::setOrientation(const Follower& other)
    rotation_ = other.rotation_;
 }
 
+void Follower::setPosition(const glm::vec3& position)
+{
+   position_ = position;
+}
+
 
 }// namespace carcassonne

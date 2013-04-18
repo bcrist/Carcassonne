@@ -27,21 +27,97 @@
 
 #include "carcassonne/scenario.h"
 
+#include "carcassonne/pile.h"
+#include "carcassonne/game.h"
+
 namespace carcassonne {
 
-Scenario::Scenario(Game& game, std::vector<Player*>&& players)
+Scenario::Scenario(Game& game, ScenarioInit& options)
    : game_(game),
-     min_simulate_interval_(sf::milliseconds(5))
+     camera_(game.getGraphicsConfiguration()),
+     hud_camera_(game.getGraphicsConfiguration()),
+     floating_height_(0.5f),
+     min_simulate_interval_(sf::milliseconds(5)),
+     paused_(false),
+     players_(options.players),
+     current_player_(players_.end()),
+     current_follower_(nullptr)
 {
-   
+   camera_.setPosition(glm::vec3(-2, 10, -4));
+   camera_.setTarget(glm::vec3(0, 0, 0));
+   assert(players_.size() > 1);
+
+   draw_pile_.add(std::move(options.tiles));
+
+   board_.placeTileAt(glm::ivec2(0,0), std::move(options.starting_tile));
+   endTurn();
 }
 
-void Scenario::onMouseMoved(const glm::ivec2& windows_coords)
+Player& Scenario::getCurrentPlayer()
 {
+   return **current_player_;
+}
+
+const Player& Scenario::getCurrentPlayer() const
+{
+   return **current_player_;
+}
+
+void Scenario::endTurn()
+{
+   // move current_player_ to the next player
+   if (current_player_ == players_.end())
+      current_player_ = players_.begin();
+   else
+      ++current_player_;
+
+   // set current_tile_
+   current_tile_ = draw_pile_.remove();
+
+   // set current_follower_
+   current_follower_ = nullptr;
+}
+
+void Scenario::onMouseMoved(const glm::ivec2& window_coords)
+{
+   if (getCurrentPlayer().isHuman())
+   {
+      glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(window_coords), floating_height_));
+
+      if (current_tile_)
+      {
+         current_tile_->setPosition(world_coords);
+      }
+      else if (current_follower_)
+      {
+         current_follower_->setPosition(world_coords);
+      }
+   }
 }
 
 void Scenario::onMouseWheel(int delta)
 {
+   glm::vec3 look_direction(camera_.getTarget() - camera_.getPosition());
+
+   float look_length = glm::length(look_direction);
+
+   float factor = 1.5f;
+   
+   if (delta < 0)
+   {
+      delta = -delta;
+      factor = 1 / factor;
+   }
+
+   while (--delta > 0)
+      factor *= factor;
+
+   look_length *= factor;
+
+   if (look_length < 3 || look_length > 150) // TODO: set min/max look length from graphicsconfig
+      return;
+
+   camera_.setPosition(camera_.getTarget() - look_direction * factor);
 }
 
 void Scenario::onMouseButton(sf::Mouse::Button button, bool down)
@@ -58,6 +134,8 @@ void Scenario::onCharacter(const sf::Event::TextEvent& event)
 
 void Scenario::onResized()
 {
+   camera_.recalculatePerspective();
+   hud_camera_.recalculate();
 }
 
 void Scenario::onBlurred()
@@ -69,9 +147,22 @@ bool Scenario::onClosed()
    return false;
 }
 
-void Scenario::draw()const
+void Scenario::draw() const
 {
-   
+   camera_.use();
+   board_.draw();
+
+   if (current_tile_)
+      current_tile_->draw();
+   else if (current_follower_)
+      current_follower_->draw();
+
+
+   hud_camera_.use();
+   // draw current player's HUD
+   getCurrentPlayer().draw();
+
+   // TODO: draw all players' scores
 }
 
 void Scenario::update()

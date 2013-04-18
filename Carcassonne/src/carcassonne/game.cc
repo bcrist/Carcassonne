@@ -47,6 +47,7 @@ Game::Game()
 int Game::run()
 {
    graphicsConfigChanged();
+   clearMenus();
 
    while (window_.isOpen())
    {
@@ -184,7 +185,7 @@ void Game::onClosed()
    close();
 }
 
-bool Game::close()
+void Game::close()
 {   
    if (gfx_cfg_.save_window_location)
    {
@@ -196,8 +197,6 @@ bool Game::close()
    }
 
    window_.close();
-
-   return true;
 }
 
 void Game::reloadGraphicsConfiguration()
@@ -206,10 +205,28 @@ void Game::reloadGraphicsConfiguration()
    graphicsConfigChanged();
 }
 
+void Game::newScenario(ScenarioInit& options)
+{
+   if (scenario_)
+      endScenario();
+
+   scenario_.reset(new Scenario(*this, options));
+}
+
+void Game::endScenario()
+{
+   if (!scenario_)
+      return;
+
+   //scenario_->finalize();
+   scenario_.reset();
+}
+
 // adds 'menu' to the top of the menu stack.
 void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
 {
-   assert(menu);  // menu.get() != nullptr
+   if (!menu)
+      return;
 
    if (!menu_stack_.empty())
       menu_stack_.back()->cancelInput();

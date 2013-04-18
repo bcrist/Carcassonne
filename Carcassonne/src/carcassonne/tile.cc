@@ -28,6 +28,8 @@
 
 namespace carcassonne {
 
+#pragma region TileEdge
+
 TileEdge::TileEdge()
    : type(TYPE_FARM),
      open(true),
@@ -64,6 +66,7 @@ TileEdge::TileEdge(features::City* city)
 {
 }
 
+#pragma endregion
 
 // Constructs a tile of one of the TYPE_EMPTY_* types
 Tile::Tile(Type type)
@@ -110,10 +113,15 @@ void Tile::rotateCounterclockwise()
    rotation_ = static_cast<Rotation>((static_cast<int>(rotation_) + 3) % 4);
 }
 
+void Tile::setPosition(const glm::vec3& position)
+{
+   position_ = position;
+}
+
 // Returns the type of features which currently exist on the requested side.
 const TileEdge& Tile::getEdge(Side side)
 {
-   return edges_[0];
+   return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
 }
 
 std::vector<features::Feature*> Tile::getFeatures()
