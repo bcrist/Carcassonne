@@ -45,12 +45,11 @@ public:
 
    void add(sf::Time duration);
 
-   bool operator()();
+   bool operator()(sf::Time delta);
 
 private:
-   sf::Clock timer_;
+   sf::Time elapsed_;
    sf::Time duration_;
-   bool running_;
 };
 
 } // namespace scheduling

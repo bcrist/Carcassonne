@@ -31,10 +31,7 @@ namespace easing {
 
 struct Linear
 {
-   float operator()(float f)
-   {
-      return f;
-   }
+   float operator()(float f);
 };
 
 // S - number of discrete steps
@@ -43,14 +40,14 @@ struct Linear
 template <int S, int N = 50, int D = 100>
 struct SteppedLinear
 {
-   float operator()(float f)
-   {
-      return floor(float(N) / D + f * S) / S;
-   }
+   float operator()(float f);
 };
 
 } // namespace carcassonne::scheduling::easing
 } // namespace carcassonne::scheduling
 } // namespace carcassonne
+
+
+#include "carcassonne/scheduling/easing/linear.inl"
 
 #endif

@@ -38,89 +38,28 @@ template <typename T, typename P = T, typename R = void>
 class Interpolator
 {
 public:
-   Interpolator(sf::Time duration, const std::function<R(P)>& func, P initial = 0, P final = 1, const std::function<float(float)>& easing = nullptr)
-      : duration_(duration),
-        running_(false),
-        easing_(easing),
-        initial_(initial),
-        final_(final),
-        function_(func)
-   {}
+   Interpolator(sf::Time duration, const std::function<R(P)>& func, P initial = 0, P final = 1, const std::function<float(float)>& easing = nullptr);
    
-   sf::Time getDuration() const
-   {
-      return duration_;
-   }
+   sf::Time getDuration() const;
+   sf::Time getElapsed() const;
 
-   sf::Time getElapsed() const
-   {
-      if (!running_)
-         return sf::Time::Zero;
+   void reset();
+   void reset(sf::Time duration);
 
-      return timer_.getElapsedTime();
-   }
+   float getFraction() const;
 
-   void reset()
-   {
-      running_ = false;
-   }
+   float getEased() const;
+   float getEased(float fraction) const;
 
-   float getFraction() const
-   {
-      float f = getElapsed().asMicroseconds() / float(duration_.asMicroseconds());
-      if (f < 0)
-         f = 0;
-      else if (f > 1)
-         f = 1;
+   T get() const;
 
-      return f;
-   }
+   T get(float fraction) const;
 
-   float getEased() const
-   {
-      if (!easing_)
-         return getFraction();
-
-      return easing_(getFraction());
-   }
-
-   float getEased(float fraction) const
-   {
-      if (!easing_)
-         return fraction;
-
-      return easing_(fraction);
-   }
-
-   T get() const
-   {
-      return get(getFraction());
-   }
-
-   T get(float fraction) const
-   {
-      float b = getEased(fraction),
-            a = 1 - b;
-
-      return initial_ * a + final_ * b;
-   }
-
-   bool operator()()
-   {
-      if (!running_)
-      {
-         running_ = true;
-         timer_.restart();
-      }
-      float f = getFraction();
-      function_(get(f));
-      return f == 1.0f;
-   }
+   bool operator()(sf::Time delta);
 
 private:
-   sf::Clock timer_;
+   sf::Time elapsed_;
    sf::Time duration_;
-   bool running_;
 
    std::function<float(float)> easing_;
 

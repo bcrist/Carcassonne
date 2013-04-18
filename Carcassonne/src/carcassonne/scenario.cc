@@ -25,25 +25,49 @@
 // AI players.  "Game" might have been a better name, but our Game class
 // manages the entire application, not just one match/scenario.
 
-#include "carcassonne/_carcassonne.h"
 #include "carcassonne/scenario.h"
-
 
 namespace carcassonne {
 
 Scenario::Scenario(std::vector<Player*>&& players)
+   : min_simulate_interval_(sf::milliseconds(5))
 {
    
 }
 
 void Scenario::simulate(sf::Time delta)
 {
-      
+   simulation_unifier_(delta);
 }
 
 void Scenario::draw()const
 {
    
+}
+
+void Scenario::update()
+{
+   if (paused_ || clock_.getElapsedTime() < min_simulate_interval_)
+      return;
+
+   sf::Time delta = clock_.restart();
+   simulate(delta);
+}
+
+bool Scenario::isPaused() const
+{
+   return paused_;
+}
+
+void Scenario::setPaused(bool paused)
+{
+   if (paused_ != paused)
+   {
+      paused_ = paused;
+
+      if (paused)
+         clock_.restart();
+   }
 }
 
 }// namespace carcassonne

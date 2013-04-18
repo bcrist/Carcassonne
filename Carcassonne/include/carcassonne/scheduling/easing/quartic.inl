@@ -19,35 +19,50 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/scheduling/easing/quartic.inl
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#include "carcassonne/_carcassonne.h"
+#ifndef CARCASSONNE_SCHEDULING_EASING_QUARTIC_INL_
+#define CARCASSONNE_SCHEDULING_EASING_QUARTIC_INL_
+
+#ifndef CARCASSONNE_SCHEDULING_EASING_QUARTIC_H_
+#include "carcassonne/scheduling/easing/quartic.h"
+#endif
 
 namespace carcassonne {
 namespace scheduling {
 namespace easing {
 
-struct QuadraticIn
+float QuarticIn::operator()(float f)
 {
-   float operator()(float f);
-};
+   double f2 = double(f) * f;
+   return float(f2 * f2);
+}
 
-struct QuadraticOut
+float QuarticOut::operator()(float f)
 {
-   float operator()(float f);
-};
+   f = 1.0f - f;
+   double f2 = double(f) * f;
+   return float(1.0 - f2 * f2);
+}
 
-struct QuadraticInOut
+float QuarticInOut::operator()(float f)
 {
-   float operator()(float f);
-};
+   f *= 2.0f;
+   if (f <= 1.0f)
+   {
+      double f2 = double(f) * f;
+      return float(0.5 * f2 * f2);
+   }
+   else
+   {
+      f = 2.0f - f;
+      double f2 = double(f) * f;
+      return float(0.5 * (2.0 - f2 * f2));
+   }
+}
 
 } // namespace carcassonne::scheduling::easing
 } // namespace carcassonne::scheduling
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
 
 #endif

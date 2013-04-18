@@ -31,40 +31,23 @@ namespace easing {
 
 struct CubicIn
 {
-   float operator()(float f)
-   {
-      return f * f * f;
-   }
+   float operator()(float f);
 };
 
 struct CubicOut
 {
-   float operator()(float f)
-   {
-      f = 1.0f - f;
-      return 1.0f - f * f * f;
-   }
+   float operator()(float f);
 };
 
 struct CubicInOut
 {
-   float operator()(float f)
-   {
-      f *= 2.0f;
-      if (f <= 1.0f)
-      {
-         return 0.5f * (f * f * f);
-      }
-      else
-      {
-         f = 2.0f - f;
-         return 0.5f * (2.0f - f * f * f);
-      }
-   }
+   float operator()(float f);
 };
 
 } // namespace carcassonne::scheduling::easing
 } // namespace carcassonne::scheduling
 } // namespace carcassonne
+
+#include "carcassonne/scheduling/easing/cubic.inl"
 
 #endif

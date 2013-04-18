@@ -19,35 +19,40 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/quadratic.h
+// File: carcassonne/gui/menu.h
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
-#define CARCASSONNE_SCHEDULING_EASING_QUADRATIC_H_
+#ifndef CARCASSONNE_MENU_H_
+#define CARCASSONNE_MENU_H_
 #include "carcassonne/_carcassonne.h"
 
 namespace carcassonne {
-namespace scheduling {
-namespace easing {
 
-struct QuadraticIn
+class Game;
+
+namespace gui {
+
+class Menu
 {
-   float operator()(float f);
+public:
+   Menu(Game& game);
+
+   bool onClose();
+   void onResized();
+
+   void onBlur();
+
+   void mouseMove(glm::
+
+   void update();
+   void draw();
+
+   void cancelInput();
+
+private:
+   Game& game_;
 };
 
-struct QuadraticOut
-{
-   float operator()(float f);
-};
-
-struct QuadraticInOut
-{
-   float operator()(float f);
-};
-
-} // namespace carcassonne::scheduling::easing
-} // namespace carcassonne::scheduling
+} // namespace carcassonne::gui
 } // namespace carcassonne
-
-#include "carcassonne/scheduling/easing/quadratic.inl"
 
 #endif

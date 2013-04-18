@@ -64,6 +64,7 @@
     <ClInclude Include="include\carcassonne\gfx\sprite.h" />
     <ClInclude Include="include\carcassonne\gfx\texture.h" />
     <ClInclude Include="include\carcassonne\gfx\texture_font.h" />
+    <ClInclude Include="include\carcassonne\gui\menu.h" />
     <ClInclude Include="include\carcassonne\pile.h" />
     <ClInclude Include="include\carcassonne\player.h" />
     <ClInclude Include="include\carcassonne\scenario.h" />
@@ -89,6 +90,14 @@
     <None Include="include\carcassonne\gfx\camera.inl" />
     <None Include="include\carcassonne\gfx\rect.inl" />
     <None Include="include\carcassonne\gfx\sprite.inl" />
+    <None Include="include\carcassonne\scheduling\easing\cubic.inl" />
+    <None Include="include\carcassonne\scheduling\easing\linear.inl" />
+    <None Include="include\carcassonne\scheduling\easing\quadratic.inl" />
+    <None Include="include\carcassonne\scheduling\easing\quartic.inl" />
+    <None Include="include\carcassonne\scheduling\easing\quintic.inl" />
+    <None Include="include\carcassonne\scheduling\easing\sinusoidal.inl" />
+    <None Include="include\carcassonne\scheduling\interpolator.inl" />
+    <None Include="include\carcassonne\scheduling\method.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8FD4D4BE-A710-4A9B-A8D1-1219A84C17B6}</ProjectGuid>

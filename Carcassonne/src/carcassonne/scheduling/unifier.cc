@@ -30,7 +30,7 @@ Unifier::Unifier()
 {
 }
    
-void Unifier::schedule(const std::function<bool()>& deferred)
+void Unifier::schedule(const std::function<bool(sf::Time)>& deferred)
 {
    deferred_functions_.push_back(deferred);
 }
@@ -43,11 +43,11 @@ void Unifier::clear()
 // call each function in deferred_functions_.  Remove any functions
 // which return true.  If any functions return false, return
 // false, otherwise return true;
-bool Unifier::operator()()
+bool Unifier::operator()(sf::Time delta)
 {
    for (auto i(deferred_functions_.begin()); i != deferred_functions_.end();)
    {
-      if ((*i)())
+      if ((*i)(delta))
          i = deferred_functions_.erase(i);
       else
          ++i;

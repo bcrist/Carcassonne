@@ -45,120 +45,56 @@ Game::Game()
    : config_db_("carcassonne.ccconfig"),
      gfx_cfg_(gfx::GraphicsConfiguration::load(config_db_)),
      assets_("carcassonne.ccassets"),
-     simulation_running_(true),
-     min_simulate_interval_(sf::milliseconds(5)),
-     game_camera_(gfx_cfg_),
-     gui_camera_(gfx_cfg_)
+     menu_camera_(gfx_cfg_)
 {
 }
 
 int Game::run()
 {
-   gfx_cfg_.v_sync = false;
-   gfx_cfg_.depth_bits = 32;
-   gfx_cfg_.msaa_level = 4;
-   gfx_cfg_.window_mode = gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED;
-
    graphicsConfigChanged();
-   clock_.restart();
 
-   game_camera_.setPosition(glm::vec3(100, 100, 0));
-   game_camera_.setTarget(glm::vec3(0,0,0));
-
-   mesh_ = assets_.getMesh("follower");
-   
-
-   scheduling::Sequence seq;
-   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
-
-   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
-      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
-      glm::vec3(100, 100, 0), glm::vec3(0,100,100), scheduling::easing::QuadraticInOut())); 
-
-   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
-
-   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
-      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
-      glm::vec3(0, 100, 100), glm::vec3(-100,100,0), scheduling::easing::QuarticInOut())); 
-
-   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
-
-   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
-      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
-      glm::vec3(-100, 100, 0), glm::vec3(0,100,-100), scheduling::easing::SinusoidalInOut())); 
-
-   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
-
-   seq.schedule(scheduling::Interpolator<glm::vec3, const glm::vec3&>(sf::seconds(5),
-      ([=](const glm::vec3& position) { game_camera_.setPosition(position); }),
-      glm::vec3(0, 100, -100), glm::vec3(100,100,0), scheduling::easing::SteppedLinear<16>())); 
-
-   seq.schedule(scheduling::Delay(sf::seconds(0.5)));
-
-   updater_.schedule(seq);
-
-   seq = scheduling::Sequence();
-
-   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
-      ([=](const glm::vec4& color) { follower_color_ = color; }),
-      glm::vec4(1, 0, 0, 1), glm::vec4(0,1,0,1))); 
-
-   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
-      ([=](const glm::vec4& color) { follower_color_ = color; }),
-      glm::vec4(0, 1, 0, 1), glm::vec4(0,0,1,1), scheduling::easing::SteppedLinear<5>())); 
-
-   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
-      ([=](const glm::vec4& color) { follower_color_ = color; }),
-      glm::vec4(0, 0, 1, 1), glm::vec4(1,0,0,1), scheduling::easing::QuinticInOut())); 
-
-   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
-      ([=](const glm::vec4& color) { follower_color_ = color; }),
-      glm::vec4(1, 0, 0, 1), glm::vec4(0,1,0,1))); 
-
-   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
-      ([=](const glm::vec4& color) { follower_color_ = color; }),
-      glm::vec4(0, 1, 0, 1), glm::vec4(0,0,1,1))); 
-
-   seq.schedule(scheduling::Interpolator<glm::vec4, const glm::vec4&>(sf::seconds(3),
-      ([=](const glm::vec4& color) { follower_color_ = color; }),
-      glm::vec4(0, 0, 1, 1), glm::vec4(1,0,0,1))); 
-
-   updater_.schedule(seq);
-   
    while (window_.isOpen())
    {
       sf::Event event;
       while (window_.pollEvent(event))
       {
          if (event.type == sf::Event::Resized)
-         {
-            sf::Event::SizeEvent& se = event.size;
-            resize(glm::ivec2(se.width, se.height));
-         }
+            onResized(glm::ivec2(event.size.width, event.size.height));
 
          else if (event.type == sf::Event::MouseMoved)
-         {
-            sf::Event::MouseMoveEvent& mme = event.mouseMove;
-            mouseMove(glm::ivec2(mme.x, mme.y));
-         }
+            onMouseMoved(glm::ivec2(event.mouseMove.x, event.mouseMove.y));
+
+         else if (event.type == sf::Event::MouseWheelMoved)
+            onMouseWheel(event.mouseWheel.delta);
+
+         else if (event.type == sf::Event::MouseButtonPressed)
+            onMouseButton(event.mouseButton.button, true);
+
+         else if (event.type == sf::Event::MouseButtonReleased)
+            onMouseButton(event.mouseButton.button, false);
+
+         else if (event.type == sf::Event::LostFocus)
+            onBlurred();
 
          else if (event.type == sf::Event::KeyPressed)
          {
-            if (event.key.code = sf::Keyboard::Escape)
-               return close();
+            onKey(event.key, true);
+
+            if (event.key.code == sf::Keyboard::Escape)
+               onClosed();
          }
 
+         else if (event.type == sf::Event::KeyReleased)
+            onKey(event.key, false);
+
+         else if (event.type == sf::Event::TextEntered)
+            onCharacter(event.text);
+
          else if (event.type == sf::Event::Closed)
-            return close();
+            onClosed();
       }
   
-      // Simulate  Draw a new frame
-      if (simulation_running_ && clock_.getElapsedTime() >= min_simulate_interval_)
-      {
-         sf::Time delta = clock_.restart();
-         simulate(delta);
-      }
-
+      update();
       draw();
       window_.display();
    }
@@ -166,9 +102,13 @@ int Game::run()
    return 0;
 }
 
-int Game::close()
+bool Game::close()
 {
-   int return_value = 0;
+   if (!menu_stack_.empty() && !menu_stack_.back()->onClose())
+      return false;
+
+   if (scenario_ && !scenario_->onClose())
+      return false;
    
    if (gfx_cfg_.save_window_location)
    {
@@ -176,12 +116,12 @@ int Game::close()
       gfx_cfg_.window_position.x = pos.x;
       gfx_cfg_.window_position.y = pos.y;
 
-      return_value = gfx_cfg_.saveWindowLocation(config_db_);
+      gfx_cfg_.saveWindowLocation(config_db_);
    }
 
    window_.close();
 
-   return return_value;
+   return true;
 }
 
 void Game::graphicsConfigChanged()
@@ -307,82 +247,122 @@ void Game::initOpenGL()
    glEnable(GL_LIGHT0);
    glEnable(GL_COLOR_MATERIAL);
 
-   
-
-
    resize(gfx_cfg_.viewport_size);
 }
 
-void Game::resize(const glm::ivec2& new_size)
+void Game::onResized(const glm::ivec2& new_size)
 {
    gfx_cfg_.viewport_size = new_size;
    glViewport(0, 0, new_size.x, new_size.y);
 
-   game_camera_.recalculatePerspective();
-   gui_camera_.recalculate();
+   menu_camera_.recalculate();
+
+   if (scenario_)
+      scenario_->onResized();
+
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onResized();
 }
 
-void Game::mouseMove(const glm::ivec2& window_coords)
+void Game::onBlurred()
 {
-   glm::vec3 new_hover_position = game_camera_.windowToWorld(glm::vec2(window_coords), hover_position_.y);
-   hover_position_.x = new_hover_position.x;
-   hover_position_.z = new_hover_position.z;
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onBlurred();
+
+   if (scenario_)
+      scenario_->onBlurred();
 }
 
-void Game::simulate(sf::Time delta)
+void Game::onClosed()
 {
-   updater_();
+   if (!menu_stack_.empty())
+      menu_stack_.back()->onClose();
+
+   if (scenario_)
+      scenario_->onClose();
+}
+
+void Game::onMouseMoved(const glm::ivec2& window_coords)
+{
+   if (scenario_)
+      scenario_->onMouseMoved(window_coords);
+
+   if (!menu_stack_.empty())
+   {
+      glm::vec3 world_coords(menu_camera_.windowToWorld(window_coords));
+      menu_stack_.back()->onMouseMoved(world_coords);
+   }
+}
+
+void Game::update()
+{
+   if (scenario_)
+      scenario_->update();
+
+   if (!menu_stack_.empty())
+      menu_stack_.back()->update();
 }
 
 void Game::draw()
 {
-   sf::Clock clock;
-
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   game_camera_.use();
-   glEnable(GL_LIGHTING);
-   const glm::vec4 light_pos(-1, 1, -1, 0);
-   glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(light_pos));
 
-   glPushMatrix();
-   glTranslatef(hover_position_.x, hover_position_.y, hover_position_.z);
+   if (scenario_)
+      scenario_->draw();
 
-   glColor4fv(glm::value_ptr(follower_color_));
-   mesh_->draw();
-
-   glPopMatrix();
-
-   glBegin(GL_LINES);
-      glColor3f(1, 0, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(10, 0, 0);
-      
-      glColor3f(0, 1, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, 10, 0);
-
-      glColor3f(0, 0, 1);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, 0, 10);
-   glEnd();
-
-   //std::cerr << clock.getElapsedTime().asMicroseconds() << std::endl;
-}
-
-bool Game::isSimulationRunning() const
-{
-   return simulation_running_;
-}
-
-void Game::setSimulationRunning(bool running)
-{
-   if (simulation_running_ != running)
+   if (!menu_stack_.empty())
    {
-      simulation_running_ = running;
-
-      if (running)
-         clock_.restart();
+      glDisable(GL_LIGHTING);
+      menu_camera_.use();
+      menu_stack_.back()->draw();
    }
 }
+
+void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
+{
+   assert(menu);  // menu.get() != nullptr
+
+   if (!menu_stack_.empty())
+      menu_stack_.back()->cancelInput();
+
+   menu_stack_.push_back(std::move(menu));
+
+   if (leve != NULL)
+      level->pause();
+}
+
+void Game::popMenu()
+{
+	if (!menuStack.empty())
+	{
+		menuStack.back()->setVisibility(false);
+		menuStack.pop_back();
+		
+		if (menuStack.empty())
+		{
+			if (level == NULL)
+				pushMenu(mainMenu);
+			else
+				level->resume();
+		}
+		else
+			menuStack.back()->setVisibility(true);
+	}
+}
+
+void Game::clearMenu()
+{
+	for(mstack_iter_t it = menuStack.begin(); it != menuStack.end(); ++it)
+		(*it)->setVisibility(false);
+
+	menuStack.clear();
+
+	if (level == NULL)
+		pushMenu(mainMenu);
+	else
+		level->resume();
+}
+
+
 
 } // namespace carcassonne

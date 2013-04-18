@@ -30,7 +30,7 @@ Sequence::Sequence()
 {
 }
    
-void Sequence::schedule(const std::function<bool()>& deferred)
+void Sequence::schedule(const std::function<bool(sf::Time)>& deferred)
 {
    deferred_functions_.push_back(deferred);
 }
@@ -42,12 +42,12 @@ void Sequence::clear()
 
    // call the first function in deferred_functions_.  Remove it and return true
    // if it returns true.  Otherwise return false
-bool Sequence::operator()()
+bool Sequence::operator()(sf::Time delta)
 {
    if (deferred_functions_.empty())
       return true;
 
-   if (deferred_functions_.front()())
+   if (deferred_functions_.front()(delta))
    {
       deferred_functions_.erase(deferred_functions_.begin());
 
