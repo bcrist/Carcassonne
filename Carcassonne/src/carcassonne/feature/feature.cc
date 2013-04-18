@@ -54,12 +54,15 @@ bool Feature::isRoad()const
    return getType() == TYPE_ROAD;
 }
 
-void Feature::placeFollower(const Follower& follower)
+void Feature::placeFollower(Follower& follower)
 {
-   for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
-   {
-      
-   }
+   if (!follower_placeholder_)
+      return;
+
+   follower.setIdle(false);
+   follower.setOrientation(*follower_placeholder_);
+   followers_.push_back(&follower);
+   follower_placeholder_.reset();
 }
 
 }

@@ -77,7 +77,16 @@ Tile::Tile(Type type)
 // other type.  A TYPE_FLOATING tile can only be changed to TYPE_PLACED.
 void Tile::setType(Type type)
 {
-   
+   switch(type_)
+   {
+      case TYPE_EMPTY_PLACEABLE:
+      case TYPE_EMPTY_PLACEABLE_IF_ROTATED:
+      case TYPE_EMPTY_NOT_PLACEABLE:
+         type_ = type;
+      case TYPE_FLOATING:
+      default: break;
+   }
+         
 }
 
 Tile::Type Tile::getType()const
@@ -89,10 +98,16 @@ Tile::Type Tile::getType()const
 // Rotates the tile if it is a TYPE_FLOATING tile
 void Tile::rotateClockwise()
 {
+   if (type_ != TYPE_FLOATING)
+      return;
+   rotation_ = static_cast<Rotation>((static_cast<int>(rotation_) + 1) % 4);
 }
 
 void Tile::rotateCounterclockwise()
 {
+   if (type_ != TYPE_FLOATING)
+      return;
+   rotation_ = static_cast<Rotation>((static_cast<int>(rotation_) + 3) % 4);
 }
 
 // Returns the type of features which currently exist on the requested side.
@@ -120,16 +135,67 @@ void Tile::draw() const
 {
 }
 
-void Tile::replaceCity(const features::City& old_city, const features::City& new_city)
+void Tile::replaceCity(const features::City& old_city, features::City& new_city)
 {
+   for (auto i(cities_.begin()), end(cities_.end()); i!= end; ++i)
+   {
+      std::shared_ptr<features::City>& ptr = *i;
+
+      ptr.get();
+      if (&old_city == ptr.get())
+         ptr = new_city.shared_from_this();
+   }
+
+   for (int i = 0; i < 4; ++i)
+   {
+      TileEdge& edge = edges_[i];
+      if (edge.city == &old_city)
+      {
+         edge.city = &new_city;
+      }
+   }
 }
 
-void Tile::replaceFarm(const features::Farm& old_farm, const features::Farm& new_farm)
+void Tile::replaceFarm(const features::Farm& old_farm, features::Farm& new_farm)
 {
+   for (auto i(farms_.begin()), end(farms_.end()); i!= end; ++i)
+   {
+      std::shared_ptr<features::Farm>& ptr = *i;
+
+      ptr.get();
+      if (&old_farm == ptr.get())
+         ptr = new_farm.shared_from_this();
+   }
+
+   for (int i = 0; i < 4; ++i)
+   {
+      TileEdge& edge = edges_[i];
+      if (edge.farm == &old_farm)
+      {
+         edge.farm = &new_farm;
+      }
+   }
 }
 
-void Tile::replaceRoad(const features::Road& old_road, const features::Road& new_road)
+void Tile::replaceRoad(const features::Road& old_road, features::Road& new_road)
 {
+   for (auto i(roads_.begin()), end(roads_.end()); i!= end; ++i)
+   {
+      std::shared_ptr<features::Road>& ptr = *i;
+
+      ptr.get();
+      if (&old_road == ptr.get())
+         ptr = new_road.shared_from_this();
+   }
+
+   for (int i = 0; i < 4; ++i)
+   {
+      TileEdge& edge = edges_[i];
+      if (edge.road == &old_road)
+      {
+         edge.road = &new_road;
+      }
+   }
 }
    
 } // namespace carcassonne

@@ -67,8 +67,8 @@ public:
    // idle state.
    virtual void score() = 0;
 
-   void placeFollower(const Follower& follower);
-
+   void placeFollower(Follower& follower);
+      
 
 protected:
    // The tiles which contain at least a part of this feature.  For cloisters,

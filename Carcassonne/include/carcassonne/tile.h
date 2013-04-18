@@ -56,7 +56,7 @@ struct TileEdge
 
    union {
       features::Farm* farm;
-      features::Road* road;
+      features::Road* road; 
       features::City* city;
    };
 
@@ -135,9 +135,9 @@ public:
 
    void draw() const;
 
-   void replaceCity(const features::City& old_city, const features::City& new_city);
-   void replaceFarm(const features::Farm& old_farm, const features::Farm& new_farm);
-   void replaceRoad(const features::Road& old_road, const features::Road& new_road);
+   void replaceCity(const features::City& old_city, features::City& new_city);
+   void replaceFarm(const features::Farm& old_farm, features::Farm& new_farm);
+   void replaceRoad(const features::Road& old_road, features::Road& new_road);
    
 
 private:
