@@ -54,6 +54,11 @@ bool Follower::isIdle()const
    return idle_;
 }
 
+void Follower::setIdle(bool idle)
+{
+   idle_ = idle;
+}
+
 void Follower::setOrientation(const Follower& other)
 {
    position_ = other.position_;

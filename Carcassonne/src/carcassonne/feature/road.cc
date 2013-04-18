@@ -73,7 +73,7 @@ void Road::score()
    {
       Follower* f = *i;
       Player* owner = f->getOwner();
-      
+      f->setIdle(true);
       int& count = players[owner];
 
       ++count;

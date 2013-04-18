@@ -40,6 +40,7 @@ public:
    Follower(Player* owner);
    Player* getOwner()const;
    bool isIdle()const;
+   void setIdle(bool idle);
 
    void setOrientation(const Follower& other);
 

@@ -59,27 +59,28 @@ bool Farm::isComplete()const
 // Finally, return all followers to idle state.
 void Farm::score()
 {
+   std::vector<features::City*> complete_cities;
    for (auto i(adjacent_cities_.begin()), end(adjacent_cities_.end()); i !=end; ++i)
    {
       City* c = *i;
-      if (c->isComplete() == true)
+      if (c->isComplete())
       {
-         adjacent_cities_.push_back(c);
+         complete_cities.push_back(c);
       }
    }
+   adjacent_cities_.clear();
 
-   int points = 0;
-   points = tiles_.size();
+   int points = 3 * complete_cities.size();
 
    std::map<Player*, int> players;
-   int mostFollowers= 0;
+   int mostFollowers = 0;
    std::vector<Player*> players_with_most_followers;
 
    for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
    {
       Follower* f = *i;
       Player* owner = f->getOwner();
-      
+      f->setIdle(true);
       int& count = players[owner];
 
       ++count;
@@ -104,6 +105,8 @@ void Farm::score()
       Player* p = *i;
       p->scorePoints(points);
    }
+
+   
 }
 
 void Farm::join(Farm& other)

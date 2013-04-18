@@ -27,6 +27,7 @@
 #include "carcassonne\features\cloister.h"
 
 #include "carcassonne\player.h"
+#include "carcassonne\follower.h"
 
 namespace carcassonne {
 namespace features {
@@ -55,6 +56,9 @@ void Cloister::score()
    
    if (!followers_.empty())
       followers_.front()->getOwner()->scorePoints(points);
+
+   Follower* f;
+   f->setIdle(true);
 }
 
 }
