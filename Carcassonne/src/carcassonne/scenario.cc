@@ -66,6 +66,7 @@ void Scenario::onBlurred()
 
 bool Scenario::onClosed()
 {
+   return false;
 }
 
 void Scenario::draw()const

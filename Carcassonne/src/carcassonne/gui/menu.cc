@@ -81,15 +81,15 @@ bool Menu::onClosed()
    return true;
 }
 
-void update()
+void Menu::update()
 {
 }
 
-void draw()
+void Menu::draw()
 {
 }
 
-void cancelInput()
+void Menu::cancelInput()
 {
 }
 

@@ -55,6 +55,9 @@
     <Filter Include="Header Files\carcassonne\gui">
       <UniqueIdentifier>{07660ff5-3d89-4ad5-b7ff-95377a3c75e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\carcassonne\gui">
+      <UniqueIdentifier>{f1214fa4-7d7c-474c-80b5-66e8918d2f61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\carcassonne\db\db.cc">
@@ -141,11 +144,11 @@
     <ClCompile Include="src\carcassonne\scheduling\delay.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\gui\menu.cc">
-      <Filter>Source Files\carcassonne\gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\carcassonne\scheduling\circular_sequence.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gui\menu.cc">
+      <Filter>Source Files\carcassonne\gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
