@@ -56,7 +56,10 @@ bool Feature::isRoad()const
 
 void Feature::placeFollower(const Follower& follower)
 {
-
+   for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
+   {
+      
+   }
 }
 
 }
