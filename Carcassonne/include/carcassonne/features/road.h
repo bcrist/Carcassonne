@@ -76,7 +76,7 @@ public:
    // it covers so that they now refer to the surviving road.  This should cause
    // all shared_ptrs to the dying road to go away, and the dying road will be
    // destroyed.
-   void join(const Road& other);
+   void join(Road& other);
 
 private:
 
