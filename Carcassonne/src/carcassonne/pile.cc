@@ -40,6 +40,27 @@ Pile::Pile(unsigned int seed)
 {
 }
 
+Pile::Pile(Pile&& other)
+   : prng_(static_cast<std::mt19937::result_type>(time(nullptr)))
+{
+   add(std::move(other));
+}
+
+Pile& Pile::operator=(Pile&& other)
+{
+   tiles_ = std::move(other.tiles_);
+}
+
+Pile::Pile(AssetManager& asset_mgr, const std::string& tileset_name)
+{
+   // TODO
+}
+
+void Pile::setSeed()
+{
+   prng_.seed(static_cast<std::mt19937::result_type>(time(nullptr)));
+}
+
 void Pile::setSeed(unsigned int seed)
 {
    prng_.seed(static_cast<std::mt19937::result_type>(seed));

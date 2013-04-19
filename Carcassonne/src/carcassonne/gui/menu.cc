@@ -28,7 +28,7 @@
 namespace carcassonne {
 namespace gui {
 
-std::unique_ptr<Menu> Menu::load(const std::string& name)
+std::unique_ptr<Menu> Menu::load(AssetManager& asset_mgr, const std::string& name)
 {
    throw std::runtime_error("Menu not found!");
 }

@@ -79,24 +79,6 @@ gfx::Texture* AssetManager::getTexture(const std::string& name)
    return ptr.get();
 }
 
-const gfx::Sprite& AssetManager::getSprite(const std::string& name)
-{
-   auto i(sprites_.find(name));
-   if (i == sprites_.end())
-   {
-      try
-      {
-         sprites_.insert(std::make_pair(name, gfx::Sprite(*this, name)));
-      }
-      catch (std::runtime_error& err)
-      {
-         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what() << std::endl;
-         
-      }
-   }
-   return i->second;
-}
-
 gfx::Mesh* AssetManager::getMesh(const std::string& name)
 {
    std::unique_ptr<gfx::Mesh>& ptr = meshes_[name];
@@ -116,6 +98,23 @@ gfx::Mesh* AssetManager::getMesh(const std::string& name)
    return ptr.get();
 }
 
+const gfx::Sprite& AssetManager::getSprite(const std::string& name)
+{
+   auto i(sprites_.find(name));
+   if (i == sprites_.end())
+   {
+      try
+      {
+         sprites_.insert(std::make_pair(name, gfx::Sprite(*this, name)));
+      }
+      catch (std::runtime_error& err)
+      {
+         std::cerr << "Failed to load sprite \"" << name << "\": " << err.what() << std::endl;   
+      }
+   }
+   return i->second;
+}
+
 std::unique_ptr<gui::Menu> AssetManager::getMenu(const std::string& name)
 {
    std::unique_ptr<gui::Menu>& ptr = menus_[name];
@@ -124,7 +123,7 @@ std::unique_ptr<gui::Menu> AssetManager::getMenu(const std::string& name)
    {
       try
       {
-         ptr = gui::Menu::load(name);
+         ptr = gui::Menu::load(*this, name);
       }
       catch (const std::runtime_error& err)
       {
@@ -133,6 +132,23 @@ std::unique_ptr<gui::Menu> AssetManager::getMenu(const std::string& name)
    }
 
    return ptr ? ptr->clone() : nullptr;
+}
+
+
+// Returns a pile of all the tiles in a specific tileset.  The top tile is the
+// tileset's starting tile.
+Pile AssetManager::getTileSet(const std::string& name)
+{
+   try
+   {
+      return Pile(*this, name);
+   }
+   catch (std::runtime_error& err)
+   {
+      std::cerr << "Failed to load tileset \"" << name << "\": " << err.what() << std::endl;
+   }
+
+   return Pile();
 }
 
 } // namespace carcassonne

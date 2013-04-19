@@ -32,6 +32,7 @@
 #include "carcassonne/gfx/sprite.h"
 #include "carcassonne/gfx/mesh.h"
 #include "carcassonne/gui/menu.h"
+#include "carcassonne/pile.h"
 
 namespace carcassonne {
 
@@ -45,12 +46,12 @@ public:
    void reload();
 
    gfx::Texture* getTexture(const std::string& name);
-
+   gfx::Mesh* getMesh(const std::string& name);
    const gfx::Sprite& getSprite(const std::string& name);
 
-   gfx::Mesh* getMesh(const std::string& name);
-
    std::unique_ptr<gui::Menu> getMenu(const std::string& name);
+
+   Pile getTileSet(const std::string& name);
 
 private:
    db::DB db_;

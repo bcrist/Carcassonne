@@ -31,6 +31,7 @@
 #include <memory>
 #include <random>
 
+#include "carcassonne/asset_manager.h"
 #include "carcassonne/tile.h"
 
 namespace carcassonne {
@@ -40,7 +41,12 @@ class Pile
 public:
    Pile(); //
    Pile(unsigned int seed);
+   Pile(Pile&& other);
+   Pile& operator=(Pile&& other);
 
+   Pile(AssetManager& asset_mgr, const std::string& tileset_name);
+
+   void setSeed();
    void setSeed(unsigned int seed);
 
    // assert that tile's type is TYPE_FLOATING

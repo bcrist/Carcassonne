@@ -26,6 +26,7 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <SFML/Window.hpp>
+#include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
 
@@ -36,7 +37,7 @@ namespace gui {
 class Menu
 {
 public:
-   static std::unique_ptr<Menu> load(const std::string& name);
+   static std::unique_ptr<Menu> load(AssetManager& asset_mgr, const std::string& name);
 
    Menu(Game& game);
 
