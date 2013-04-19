@@ -132,9 +132,6 @@
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\game.cc">
       <Filter>Source Files\carcassonne</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\main.cc">
-      <Filter>Source Files\carcassonne</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scheduling\sequence.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
@@ -149,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="src\carcassonne\gui\menu.cc">
       <Filter>Source Files\carcassonne\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cc">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

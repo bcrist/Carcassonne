@@ -142,7 +142,7 @@ void Mesh::draw() const
    else
       Texture::disableAny();
 
-   drawCommon();
+   drawBase();
 }
 
 void Mesh::draw(GLenum texture_mode) const
@@ -152,7 +152,7 @@ void Mesh::draw(GLenum texture_mode) const
    else
       Texture::disableAny();
 
-   drawCommon();
+   drawBase();
 }
 
 void Mesh::draw(GLenum texture_mode, const glm::vec4& texture_env_color) const
@@ -162,10 +162,10 @@ void Mesh::draw(GLenum texture_mode, const glm::vec4& texture_env_color) const
    else
       Texture::disableAny();
 
-   drawCommon();
+   drawBase();
 }
 
-void Mesh::drawCommon() const
+void Mesh::drawBase() const
 {
    if (display_list_id_ != 0)
       glCallList(display_list_id_);

@@ -20,7 +20,6 @@
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\feature\road.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\follower.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\game.cc" />
-    <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\main.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\pile.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\player.cc" />
     <ClCompile Include="..\..\..\github\Carcassonne\Carcassonne\src\carcassonne\scenario.cc" />
@@ -39,6 +38,7 @@
     <ClCompile Include="src\carcassonne\gui\menu.cc" />
     <ClCompile Include="src\carcassonne\scheduling\circular_sequence.cc" />
     <ClCompile Include="src\carcassonne\scheduling\delay.cc" />
+    <ClCompile Include="src\main.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
   </ItemGroup>

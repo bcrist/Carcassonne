@@ -48,14 +48,17 @@ public:
 
    const std::string& getName() const;
 
+   // Uses texture specified by this mesh
    // make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
    void draw() const;
    void draw(GLenum texture_mode) const;
    void draw(GLenum texture_mode, const glm::vec4& texture_env_color) const;
+
+   // Uses whatever texture settings are currently set
+   // make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
+   void drawBase() const;
    
 private:
-   void drawCommon() const;
-
    std::string name_;
 
    mutable GLuint display_list_id_;
