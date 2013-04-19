@@ -41,10 +41,10 @@ class Feature : public std::enable_shared_from_this<Feature>
 public:
 
    enum Type {
-      TYPE_CITY = 0,
-      TYPE_CLOISTER = 1,
-      TYPE_FARM = 2,
-      TYPE_ROAD = 3
+      TYPE_FARM = 0,
+      TYPE_ROAD = 1,
+      TYPE_CITY = 2,
+      TYPE_CLOISTER = 3
    };
 
    Feature();

@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <iterator>
 #include <map>
+#include <vector>
+#include <set>
 
 #include "carcassonne/db/db.h"
 #include "carcassonne/db/stmt.h"
@@ -29,6 +31,41 @@ enum MeshDataType {
    VERTEX,
    NORMAL,
    TEXTURE_COORD
+};
+
+enum FeatureType {
+   TYPE_FARM = 0,  // a single farm over the entire edge
+   TYPE_ROAD = 1,  // a road in the center with 2 farms (possibly the same farm) on either side
+   TYPE_CITY = 2,   // a single city over the entire edge
+   TYPE_CLOISTER = 3
+};
+
+struct TileEdge
+{
+   std::string feature;
+   std::string cw_farm;
+   std::string ccw_farm;
+};
+
+struct Follower
+{
+   bool farming;
+   float x;
+   float z;
+   float rotation;
+
+   Follower() : farming(false), x(0), z(0), rotation(0) {}
+};
+
+struct Feature
+{
+   FeatureType type;
+   std::set<std::string> adjacent_cities; // only for farms
+   int pennants;  // only for cities
+   Follower follower;
+   int id;
+
+   Feature() : type(TYPE_FARM), pennants(0), id(0) {}
 };
 
 int texture(int argc, char** argv)
@@ -466,6 +503,487 @@ int obj_mesh(int argc, char** argv)
    return 0;
 }
 
+
+/*
+CREATE TABLE IF NOT EXISTS cc_tiles (
+   name TEXT PRIMARY KEY, 
+   texture TEXT, 
+   north INTEGER, north_cw INTEGER DEFAULT 0, north_ccw INTEGER DEFAULT 0,
+   east  INTEGER, east_cw  INTEGER DEFAULT 0, east_ccw  INTEGER DEFAULT 0,
+   south INTEGER, south_cw INTEGER DEFAULT 0, south_ccw INTEGER DEFAULT 0,
+   west  INTEGER, west_cw  INTEGER DEFAULT 0, west_ccw  INTEGER DEFAULT 0,
+   cloister INTEGER DEFAULT 0)
+   
+CREATE TABLE IF NOT EXISTS cc_tile_features (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   type INTEGER,
+   adjacent1 INTEGER DEFAULT 0,
+   adjacent2 INTEGER DEFAULT 0,
+   adjacent3 INTEGER DEFAULT 0,
+   adjacent4 INTEGER DEFAULT 0,
+   pennants INTEGER DEFAULT 0,
+   follower_orientation INTEGER,
+   follower_x NUMERIC,
+   follower_z NUMERIC,
+   follower_r NUMERIC)
+*/
+void insertTile(carcassonne::db::DB& db, const std::string& tile_name, const std::string& texture_name, std::map<std::string, Feature>& features, const TileEdge* edges, const std::string& cloister_name)
+{
+   std::cout << tile_name << ": " << texture_name << std::endl;
+   for (auto i(features.begin()), end(features.end()); i != end; ++i)
+   {
+      std::cout << "   " << i->first << ": type:" << i->second.type << " p:" << i->second.pennants << " follower: " << i->second.follower.farming << " " << i->second.follower.x << " " << i->second.follower.z << " " << i->second.follower.rotation << " adj:";
+      for (auto j(i->second.adjacent_cities.begin()), end(i->second.adjacent_cities.end()); j != end; ++j)
+         std::cout << " " << *j;
+      std::cout << std::endl;
+   }
+   std::cout << std::endl;
+
+   std::cout << "   N: " << edges[0].feature << ' ' << edges[0].cw_farm << ' ' << edges[0].ccw_farm << std::endl
+             << "   E: " << edges[1].feature << ' ' << edges[1].cw_farm << ' ' << edges[1].ccw_farm << std::endl
+             << "   S: " << edges[2].feature << ' ' << edges[2].cw_farm << ' ' << edges[2].ccw_farm << std::endl
+             << "   W: " << edges[3].feature << ' ' << edges[3].cw_farm << ' ' << edges[3].ccw_farm << std::endl;
+   std::cout << std::endl;
+
+   // save tile to db
+#pragma region remove old tile
+   std::set<int> old_features;
+   carcassonne::db::Stmt s_get(db, "SELECT north, north_cw, north_ccw, "   // 0, 1, 2
+                                    "east, east_cw, east_ccw, "            // 3, 4, 5
+                                    "south, south_cw, south_ccw, "         // 6, 7, 8
+                                    "west, west_cw, west_ccw, "            // 9, 10, 11
+                                    "cloister "                            // 12
+                                    "FROM cc_tiles "
+                                    "WHERE name = ?");
+   s_get.bind(1, tile_name);
+   if (s_get.step())
+   {
+      old_features.insert(s_get.getInt(0));
+      old_features.insert(s_get.getInt(1));
+      old_features.insert(s_get.getInt(2));
+      old_features.insert(s_get.getInt(3));
+      old_features.insert(s_get.getInt(4));
+      old_features.insert(s_get.getInt(5));
+      old_features.insert(s_get.getInt(6));
+      old_features.insert(s_get.getInt(7));
+      old_features.insert(s_get.getInt(8));
+      old_features.insert(s_get.getInt(9));
+      old_features.insert(s_get.getInt(10));
+      old_features.insert(s_get.getInt(11));
+      old_features.insert(s_get.getInt(12));
+      s_get.reset();
+
+      // remove old tile
+      carcassonne::db::Stmt s_delete_tile(db, "DELETE FROM cc_tiles WHERE name = ?");
+      s_delete_tile.bind(1, tile_name);
+      s_delete_tile.step();
+
+
+      // if old features are still in use by other tiles, don't delete them
+      carcassonne::db::Stmt s_get_others(db, "SELECT name FROM cc_tiles WHERE "
+                                             "north = ? OR north_cw = ? OR north_ccw = ? OR "
+                                             "east = ? OR east_cw = ? OR east_ccw = ? OR "
+                                             "south = ? OR south_cw = ? OR south_ccw = ? OR "
+                                             "west = ? OR west_cw = ? OR west_ccw = ? OR "
+                                             "cloister = ? LIMIT 1");
+      for (auto i(old_features.begin()); i != old_features.end();)
+      {
+         s_get_others.bind(1, *i);
+         s_get_others.bind(2, *i);
+         s_get_others.bind(3, *i);
+
+         s_get_others.bind(4, *i);
+         s_get_others.bind(5, *i);
+         s_get_others.bind(6, *i);
+
+         s_get_others.bind(7, *i);
+         s_get_others.bind(8, *i);
+         s_get_others.bind(9, *i);
+
+         s_get_others.bind(10, *i);
+         s_get_others.bind(11, *i);
+         s_get_others.bind(12, *i);
+
+         s_get_others.bind(13, *i);
+
+         if (s_get_others.step())
+         {
+            i = old_features.erase(i);
+            
+         }
+         else
+            ++i;
+
+         s_get_others.reset();
+      }
+
+      // all old features remaining can be removed
+      carcassonne::db::Stmt s_delete_old(db, "DELETE FROM cc_tile_features WHERE id = ?");
+      for (auto i(old_features.begin()), end(old_features.end()); i != end; ++i)
+      {
+         s_delete_old.bind(1, *i);
+         s_delete_old.step();
+         s_delete_old.reset();
+      }
+   }
+#pragma endregion
+
+   // old tile removed if present; insert new tile
+   carcassonne::db::Stmt s_insert_feature(db, "INSERT INTO cc_tile_features ("
+                                              "type, follower_orientation, "
+                                              "follower_x, follower_z, follower_r, "
+                                              "pennants) VALUES (?, ?, ?, ?, ?, ?)");
+
+   carcassonne::db::Stmt s_get_feature_id(db, "SELECT id FROM cc_tile_features ORDER BY id DESC LIMIT 1");
+
+   for (auto i(features.begin()), end(features.end()); i != end; ++i)
+   {
+      s_insert_feature.bind();
+      s_insert_feature.bind(1, static_cast<int>(i->second.type));
+      s_insert_feature.bind(2, i->second.follower.farming ? 1 : 0);
+      s_insert_feature.bind(3, i->second.follower.x);
+      s_insert_feature.bind(4, i->second.follower.z);
+      s_insert_feature.bind(5, i->second.follower.rotation);
+
+      s_insert_feature.bind(6, i->second.pennants);
+
+      s_insert_feature.step();
+      if (s_get_feature_id.step())
+         i->second.id = s_get_feature_id.getInt(0);
+
+      s_insert_feature.reset();
+      s_get_feature_id.reset();
+   }
+
+   // update adjacent cities for farms
+   carcassonne::db::Stmt s_update_feature(db, "UPDATE cc_tile_features SET adjacent1 = ?, adjacent2 = ?, adjacent3 = ?, adjacent4 = ? WHERE id = ?");
+   for (auto i(features.begin()), end(features.end()); i != end; ++i)
+   {
+      if (i->second.adjacent_cities.empty())
+         continue;
+
+      auto k(i->second.adjacent_cities.begin());
+      for (int j = 1; j <= 4; ++j)
+      {
+         int id;
+         if (k == i->second.adjacent_cities.end())
+            id = 0;
+         else
+         {
+            id = features[*k].id;
+            ++k;
+         }
+         s_update_feature.bind(j, id);
+      }
+      s_update_feature.bind(5, i->second.id);
+      s_update_feature.step();
+      s_update_feature.reset();
+   }
+
+
+   // insert actual tile object
+   carcassonne::db::Stmt s_insert_tile(db, "INSERT INTO cc_tiles ("
+                                           "name, "   // 1
+                                           "texture, "   //2
+                                           "north, north_cw, north_ccw, "  //3 4 5
+                                           "east, east_cw, east_ccw, "     //6 7 8
+                                           "south, south_cw, south_ccw, "  //9 10 11
+                                           "west, west_cw, west_ccw, "     //12 13 14
+                                           "cloister) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  //15
+   s_insert_tile.bind(1, tile_name);
+   s_insert_tile.bind(2, texture_name);
+
+   for (int i = 0; i < 4; ++i)
+   {
+      s_insert_tile.bind(3 + 3 * i, features[edges[i].feature].id);
+      if (features[edges[i].feature].type == TYPE_ROAD)
+      {
+         s_insert_tile.bind(4 + 3 * i, features[edges[i].cw_farm].id);
+         s_insert_tile.bind(5 + 3 * i, features[edges[i].ccw_farm].id);
+      }
+      else
+      {
+         s_insert_tile.bind(4 + 3 * i);
+         s_insert_tile.bind(5 + 3 * i);
+      }
+   }
+
+   if (cloister_name.length() > 0)
+      s_insert_tile.bind(15, features[cloister_name].id);
+   else
+      s_insert_tile.bind(15);
+
+   s_insert_tile.step();
+}
+
+
+int tilespec(int argc, char** argv)
+{
+   std::string filename(argv[1]);
+
+   if (argc < 5)
+   {
+      std::cout << std::endl
+               << "Usage: " << std::endl
+               << "   " << (argc > 0 ? argv[0] : "CCAssets") << " \"" << filename
+               << "\" tileset <tileset name> <tilespec filename>" << std::endl;
+      return 1;
+   }
+
+   std::string tileset_name(argv[3]);
+   std::string tilespec(argv[4]);
+
+   try {
+      carcassonne::db::DB db(filename);
+      carcassonne::db::Transaction transaction(db);
+      
+      db.exec("CREATE TABLE IF NOT EXISTS cc_tilesets ("
+              "name TEXT UNIQUE, "
+              "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+              "starting_tile TEXT); "
+
+              "CREATE TABLE IF NOT EXISTS cc_tileset_tiles ("
+              "tileset_id INTEGER, "
+              "tile TEXT, "
+              "quantity INTEGER, "
+              "PRIMARY KEY (tileset_id, tile)); "
+         
+              "CREATE TABLE IF NOT EXISTS cc_tiles ("
+              "name TEXT PRIMARY KEY, "
+              "texture TEXT, "
+              "north INTEGER, north_cw INTEGER DEFAULT 0, north_ccw INTEGER DEFAULT 0, "
+              "east  INTEGER, east_cw  INTEGER DEFAULT 0, east_ccw  INTEGER DEFAULT 0, "
+              "south INTEGER, south_cw INTEGER DEFAULT 0, south_ccw INTEGER DEFAULT 0, "
+              "west  INTEGER, west_cw  INTEGER DEFAULT 0, west_ccw  INTEGER DEFAULT 0, "
+              "cloister INTEGER DEFAULT 0); "
+
+              "CREATE TABLE IF NOT EXISTS cc_tile_features ("
+              "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+              "type INTEGER, "
+              "adjacent1 INTEGER DEFAULT 0, "
+              "adjacent2 INTEGER DEFAULT 0, "
+              "adjacent3 INTEGER DEFAULT 0, "
+              "adjacent4 INTEGER DEFAULT 0, "
+              "pennants INTEGER DEFAULT 0, "
+              "follower_orientation INTEGER, "
+              "follower_x NUMERIC, "
+              "follower_z NUMERIC, "
+              "follower_r NUMERIC);");
+
+      std::string starting_tile;
+      std::map<std::string, int> other_tiles;
+
+      std::string tile_name;
+      std::string texture_name;
+      TileEdge edges[4];
+      std::map<std::string, Feature> features;
+      std::string cloister_name;
+
+
+
+      std::ifstream ifs(tilespec, std::ifstream::in);
+      std::string line;
+      while (std::getline(ifs, line))
+      {
+         if (line.length() < 1)
+            continue;   // skip blank lines
+
+         if (line[0] == '#')
+            continue;   // skip comment lines
+
+         std::istringstream iss(line);
+
+         if (line[0] <= ' ')  // whitespace at beginning -> same tile as before
+         {
+            std::string command;
+            iss >> command;
+            std::transform(command.begin(), command.end(), command.begin(), tolower);
+
+            if (command == "t" || command == "tex" || command == "texture")
+            {
+               iss >> texture_name;
+            }
+            else if (command == "n" || command == "north" ||
+                     command == "e" || command == "east" ||
+                     command == "s" || command == "south" ||
+                     command == "w" || command == "west")
+            {
+               int i;
+               switch (command[0])
+               {
+                  case 'e': i = 1; break;
+                  case 's': i = 2; break;
+                  case 'w': i = 3; break;
+                  default:  i = 0; break;
+               }
+               TileEdge& edge = edges[i];
+
+               std::string type;
+               iss >> type;
+               std::transform(type.begin(), type.end(), type.begin(), tolower);
+
+               FeatureType edge_type = TYPE_CITY;
+
+               if (type == "c" || type == "city")
+                  edge_type = TYPE_CITY;
+               else if (type == "f" || type == "field" || type == "farm")
+                  edge_type = TYPE_FARM;
+               else if (type == "r" || type == "road")
+                  edge_type = TYPE_ROAD;
+
+               iss >> edge.feature >> edge.cw_farm >> edge.ccw_farm;
+
+               features[edge.feature].type = edge_type;
+               if (edge_type == TYPE_ROAD)
+               {
+                  features[edge.cw_farm].type = TYPE_FARM;
+                  features[edge.ccw_farm].type = TYPE_FARM;
+               }
+
+            }
+            else if (command == "c" || command == "cloister")
+            {
+               std::string feature;
+               iss >> feature;
+
+               features[feature].type = TYPE_CLOISTER;
+               cloister_name = feature;
+            }
+            else if (command == "f" || command == "follower")
+            {
+               std::string feature, temp;
+               iss >> feature >> temp;
+
+               Feature& f = features[feature];
+
+               std::transform(temp.begin(), temp.end(), temp.begin(), tolower);
+               if (temp == "f" || temp == "farming")
+               {
+                  f.follower.farming = true;
+                  iss >> f.follower.x >> f.follower.z >> f.follower.rotation;
+               }
+               else
+               {
+                  std::istringstream iss2(temp);
+                  iss2 >> f.follower.x;
+                  iss >> f.follower.z >> f.follower.rotation;
+               }
+            }
+            else if (command == "p" || command == "pennant")
+            {
+               std::string feature;
+               iss >> feature;
+
+               Feature& f = features[feature];
+               f.type = TYPE_CITY;
+               ++f.pennants;
+            }
+            else if (command == "a" || command == "adjacent")
+            {
+               std::string farm, city;
+               iss >> farm >> city;
+
+               Feature& f = features[farm];
+               Feature& c = features[city];
+               f.type = TYPE_FARM;
+               c.type = TYPE_CITY;
+               f.adjacent_cities.insert(city);
+            }
+
+         }
+         else  // new tile
+         {
+            if (tile_name.length() > 0 && tile_name[0] != '$') // $ indicates a tile that should already exist in the DB (i.e. from another tileset)
+               insertTile(db, tile_name, texture_name, features, edges, cloister_name);
+
+            features.clear();
+            edges[0] = TileEdge();
+            edges[1] = TileEdge();
+            edges[2] = TileEdge();
+            edges[3] = TileEdge();
+            cloister_name = std::string();
+
+            std::string temp;
+            int tile_quantity = 1;
+            iss >> tile_name >> tile_quantity >> temp;
+            std::transform(temp.begin(), temp.end(), temp.begin(), tolower);
+
+            if (tile_quantity < 1)
+               tile_quantity = 1;
+
+            const char* name = tile_name.c_str();
+            if (*name == '$')
+               ++name;
+
+            if (temp == "s" || temp == "start")
+            {
+               --tile_quantity;
+               starting_tile = name;
+            }
+
+            if (tile_quantity > 0)
+               other_tiles[name] = tile_quantity;
+         }
+      }
+      ifs.close();
+
+      if (tile_name.length() > 0 && tile_name[0] != '$') // $ indicates a tile that should already exist in the DB (i.e. from another tileset)
+         insertTile(db, tile_name, texture_name, features, edges, cloister_name);
+
+
+      // TODO: save tileset info
+      /*      "CREATE TABLE IF NOT EXISTS cc_tilesets ("
+              "name TEXT UNIQUE, "
+              "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+              "starting_tile TEXT); "
+
+              "CREATE TABLE IF NOT EXISTS cc_tileset_tiles ("
+              "tileset_id INTEGER, "
+              "tile TEXT, "
+              "quantity INTEGER, "
+              "PRIMARY KEY (tileset_id, tile)); "*/
+
+      carcassonne::db::Stmt s_insert_tileset(db, "INSERT OR REPLACE INTO cc_tilesets ("
+                                                 "name, starting_tile) VALUES (?, ?)");
+      s_insert_tileset.bind(1, tileset_name);
+      s_insert_tileset.bind(2, starting_tile);
+      s_insert_tileset.step();
+         
+      int ts_id;
+
+      carcassonne::db::Stmt s_get_tileset_id(db, "SELECT id FROM cc_tilesets WHERE name = ?");
+      s_get_tileset_id.bind(1, tileset_name);
+      if (s_get_tileset_id.step())
+      {
+         ts_id = s_get_tileset_id.getInt(0);
+      }
+      else
+         throw std::runtime_error("Could not update cc_tilesets!");
+
+
+      carcassonne::db::Stmt s_insert_tiles(db, "INSERT OR REPLACE INTO cc_tileset_tiles ("
+                                               "tileset_id, tile, quantity) VALUES (?, ?, ?)");
+      s_insert_tiles.bind(1, ts_id);
+
+      for (auto i(other_tiles.begin()), end(other_tiles.end()); i != end; ++i)
+      {
+         s_insert_tiles.bind(2, i->first);
+         s_insert_tiles.bind(3, i->second);
+         s_insert_tiles.step();
+         s_insert_tiles.reset();
+      }
+
+      transaction.commit();
+   }
+   catch (const std::runtime_error& e)
+   {
+      std::cerr << e.what();
+      return 1;
+   }
+
+   return 0;
+}
+
 int runApp(int argc, char** argv)
 {
    if (argc < 2)
@@ -488,6 +1006,8 @@ int runApp(int argc, char** argv)
       return sprite(argc, argv);
    else if (operation == "obj")
       return obj_mesh(argc, argv);
+   else if (operation == "tileset")
+      return tilespec(argc, argv);
    else
    {
       std::cerr << "Unrecognized operation!" << std::endl;
@@ -507,7 +1027,9 @@ int main(int argc, char** argv)
                 << "Operations:" << std::endl
                 << "   texture   Create a texture asset by embedding an image file." << std::endl
                 << "   sprite    Specify texture and texture coordinates for a sprite asset." << std::endl
-                << "   obj       Create a mesh asset from a Wavefront .OBJ file (only v, vn, vt, f supported)." << std::endl;
+                << "   obj       Create a mesh asset from a Wavefront .OBJ file (only v, vn, vt, f supported)." << std::endl
+                << "   tileset   Create a tileset asset from a tilespec file." << std::endl;
 
    return result;
 }
+
