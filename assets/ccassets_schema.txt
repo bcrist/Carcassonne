@@ -1,0 +1,80 @@
+CREATE TABLE cc_textures
+(     name                 TEXT PRIMARY KEY,
+      format               TEXT DEFAULT 'file',
+      width                INTEGER DEFAULT 0,
+      height               INTEGER DEFAULT 0,
+      data                 BLOB     );
+   
+   
+      
+CREATE TABLE cc_sprites
+(     name                 TEXT PRIMARY KEY,
+      texture              TEXT,
+      x                    NUMERIC,
+      y                    NUMERIC,
+      width                NUMERIC,
+      height               NUMERIC     );
+      
+      
+      
+CREATE TABLE cc_meshes
+(     name                 TEXT UNIQUE,
+      id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+      primitive_type       INTEGER,
+      texture              TEXT,
+      indices              INTEGER,
+      vertices             INTEGER,
+      normals              INTEGER,
+      texture_coords       INTEGER     );
+
+CREATE TABLE cc_mesh_data
+(     mesh_id              INTEGER,
+      type                 INTEGER,
+      n                    INTEGER,
+      x                    NUMERIC,
+      y                    NUMERIC,
+      z                    NUMERIC,
+      PRIMARY KEY (mesh_id, type, n)      );
+      
+      
+      
+CREATE TABLE cc_tilesets
+(     name                 TEXT UNIQUE,
+      id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+      starting_tile        TEXT     );
+
+CREATE TABLE cc_tileset_tiles
+(     tileset_id           INTEGER,
+      tile                 TEXT,
+      quantity             INTEGER,
+      PRIMARY KEY (tileset_id, tile)      );
+      
+CREATE TABLE cc_tiles
+(     name                 TEXT PRIMARY KEY,
+      texture              TEXT,
+      north                INTEGER,
+      north_cw             INTEGER DEFAULT 0,
+      north_ccw            INTEGER DEFAULT 0,
+      east                 INTEGER,
+      east_cw              INTEGER DEFAULT 0,
+      east_ccw             INTEGER DEFAULT 0,
+      south                INTEGER,
+      south_cw             INTEGER DEFAULT 0,
+      south_ccw            INTEGER DEFAULT 0,
+      west                 INTEGER,
+      west_cw              INTEGER DEFAULT 0,
+      west_ccw             INTEGER DEFAULT 0,
+      cloister             INTEGER DEFAULT 0    );
+
+CREATE TABLE cc_tile_features
+(     id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+      type                 INTEGER,
+      adjacent1            INTEGER DEFAULT 0,
+      adjacent2            INTEGER DEFAULT 0,
+      adjacent3            INTEGER DEFAULT 0,
+      adjacent4            INTEGER DEFAULT 0,
+      pennants             INTEGER DEFAULT 0,
+      follower_orientation INTEGER,
+      follower_x           NUMERIC,
+      follower_z           NUMERIC,
+      follower_r           NUMERIC     );

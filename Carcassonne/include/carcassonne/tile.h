@@ -38,6 +38,8 @@
 
 namespace carcassonne {
 
+class AssetManager;
+
 // Structure that represents the features present on a particular side of a tile
 struct TileEdge
 {
@@ -109,7 +111,14 @@ public:
    };
    
    // Constructs a tile of one of the TYPE_EMPTY_* types
-   Tile(Type type);
+   Tile(AssetManager& asset_mgr, Type type);
+   
+   // Load tile from database
+   Tile(AssetManager& asset_mgr, const std::string& name);
+
+   // Copy another tile (does not share feature objects)
+   Tile(const Tile& other);
+
 
    // Sets the tile's type.  A TYPE_EMPTY_* tile can only be set to any of the
    // other TYPE_EMPTY_* types.  A TYPE_PLACED tile can't be changed to any
@@ -124,15 +133,15 @@ public:
    void setPosition(const glm::vec3& position);
 
    // Returns the type of features which currently exist on the requested side.
-   const TileEdge& getEdge(Side side);
+   //const TileEdge& getEdge(Side side);
 
-   std::vector<features::Feature*> getFeatures();
+   //std::vector<features::Feature*> getFeatures();
 
-   // called when a tile is placed 
-   void closeSide(Side side, Tile* new_neighbor);
+   // called when a tile is placed next to existing tiles
+   void closeSide(Side side, Tile& new_neighbor);
 
-   // 
-   void closeDiagonal(Side clockwise_from, Tile* new_diagonal_neighbor);
+   // called when a tile is placed kitty-corner to existing tiles
+   void closeDiagonal(Tile& new_diagonal_neighbor);
 
 
    void draw() const;
@@ -143,10 +152,13 @@ public:
    
 
 private:
+   TileEdge& getEdge(Side side);
+
    Type type_;
 
    glm::vec4 color_;
    gfx::Mesh* mesh_;
+   gfx::Texture* texture_;
 
    glm::vec3 position_;
    Rotation rotation_;
@@ -158,8 +170,7 @@ private:
    std::vector<std::shared_ptr<features::Feature> > farms_;
    std::unique_ptr<features::Cloister> cloister_;
 
-   // Disable copy-construction & assignment - do not implement
-   Tile(const Tile&);
+   // Disable assignment - do not implement
    void operator=(const Tile&);
 };
 

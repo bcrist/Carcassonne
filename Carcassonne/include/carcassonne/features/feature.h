@@ -48,6 +48,7 @@ public:
    };
 
    Feature();
+   Feature(const Feature& other);
    virtual ~Feature(); 
 
    virtual Type getType() const = 0; // returns the type of feature this is.
@@ -84,8 +85,7 @@ protected:
    // placeholder followers)
    std::vector<Follower*> followers_;  
 
-   // Disable copy-construction & assignment - do not implement
-   Feature(const Feature&);
+   // Disable assignment - do not implement
    void operator=(const Feature&);
 };
 

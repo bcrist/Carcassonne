@@ -26,18 +26,29 @@
 
 #include "carcassonne\features\cloister.h"
 
+#include <algorithm>
+
 #include "carcassonne\player.h"
 #include "carcassonne\follower.h"
 
 namespace carcassonne {
 namespace features {
 
-Cloister::Cloister()
+Cloister::Cloister(AssetManager& asset_mgr, int id, Tile& tile)
 {
-
+   follower_placeholder_.reset(new Follower(asset_mgr, id));
+   tiles_.push_back(&tile);
 }
 
-Cloister::~Cloister(){}
+Cloister::Cloister(const Cloister& other, Tile& tile)
+   : Feature(other)
+{
+   tiles_.push_back(&tile);
+}
+
+Cloister::~Cloister()
+{
+}
 
 Feature::Type Cloister::getType()const
 {
@@ -49,6 +60,9 @@ bool Cloister::isComplete()const
    return tiles_.size() == 9;
 }
 
+// Award tiles_.size() points to the owner of the first follower in
+// followers_, if any (cloisters can only ever support one follower).
+// Finally, return all followers to idle state.
 void Cloister::score()
 {
    int points = 0;
@@ -62,5 +76,12 @@ void Cloister::score()
    }
 }
 
+void Cloister::addTile(Tile& tile)
+{
+   auto i(std::find(tiles_.begin(), tiles_.end(), &tile));
+   if (i == tiles_.end())
+      tiles_.push_back(&tile);
 }
-}
+
+} // namespace carcassonne::features
+} // namespace carcassonne

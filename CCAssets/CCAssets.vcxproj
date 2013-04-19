@@ -81,7 +81,7 @@
     <ClCompile Include="..\Carcassonne\src\carcassonne\db\stmt.cc" />
     <ClCompile Include="..\Carcassonne\src\sqlite3.c" />
     <ClCompile Include="..\Carcassonne\src\stb_image.c" />
-    <ClCompile Include="src\carcassonne\main.cc" />
+    <ClCompile Include="main.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

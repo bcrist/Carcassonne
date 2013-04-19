@@ -26,26 +26,43 @@
 // completed cities which they border.
 
 #include "carcassonne\features\farm.h"
-#include "carcassonne\tile.h"
-#include "carcassonne\player.h"
 
 #include <map>
+#include <algorithm>
+
+#include "carcassonne\asset_manager.h"
+#include "carcassonne\db\db.h"
+#include "carcassonne\db\stmt.h"
+#include "carcassonne\tile.h"
+#include "carcassonne\player.h"
+#include "carcassonne\features\city.h"
 
 namespace carcassonne {
 namespace features {
 
-Farm::Farm()
+Farm::Farm(AssetManager& asset_mgr, int id, Tile& tile)
 {
-   
+   follower_placeholder_.reset(new Follower(asset_mgr, id));
+   tiles_.push_back(&tile);
 }
 
-Farm::~Farm(){}
+Farm::Farm(const Farm& other, Tile& tile)
+   : Feature(other),
+     adjacent_cities_(other.adjacent_cities_)
+{
+   tiles_.push_back(&tile);
+}
+
+Farm::~Farm()
+{
+}
 
 Feature::Type Farm::getType()const
 {
    return TYPE_FARM;
 }
 
+// return false - farms are never complete
 bool Farm::isComplete()const
 {
    return false;
@@ -105,16 +122,36 @@ void Farm::score()
       Player* p = *i;
       p->scorePoints(points);
    }
-
-   
 }
 
+// merges this farm with another one (due to a tile being placed connecting
+// them).
+//
+// If this == &other then the farms are already merged, and nothing needs
+// to be done.
+//
+// Otherwise, the farm which covers the most tiles (or the farm passed as the
+// function parameter if both farms cover the same number of tiles) will be
+// designated as the surviving farm.  The smaller farm will be designated as
+// the dying farm.
+//
+// All followers from the dying farm's followers_ vector will be placed in
+// the surviving farm's followers_ vector.  If neither farm has any followers
+// yet, and the surviving farm is (*this), follower_placeholder_ will be set
+// to std::move(other.follower_placeholder_).  Therefore when placing a tile
+// with a farm, the already placed neighbor farms should be join()ed to the
+// new tile's farm, i.e. old_tile_farm.join(new_tile_farm);  (note: those are
+// not real variable names).  This is accomplished by calling
+// Tile::closeSide() on the existing tile before the new tile.
+// 
+// Finally, the dying farm will call Tile::replaceFarm() on each of the tiles
+// it covers so that they now refer to the surviving farm.  This should cause
+// all shared_ptrs to the dying farm to go away, and the dying farm will be
+// destroyed.
 void Farm::join(Farm& other)
 {
    if (this == &other)
-   {
       return;
-   }
 
    Farm* survivor;
    Farm* victim;
@@ -123,7 +160,6 @@ void Farm::join(Farm& other)
       survivor = this;
       victim = &other;
    }
-   
    else 
    {
       survivor = &other;
@@ -136,17 +172,34 @@ void Farm::join(Farm& other)
    victim->followers_.clear();
 
    if (survivor->followers_.size() > 0 &&  survivor == this)
-   {
       survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
-   }
+
+   for (auto i(victim->adjacent_cities_.begin()), end(victim->adjacent_cities_.end()); i != end; ++i)
+      survivor->addAdjacentCity(**i);
+
+   victim->adjacent_cities_.clear();
 
    for (auto i(victim->tiles_.begin()), end(victim->tiles_.end()); i!= end; ++i)
    {
       Tile* t = *i;
       t->replaceFarm(*victim, *survivor);
    }
-
 }
 
+// called by Tile::replaceCity() when cities are joined.
+void Farm::replaceCity(const features::City& old_city, features::City& new_city)
+{
+   auto i(std::find(adjacent_cities_.begin(), adjacent_cities_.end(), &old_city));
+   if (i != adjacent_cities_.end())
+      *i = &new_city;
 }
+
+void Farm::addAdjacentCity(features::City& city)
+{
+   auto i(std::find(adjacent_cities_.begin(), adjacent_cities_.end(), &city));
+   if (i == adjacent_cities_.end())
+      adjacent_cities_.push_back(&city);
 }
+
+} // namespace carcassonne::features
+} // namespace carcassonne

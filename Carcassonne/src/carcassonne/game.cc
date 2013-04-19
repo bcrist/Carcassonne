@@ -403,6 +403,7 @@ void Game::initOpenGL()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, glm::value_ptr(light_diffuse));
    glLightfv(GL_LIGHT0, GL_SPECULAR, glm::value_ptr(light_specular));
    
+   // TODO: glEnable(GL_CULL_FACE);
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_LIGHT0);

@@ -26,6 +26,8 @@
 
 #include "carcassonne/tile.h"
 
+#include "carcassonne/asset_manager.h"
+
 namespace carcassonne {
 
 #pragma region TileEdge
@@ -69,11 +71,96 @@ TileEdge::TileEdge(features::City* city)
 #pragma endregion
 
 // Constructs a tile of one of the TYPE_EMPTY_* types
-Tile::Tile(Type type)
-	: color_(1,1,1,1),
-	  mesh_(nullptr)
+Tile::Tile(AssetManager& asset_mgr, Type type)
+	: type_(type),
+     color_(1,1,1,1),
+	  mesh_(asset_mgr.getMesh("std-tile")),
+     texture_(nullptr),
+     rotation_(ROTATION_NONE)
 {
+   assert(type != TYPE_PLACED && type != TYPE_FLOATING);
 }
+
+// Load tile from database
+Tile::Tile(AssetManager& asset_mgr, const std::string& name)
+{
+   // TODO
+}
+
+// Copy another tile (does not share feature objects)
+Tile::Tile(const Tile& other)
+   : type_(other.type_),
+     color_(other.color_),
+     mesh_(other.mesh_),
+     texture_(other.texture_),
+     rotation_(ROTATION_NONE)
+{
+   for (int i = 0; i < 4; ++i)
+      edges_[i] = other.edges_[i];
+
+   for (auto i(other.cities_.begin()), end(other.cities_.end()); i != end; ++i)
+   {
+      const features::City& city = static_cast<const features::City&>(**i);
+      features::City* new_city = new features::City(city);
+
+      cities_.push_back(new_city->shared_from_this());
+
+      for (int i = 0; i < 4; ++i)
+      {
+         TileEdge& edge = edges_[i];
+         if (edge.type == TileEdge::TYPE_CITY && edge.city == &city)
+            edge.city = new_city;
+      }
+   }
+
+   for (auto i(other.roads_.begin()), end(other.roads_.end()); i != end; ++i)
+   {
+      const features::Road& road = static_cast<const features::Road&>(**i);
+      features::Road* new_road = new features::Road(road);
+
+      roads_.push_back(new_road->shared_from_this());
+
+      for (int i = 0; i < 4; ++i)
+      {
+         TileEdge& edge = edges_[i];
+         if (edge.type == TileEdge::TYPE_ROAD && edge.road == &road)
+            edge.road = new_road;
+      }
+   }
+
+   for (auto i(other.farms_.begin()), end(other.farms_.end()); i != end; ++i)
+   {
+      const features::Farm& farm = static_cast<const features::Farm&>(**i);
+      features::Farm* new_farm = new features::Farm(farm);
+
+      farms_.push_back(new_farm->shared_from_this());
+
+      for (auto i(other.cities_.begin()), end(other.cities_.end()); i != end; ++i)
+      {
+         const features::City& city = static_cast<const features::City&>(**i);
+         features::City& new_city = static_cast<features::City&>(
+            **(cities_.begin() + (i - other.cities_.begin())));
+
+         new_farm->replaceCity(city, new_city);
+      }
+
+      for (int i = 0; i < 4; ++i)
+      {
+         TileEdge& edge = edges_[i];
+         if (edge.type == TileEdge::TYPE_ROAD)
+         {
+            if (edge.cw_farm == &farm)
+               edge.cw_farm = new_farm;
+
+            if (edge.ccw_farm == &farm)
+               edge.ccw_farm = new_farm;
+         }
+         else if (edge.type == TileEdge::TYPE_FARM && edge.farm == &farm)
+            edge.farm = new_farm;
+      }
+   }
+}
+
 
 // Sets the tile's type.  A TYPE_EMPTY_* tile can only be set to any of the
 // other TYPE_EMPTY_* types.  A TYPE_PLACED tile can't be changed to any
@@ -85,9 +172,20 @@ void Tile::setType(Type type)
       case TYPE_EMPTY_PLACEABLE:
       case TYPE_EMPTY_PLACEABLE_IF_ROTATED:
       case TYPE_EMPTY_NOT_PLACEABLE:
-         type_ = type;
+         if (type == TYPE_FLOATING || type == TYPE_PLACED)
+            break;
+         else
+            type_ = type;
+         break;
+
       case TYPE_FLOATING:
-      default: break;
+         if (type != TYPE_PLACED)
+            break;
+         type_ = type;
+         break;
+
+      default:
+         break;
    }
          
 }
@@ -119,28 +217,78 @@ void Tile::setPosition(const glm::vec3& position)
 }
 
 // Returns the type of features which currently exist on the requested side.
-const TileEdge& Tile::getEdge(Side side)
+//const TileEdge& Tile::getEdge(Side side)
+//{
+//   return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
+//}
+
+TileEdge& Tile::getEdge(Side side)
 {
    return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
 }
 
-std::vector<features::Feature*> Tile::getFeatures()
+/*std::vector<features::Feature*> Tile::getFeatures()
 {
    return std::vector<features::Feature*>();
+}*/
+
+// called when a tile is placed
+// should be called on (up to) all four sides of the new tile
+void Tile::closeSide(Side side, Tile& new_neighbor)
+{
+   Side neighbor_side = static_cast<Side>((side + 2) % 4);
+   TileEdge& neighbor_edge = new_neighbor.getEdge(neighbor_side);
+   TileEdge& edge = getEdge(side);
+
+   edge.open = false;
+   neighbor_edge.open = false;
+
+   if (neighbor_edge.type != edge.type)
+   {
+      std::cerr << "Warning: edge mismatch!" << std::endl;
+      return;
+   }
+
+   switch (edge.type)
+   {
+      case TileEdge::TYPE_FARM:
+         neighbor_edge.farm->join(*edge.farm);
+         break;
+
+      case TileEdge::TYPE_ROAD:
+         neighbor_edge.road->join(*edge.road);
+         neighbor_edge.cw_farm->join(*edge.ccw_farm);
+         neighbor_edge.ccw_farm->join(*edge.cw_farm);
+         break;
+
+      case TileEdge::TYPE_CITY:
+         neighbor_edge.city->join(*edge.city);
+         break;
+
+      default:
+         break;
+   }
+
+   if (cloister_)
+      cloister_->addTile(new_neighbor);
+
+   if (new_neighbor.cloister_)
+      new_neighbor.cloister_->addTile(*this);
 }
 
-// called when a tile is placed 
-void Tile::closeSide(Side side, Tile* new_neighbor)
+void Tile::closeDiagonal(Tile& new_diagonal_neighbor)
 {
-}
+   if (cloister_)
+      cloister_->addTile(new_diagonal_neighbor);
 
-void Tile::closeDiagonal(Side clockwise_from, Tile* new_diagonal_neighbor)
-{
+   if (new_diagonal_neighbor.cloister_)
+      new_diagonal_neighbor.cloister_->addTile(*this);
 }
 
 
 void Tile::draw() const
 {
+   // TODO!
 }
 
 void Tile::replaceCity(const features::City& old_city, features::City& new_city)
@@ -149,7 +297,6 @@ void Tile::replaceCity(const features::City& old_city, features::City& new_city)
    {
       std::shared_ptr<features::Feature>& ptr = *i;
 
-      ptr.get();
       if (&old_city == ptr.get())
          ptr = new_city.shared_from_this();
    }
@@ -158,9 +305,7 @@ void Tile::replaceCity(const features::City& old_city, features::City& new_city)
    {
       TileEdge& edge = edges_[i];
       if (edge.city == &old_city)
-      {
          edge.city = &new_city;
-      }
    }
 }
 
@@ -170,7 +315,6 @@ void Tile::replaceFarm(const features::Farm& old_farm, features::Farm& new_farm)
    {
       std::shared_ptr<features::Feature>& ptr = *i;
 
-      ptr.get();
       if (&old_farm == ptr.get())
          ptr = new_farm.shared_from_this();
    }
@@ -179,9 +323,7 @@ void Tile::replaceFarm(const features::Farm& old_farm, features::Farm& new_farm)
    {
       TileEdge& edge = edges_[i];
       if (edge.farm == &old_farm)
-      {
          edge.farm = &new_farm;
-      }
    }
 }
 
@@ -191,7 +333,6 @@ void Tile::replaceRoad(const features::Road& old_road, features::Road& new_road)
    {
       std::shared_ptr<features::Feature>& ptr = *i;
 
-      ptr.get();
       if (&old_road == ptr.get())
          ptr = new_road.shared_from_this();
    }
@@ -200,9 +341,7 @@ void Tile::replaceRoad(const features::Road& old_road, features::Road& new_road)
    {
       TileEdge& edge = edges_[i];
       if (edge.road == &old_road)
-      {
          edge.road = &new_road;
-      }
    }
 }
    

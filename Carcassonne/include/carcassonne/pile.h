@@ -39,7 +39,7 @@ namespace carcassonne {
 class Pile
 {
 public:
-   Pile(); //
+   Pile();
    Pile(unsigned int seed);
    Pile(Pile&& other);
    Pile& operator=(Pile&& other);
@@ -49,10 +49,7 @@ public:
    void setSeed();
    void setSeed(unsigned int seed);
 
-   // assert that tile's type is TYPE_FLOATING
    void add(std::unique_ptr<Tile>&& tile);
-
-   // move all tiles from other to the top of this pile.
    void add(Pile&& other);
 
    void shuffle();

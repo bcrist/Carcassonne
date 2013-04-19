@@ -29,27 +29,35 @@ namespace features {
 
 Feature::Feature()
 {
-   
 }
 
-Feature::~Feature(){}
+// copies an existing feature, without adding tiles or followers
+Feature::Feature(const Feature& other)
+{
+   if (other.follower_placeholder_)
+      follower_placeholder_.reset(new Follower(*other.follower_placeholder_));
+}
 
-bool Feature::isCity()const
+Feature::~Feature()
+{
+}
+
+bool Feature::isCity() const
 {
    return getType() == TYPE_CITY;
 }
 
-bool Feature::isCloister()const
+bool Feature::isCloister() const
 {
    return getType() == TYPE_CLOISTER;
 }
 
-bool Feature::isFarm()const
+bool Feature::isFarm() const
 {
    return getType() == TYPE_FARM;
 }
 
-bool Feature::isRoad()const
+bool Feature::isRoad() const
 {
    return getType() == TYPE_ROAD;
 }

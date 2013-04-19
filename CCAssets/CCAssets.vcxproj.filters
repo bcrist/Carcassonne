@@ -27,7 +27,7 @@
     <ClCompile Include="..\Carcassonne\src\carcassonne\db\stmt.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\main.cc">
+    <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

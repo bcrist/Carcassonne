@@ -29,15 +29,26 @@
 #define CARCASSONNE_FOLLOWER_H_
 #include "carcassonne/_carcassonne.h"
 
+
+
 namespace carcassonne {
 
 class Player;
+class AssetManager;
+
+namespace gfx {
+
+class Mesh;
+
+} // namespace carcassonne::gfx
 
 class Follower
 {
 public:
-   Follower();
-   Follower(Player* owner);
+   Follower(AssetManager& asset_mgr);
+   Follower(AssetManager& asset_mgr, int id);
+   Follower(const Follower& other);
+   Follower(AssetManager& asset_mgr, Player& owner);
    Player* getOwner()const;
    bool isIdle()const;
    void setIdle(bool idle);
@@ -54,15 +65,20 @@ public:
 private:
    Player* owner_;
 
-   //gfx::Mesh* mesh_;  // the mesh used to render the follower
+   gfx::Mesh* mesh_;  // the mesh used to render the follower
    glm::vec4 color_;
 
    bool idle_;       // false if this follower is currently in use.
 
+   
+
    glm::vec3 position_; // position of follower. When idle, position is absolute in the HUD camera's world space.
                         // When follower is not idle, position is relative to the tile it is placed on.
    bool farming_; // followers are rendered laying down when farming.  Ignored when idle
-   float rotation_;  // rotation around y-axis.  Ignored when idle   
+   glm::mat4 farming_transform_; // transforms a standing follower to a laying down follower
+   float rotation_;  // rotation around y-axis.  Ignored when idle
+
+   void operator=(const Follower&);
 };
 
 } // namespace carcassonne

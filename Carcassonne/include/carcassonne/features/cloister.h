@@ -35,24 +35,17 @@ namespace features {
 class Cloister : public Feature
 {
 public:
-   Cloister();
+   Cloister(AssetManager& asset_mgr, int id, Tile& tile);
+   Cloister(const Cloister& other, Tile& tile);
    virtual ~Cloister();
 
-   // return TYPE_CLOISTER
    virtual Type getType() const;
-
-   // return tiles_.size() == 9
    virtual bool isComplete() const;
-
-   // Award tiles_.size() points to the owner of the first follower in
-   // followers_, if any (cloisters can only ever support one follower).
-   // Finally, return all followers to idle state.
    virtual void score();
 
-private:
+   void addTile(Tile& tile);
 
-   // Disable copy-construction & assignment - do not implement
-   Cloister(const Cloister&);
+private:
    void operator=(const Cloister&);
 };
 

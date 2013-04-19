@@ -88,6 +88,11 @@ int Player::getHighScore() const
 
 // Specific to current game:
 
+const glm::vec4& Player::getColor() const
+{
+   return color_;
+}
+
 // get an idle follower, or null if there are none
 Follower* Player::getIdleFollower()
 {

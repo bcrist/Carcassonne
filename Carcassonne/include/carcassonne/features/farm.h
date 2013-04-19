@@ -27,68 +27,36 @@
 
 #ifndef CARCASSONNE_FEATURES_FARM_H_
 #define CARCASSONNE_FEATURES_FARM_H_
+#include "carcassonne/_carcassonne.h"
 
 #include "carcassonne/features/feature.h"
-#include "carcassonne/features/city.h"
+
 namespace carcassonne {
+
+class AssetManager;
+
 namespace features {
+
+class City;
 
 class Farm : public Feature
 {
 public:
-   Farm();
+   Farm(AssetManager& asset_mgr, int id, Tile& tile);
+   Farm(const Farm&, Tile& tile);
    virtual ~Farm();
 
-   // return TYPE_FARM
-   virtual Type getType() const;
-
-   // return false - farms are never complete
+   virtual Type getType() const;   
    virtual bool isComplete() const;
-
-   // Remove all incomplete cities from adjacent_cities_.  Create a map of
-   // players to number of followers for that player, keeping track of the
-   // highest number of followers.  When finished iterating, find all players
-   // in map who have that number of followers and increase each player's score
-   // adjacent_cities_.size() * 3.
-   // Finally, return all followers to idle state.
    virtual void score();
-
-   // merges this farm with another one (due to a tile being placed connecting
-   // them).
-   //
-   // If this == &other then the farms are already merged, and nothing needs
-   // to be done.
-   //
-   // Otherwise, the farm which covers the most tiles (or the farm passed as the
-   // function parameter if both farms cover the same number of tiles) will be
-   // designated as the surviving farm.  The smaller farm will be designated as
-   // the dying farm.
-   //
-   // All followers from the dying farm's followers_ vector will be placed in
-   // the surviving farm's followers_ vector.  If neither farm has any followers
-   // yet, and the surviving farm is (*this), follower_placeholder_ will be set
-   // to std::move(other.follower_placeholder_).  Therefore when placing a tile
-   // with a farm, the already placed neighbor farms should be join()ed to the
-   // new tile's farm, i.e. old_tile_farm.join(new_tile_farm);  (note: those are
-   // not real variable names).  This is accomplished by calling
-   // Tile::closeSide() on the existing tile before the new tile.
-   // 
-   // Finally, the dying farm will call Tile::replaceFarm() on each of the tiles
-   // it covers so that they now refer to the surviving farm.  This should cause
-   // all shared_ptrs to the dying farm to go away, and the dying farm will be
-   // destroyed.
    void join(Farm& other);
 
-   // called by Tile::replaceCity() when cities are joined.
-   void replaceCity(const features::City& old_city, const features::City& new_city);
-
+   void replaceCity(const features::City& old_city, features::City& new_city);
+   void addAdjacentCity(features::City& city);
 
 private:
    std::vector<features::City*> adjacent_cities_;
 
-
-   // Disable copy-construction & assignment - do not implement
-   Farm(const Farm&);
    void operator=(const Farm&);
 };
 

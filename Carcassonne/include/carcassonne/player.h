@@ -66,6 +66,8 @@ public:
 
    // Specific to current game:
 
+   const glm::vec4& getColor() const;
+
    // get an idle follower, or null if there are none
    Follower* getIdleFollower();
 
@@ -88,6 +90,8 @@ private:
 
 
    // Specific to current game:
+   glm::vec4 color_;
+
    std::vector<Follower> followers_;
    int idle_followers_;
 

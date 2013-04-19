@@ -75,11 +75,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\carcassonne\db\db.cc" />
-    <ClCompile Include="src\carcassonne\db\stmt.cc" />
-    <ClCompile Include="src\carcassonne\main.cc" />
-    <ClCompile Include="src\sqlite3.c" />
-    <ClCompile Include="src\stb_image.c" />
+    <ClCompile Include="..\Carcassonne\src\carcassonne\db\db.cc" />
+    <ClCompile Include="..\Carcassonne\src\carcassonne\db\stmt.cc" />
+    <ClCompile Include="..\Carcassonne\src\sqlite3.c" />
+    <ClCompile Include="..\Carcassonne\src\stb_image.c" />
+    <ClCompile Include="main.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

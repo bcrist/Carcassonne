@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\sqlite3.c">
+    <ClCompile Include="..\Carcassonne\src\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\stb_image.c">
+    <ClCompile Include="..\Carcassonne\src\stb_image.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\main.cc">
+    <ClCompile Include="..\Carcassonne\src\carcassonne\db\db.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\db\db.cc">
+    <ClCompile Include="..\Carcassonne\src\carcassonne\db\stmt.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\db\stmt.cc">
+    <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -27,16 +27,87 @@
 
 #include "carcassonne/follower.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "carcassonne/player.h"
+#include "carcassonne/asset_manager.h"
+#include "carcassonne/gfx/mesh.h"
+#include "carcassonne/db/db.h"
+#include "carcassonne/db/stmt.h"
+
 namespace carcassonne {
 
-Follower::Follower()
+Follower::Follower(AssetManager& asset_mgr)
+   : owner_(nullptr),
+     mesh_(asset_mgr.getMesh("std-follower")),
+     color_(1,1,1,1),
+     idle_(false),
+     farming_(false),
+     rotation_(0)
 {
-   
+   // half follower height: 0.1775
+   // half follower depth: 0.115
+
+   farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
+      glm::vec3(0.0f, -0.1775f, 0.0f)),
+      -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
+      glm::vec3(0.0f, 0.115f, 0.0f));
 }
 
-Follower::Follower(Player* owner)
+// load from db
+Follower::Follower(AssetManager& asset_mgr, int feature_id)
+   : owner_(nullptr),
+     mesh_(asset_mgr.getMesh("std-follower")),
+     color_(1,1,1,1),
+     idle_(false)
 {
-   
+   db::DB& db = asset_mgr.getDB();
+
+   db::Stmt s(db, "SELECT follower_orientation, follower_x, follower_z, follower_r "
+                  "FROM cc_tile_features "
+                  "WHERE id = ?");
+   s.bind(1, feature_id);
+   if (s.step())
+   {
+      farming_ = s.getInt(0) != 0;
+      position_.x = static_cast<float>(s.getDouble(1));
+      position_.z = static_cast<float>(s.getDouble(2));
+      rotation_ = static_cast<float>(s.getDouble(3));
+   }
+   else
+      throw std::runtime_error("Could not find feature to load follower data!");
+
+   farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
+      glm::vec3(0.0f, -0.1775f, 0.0f)),
+      -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
+      glm::vec3(0.0f, 0.115f, 0.0f));
+}
+
+// copies a follower (except owning player)
+Follower::Follower(const Follower& other)
+   : owner_(nullptr),
+     mesh_(other.mesh_),
+     color_(other.color_),
+     idle_(other.idle_),
+     position_(other.position_),
+     farming_(other.farming_),
+     farming_transform_(other.farming_transform_),
+     rotation_(other.rotation_)
+{
+}
+
+Follower::Follower(AssetManager& asset_mgr, Player& owner)
+   : owner_(&owner),
+     mesh_(asset_mgr.getMesh("std-follower")),
+     color_(owner.getColor()),
+     idle_(true),
+     farming_(false),
+     rotation_(0)
+{
+   farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
+      glm::vec3(0.0f, -0.1775f, 0.0f)),
+      -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
+      glm::vec3(0.0f, 0.115f, 0.0f));
 }
 
 Player* Follower::getOwner()const
@@ -44,9 +115,22 @@ Player* Follower::getOwner()const
    return owner_;
 }
 
+
 void Follower::draw()const
 {
+   glPushMatrix();
 
+   glTranslatef(position_.x, position_.y, position_.z);
+   glRotatef(rotation_, 0, 1, 0);
+
+   if (farming_)
+      glMultMatrixf(glm::value_ptr(farming_transform_));
+   
+   glColor4fv(glm::value_ptr(color_));
+   if (mesh_)
+      mesh_->draw(GL_MODULATE);
+
+   glPopMatrix();
 }
 
 bool Follower::isIdle()const
