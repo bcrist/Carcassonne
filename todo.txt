@@ -5,13 +5,16 @@ Better mouse/keyboard input handling
 In-game HUD
 Handle situations where no possible placement exists
 Handle game over
-Compass Rose
 Menus
-AI
+Stupid AI
+Snapping to locations where tiles/followers can be placed
 
 Mid Priority
 ------------
+Compass Rose
 Audio
+Better AI
+Graphics class for general opengl state management
 
 Low Priority / Optional
 -----------------------

@@ -60,6 +60,7 @@ public:
    const Player& getCurrentPlayer() const;
 
    void placeTile(const glm::ivec2& board_coords);
+   void placeFollower(const glm::vec3& world_coords);
    void endTurn();
 
    void onMouseMoved(const glm::ivec2& window_coords);
@@ -108,6 +109,7 @@ private:
    std::unique_ptr<Tile> current_tile_; // the tile that is currently being played
    Tile* last_placed_tile_;
    Follower* current_follower_;
+   std::vector<std::shared_ptr<features::Feature> > follower_placeholders_;
 
    // Disable copy-construction & assignment - do not implement
    Scenario(const Scenario&);

@@ -33,6 +33,7 @@ namespace carcassonne {
 
 class Player;
 class AssetManager;
+class Tile;
 
 namespace gfx {
 
@@ -50,12 +51,18 @@ public:
    Follower(AssetManager& asset_mgr, int id);
    Follower(AssetManager& asset_mgr, Player& owner);   
 
-   Player* getOwner()const;
-   bool isIdle()const;
+   Player* getOwner() const;
+   bool isIdle() const;
    void setIdle(bool idle);
+
+   bool isFloating() const;
+   void setFloating(bool floating);
+
+   bool isPlaced() const;
 
    void setOrientation(const Follower& other);
    void setPosition(const glm::vec3& position);
+   const glm::vec3& getPosition() const;
 
    void setColor(const glm::vec4& color);
 
@@ -74,7 +81,7 @@ private:
    glm::vec4 color_;
 
    bool idle_;       // false if this follower is currently in use.
-
+   bool floating_;   // true if this follower is currently being placed.
    
 
    glm::vec3 position_; // position of follower. When idle, position is absolute in the HUD camera's world space.

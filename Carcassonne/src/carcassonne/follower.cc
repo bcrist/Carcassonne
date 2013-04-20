@@ -30,6 +30,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "carcassonne/player.h"
+#include "carcassonne/tile.h"
 #include "carcassonne/asset_manager.h"
 #include "carcassonne/gfx/mesh.h"
 #include "carcassonne/db/db.h"
@@ -42,6 +43,7 @@ Follower::Follower()
      mesh_(nullptr),
      color_(1,1,1,1),
      idle_(false),
+     floating_(false),
      farming_(false),
      rotation_(0)
 {
@@ -52,6 +54,7 @@ Follower::Follower(const Follower& other)
      mesh_(other.mesh_),
      color_(other.color_),
      idle_(other.idle_),
+     floating_(other.floating_),
      position_(other.position_),
      farming_(other.farming_),
      farming_transform_(other.farming_transform_),
@@ -65,6 +68,7 @@ void Follower::operator=(const Follower& other)
    mesh_ = other.mesh_;
    color_ = other.color_;
    idle_ = other.idle_;
+   floating_ = other.floating_;
    position_ = other.position_;
    farming_ = other.farming_;
    farming_transform_ = other.farming_transform_;
@@ -76,7 +80,8 @@ Follower::Follower(AssetManager& asset_mgr, int feature_id)
    : owner_(nullptr),
      mesh_(asset_mgr.getMesh("std-follower")),
      color_(1,1,1,1),
-     idle_(false)
+     idle_(false),
+     floating_(false)
 {
    db::DB& db = asset_mgr.getDB();
 
@@ -103,6 +108,7 @@ Follower::Follower(AssetManager& asset_mgr, Player& owner)
      mesh_(asset_mgr.getMesh("std-follower")),
      color_(owner.getColor()),
      idle_(true),
+     floating_(false),
      farming_(false),
      rotation_(0)
 {
@@ -113,7 +119,7 @@ void Follower::calculateFarmingTransform()
 {
    farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
       glm::vec3(0.0f, 0.1775f, 0.0f)),
-      -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
+      -90.0f, glm::vec3(0.0f, 0.0f, 1.0f)),
       glm::vec3(0.0f, -0.115f, 0.0f));
 }
 
@@ -137,17 +143,19 @@ void Follower::draw()const
    if (farming_)
       glMultMatrixf(glm::value_ptr(farming_transform_));
    
-   glColor4fv(glm::value_ptr(color_));
-   bool disable_depth_write = color_.a < 1;
+   if (owner_ == nullptr)
+   {
+      glScalef(0.5f, 0.5f, 0.5f);
+      glEnable(GL_NORMALIZE); // lighting is messed up when normals are scaled otherwise
+   }
 
-   if (disable_depth_write)
-      glDepthMask(false);
+   glColor4fv(glm::value_ptr(color_));
 
    if (mesh_)
       mesh_->draw(GL_MODULATE);
 
-   if (disable_depth_write)
-      glDepthMask(true);
+   if (owner_ == nullptr)
+      glDisable(GL_NORMALIZE);
 
    glPopMatrix();
 }
@@ -162,6 +170,21 @@ void Follower::setIdle(bool idle)
    idle_ = idle;
 }
 
+bool Follower::isFloating() const
+{
+   return floating_;
+}
+
+bool Follower::isPlaced() const
+{
+   return !(floating_ || idle_);
+}
+
+void Follower::setFloating(bool floating)
+{
+   floating_ = floating;
+}
+
 void Follower::setOrientation(const Follower& other)
 {
    position_ = other.position_;
@@ -174,5 +197,9 @@ void Follower::setPosition(const glm::vec3& position)
    position_ = position;
 }
 
+const glm::vec3& Follower::getPosition() const
+{
+   return position_;
+}
 
 }// namespace carcassonne

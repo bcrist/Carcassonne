@@ -67,6 +67,11 @@ bool Feature::hasPlaceholder() const
    return follower_placeholder_;
 }
 
+const Follower* Feature::getPlaceholder() const
+{
+   return follower_placeholder_.get();
+}
+
 void Feature::drawPlaceholder() const
 {
    if (follower_placeholder_)

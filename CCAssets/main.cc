@@ -503,30 +503,6 @@ int obj_mesh(int argc, char** argv)
    return 0;
 }
 
-
-/*
-CREATE TABLE IF NOT EXISTS cc_tiles (
-   name TEXT PRIMARY KEY, 
-   texture TEXT, 
-   north INTEGER, north_cw INTEGER DEFAULT 0, north_ccw INTEGER DEFAULT 0,
-   east  INTEGER, east_cw  INTEGER DEFAULT 0, east_ccw  INTEGER DEFAULT 0,
-   south INTEGER, south_cw INTEGER DEFAULT 0, south_ccw INTEGER DEFAULT 0,
-   west  INTEGER, west_cw  INTEGER DEFAULT 0, west_ccw  INTEGER DEFAULT 0,
-   cloister INTEGER DEFAULT 0)
-   
-CREATE TABLE IF NOT EXISTS cc_tile_features (
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
-   type INTEGER,
-   adjacent1 INTEGER DEFAULT 0,
-   adjacent2 INTEGER DEFAULT 0,
-   adjacent3 INTEGER DEFAULT 0,
-   adjacent4 INTEGER DEFAULT 0,
-   pennants INTEGER DEFAULT 0,
-   follower_orientation INTEGER,
-   follower_x NUMERIC,
-   follower_z NUMERIC,
-   follower_r NUMERIC)
-*/
 void insertTile(carcassonne::db::DB& db, const std::string& tile_name, const std::string& texture_name, std::map<std::string, Feature>& features, const TileEdge* edges, const std::string& cloister_name)
 {
    std::cout << tile_name << ": " << texture_name << std::endl;
@@ -641,8 +617,8 @@ void insertTile(carcassonne::db::DB& db, const std::string& tile_name, const std
       s_insert_feature.bind();
       s_insert_feature.bind(1, static_cast<int>(i->second.type));
       s_insert_feature.bind(2, i->second.follower.farming ? 1 : 0);
-      s_insert_feature.bind(3, i->second.follower.x);
-      s_insert_feature.bind(4, i->second.follower.z);
+      s_insert_feature.bind(3, i->second.follower.z);
+      s_insert_feature.bind(4, i->second.follower.x);
       s_insert_feature.bind(5, i->second.follower.rotation);
 
       s_insert_feature.bind(6, i->second.pennants);

@@ -69,6 +69,7 @@ public:
    virtual void score() = 0;
 
    bool hasPlaceholder() const;
+   const Follower* getPlaceholder() const;
 
    void drawPlaceholder() const;
 

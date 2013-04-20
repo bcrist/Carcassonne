@@ -81,17 +81,67 @@ void Scenario::placeTile(const glm::ivec2& board_coords)
    Follower* follower = getCurrentPlayer().getIdleFollower();
    if (follower != nullptr)
    {
+      bool found_placeholder(false);
       for (size_t i = 0; i < last_placed_tile_->getFeatureCount(); ++i)
       {
          std::shared_ptr<features::Feature> feature = last_placed_tile_->getFeature(i).lock();
          if (feature->hasPlaceholder())
          {
-            current_follower_ = follower;
-            return;
+            found_placeholder = true;
+            glm::vec4 color(follower->getOwner()->getColor());
+            feature->setPlaceholderColor(color);
+            follower_placeholders_.push_back(feature);
          }
+      }
+      if (found_placeholder)
+      {
+         current_follower_ = follower;
+         return;  // don't end turn
       }
    }
 
+   endTurn();
+}
+
+void Scenario::placeFollower(const glm::vec3& world_coords)
+{
+   glm::vec3& tile_coords(world_coords - last_placed_tile_->getPosition());
+   switch (last_placed_tile_->getRotation())
+   {
+      case Tile::ROTATION_CW:
+         tile_coords = glm::vec3(-tile_coords.z, tile_coords.y, tile_coords.x);
+         break;
+
+      case Tile::ROTATION_180:
+         tile_coords = glm::vec3(-tile_coords.x, tile_coords.y, -tile_coords.z);
+         break;
+
+      case Tile::ROTATION_CCW:
+         tile_coords = glm::vec3(tile_coords.z, tile_coords.y, -tile_coords.x);
+         break;
+
+      default:
+         break;
+   }
+
+   features::Feature* closest_feature(nullptr);
+   float closest_placeholder_distance(1.0f);
+   for (auto i(follower_placeholders_.begin()), end(follower_placeholders_.end()); i != end; ++i)
+   {
+      features::Feature* feature = i->get();
+      const Follower* follower = feature->getPlaceholder();
+      float distance(glm::distance(tile_coords, follower->getPosition()));
+
+      if (closest_placeholder_distance > distance)
+      {
+         closest_placeholder_distance = distance;
+         closest_feature = feature;
+      }
+   }
+
+   if (closest_feature)
+      closest_feature->placeFollower(*current_follower_);
+   
    endTurn();
 }
 
@@ -118,6 +168,7 @@ void Scenario::endTurn()
    // set current_follower_
    current_follower_ = nullptr;
    last_placed_tile_ = nullptr;
+   follower_placeholders_.clear();
 }
 
 void Scenario::onMouseMoved(const glm::ivec2& window_coords)
@@ -171,6 +222,12 @@ void Scenario::onMouseButton(sf::Mouse::Button button, bool down)
          glm::ivec2 board_coords(board_.getCoordinates(world_coords));
 
          placeTile(board_coords);
+      }
+      else if (current_follower_)
+      {
+         glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(mouse_position_), 0.1f));
+
+         placeFollower(world_coords);
       }
    }
 
@@ -265,6 +322,13 @@ void Scenario::draw() const
    }
    else if (current_tile_)
       current_tile_->draw();
+
+   for (auto i(players_.begin()), end(players_.end()); i != end; ++i)
+   {
+      Player& p = **i;
+      p.drawPlacedFollowers();
+   }
+
 
    glDisable(GL_LIGHTING);
 

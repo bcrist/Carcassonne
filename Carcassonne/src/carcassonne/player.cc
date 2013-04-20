@@ -136,4 +136,13 @@ void Player::draw() const
 
 }
 
+void Player::drawPlacedFollowers() const
+{
+   for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
+   {
+      if (i->isPlaced())
+         i->draw();
+   }
+}
+
 } // namespace carcassonne

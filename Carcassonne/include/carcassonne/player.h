@@ -82,6 +82,9 @@ public:
    // display this player's HUD if it's their turn
    void draw() const;
 
+   // display this player's placed followers
+   void drawPlacedFollowers() const;
+
 private:
    std::string name_;
    bool human_;

@@ -27,6 +27,7 @@
 #include "carcassonne/tile.h"
 
 #include <ctime>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "carcassonne/asset_manager.h"
 #include "carcassonne/db/db.h"
@@ -359,9 +360,19 @@ void Tile::rotateCounterclockwise()
    rotation_ = static_cast<Rotation>((static_cast<int>(rotation_) + 3) % 4);
 }
 
+Tile::Rotation Tile::getRotation() const
+{
+   return rotation_;
+}
+
 void Tile::setPosition(const glm::vec3& position)
 {
    position_ = position;
+}
+
+const glm::vec3& Tile::getPosition() const
+{
+   return position_;
 }
 
 // Returns the type of features which currently exist on the requested side.
