@@ -25,10 +25,20 @@
 
 #include "carcassonne/board.h"
 
+#include "carcassonne/asset_manager.h"
+
 namespace carcassonne {
 
-Board::Board()
+Board::Board(AssetManager& asset_mgr)
+   : asset_mgr_(asset_mgr)
 {
+   makeEmpty(glm::ivec2(0,0));
+}
+
+Tile* Board::getTileAt(const glm::vec3& position) const
+{
+   return getTileAt(glm::ivec2(int(floor(position.x + 0.5f)),
+                               int(floor(position.z + 0.5f))));
 }
 
 Tile* Board::getTileAt(const glm::ivec2& position) const
@@ -60,6 +70,28 @@ bool Board::placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile
             if (old_tile == nullptr || old_tile->getType() != Tile::TYPE_EMPTY_PLACEABLE)
                return false;
 
+            empty_locations_.erase(position);
+            tile->setType(Tile::TYPE_PLACED);
+            tile->setPosition(glm::vec3(position.x, 0, position.y));
+
+            Tile* north = makeEmpty(position + glm::ivec2(1, 0));
+            Tile* south = makeEmpty(position + glm::ivec2(-1, 0));
+            Tile* east = makeEmpty(position + glm::ivec2(0, 1));
+            Tile* west = makeEmpty(position + glm::ivec2(0, -1));
+            tile->closeSide(Tile::SIDE_NORTH, north);
+            tile->closeSide(Tile::SIDE_SOUTH, south);
+            tile->closeSide(Tile::SIDE_EAST, east);
+            tile->closeSide(Tile::SIDE_WEST, west);
+           
+            Tile* ne = getTileAt(position + glm::ivec2(1, 1));
+            Tile* nw = getTileAt(position + glm::ivec2(1, -1));
+            Tile* se = getTileAt(position + glm::ivec2(-1, 1));
+            Tile* sw = getTileAt(position + glm::ivec2(-1, -1));
+            tile->closeDiagonal(ne);
+            tile->closeDiagonal(nw);
+            tile->closeDiagonal(se);
+            tile->closeDiagonal(sw);
+
             board_[position] = std::move(tile);
             return true;
          }
@@ -69,8 +101,89 @@ bool Board::placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile
    }
 }
 
+void Board::usingNewTile(const Tile& tile)
+{
+   for (auto i(empty_locations_.begin()), end(empty_locations_.end()); i != end; ++i)
+   {
+      Tile* current = getTileAt(*i);
+      checkTilePlaceable(*i, current, tile);
+   }
+}
+
+void Board::tileRotated(const Tile& tile)
+{
+   for (auto i(empty_locations_.begin()), end(empty_locations_.end()); i != end; ++i)
+   {
+      Tile* current = getTileAt(*i);
+      if (current->getType() == Tile::TYPE_EMPTY_NOT_PLACEABLE)
+         continue;
+
+      checkTilePlaceable(*i, current, tile);
+   }
+}
+
+void Board::checkTilePlaceable(const glm::ivec2& position, Tile* current, const Tile& tile)
+{
+   Tile* north = getTileAt(position + glm::ivec2(1, 0));
+   Tile* south = getTileAt(position - glm::ivec2(1, 0));
+   Tile* east = getTileAt(position + glm::ivec2(0, 1));
+   Tile* west = getTileAt(position - glm::ivec2(0, 1));
+
+   current->setType(Tile::TYPE_EMPTY_NOT_PLACEABLE);
+
+   // try all 4 rotations of the tile
+   for (int i = 0; i < 4; ++i)
+   {
+      if ((north == nullptr || north->getType() != Tile::TYPE_PLACED ||
+           tile.getEdge(static_cast<Tile::Side>(i + Tile::SIDE_NORTH)).type == 
+           north->getEdge(Tile::SIDE_SOUTH).type) &&
+
+          (south == nullptr || south->getType() != Tile::TYPE_PLACED ||
+           tile.getEdge(static_cast<Tile::Side>(i + Tile::SIDE_SOUTH)).type ==
+           south->getEdge(Tile::SIDE_NORTH).type) &&
+
+          (east == nullptr || east->getType() != Tile::TYPE_PLACED ||
+           tile.getEdge(static_cast<Tile::Side>(i + Tile::SIDE_EAST)).type == 
+           east->getEdge(Tile::SIDE_WEST).type) &&
+          
+          (west == nullptr || west->getType() != Tile::TYPE_PLACED ||
+           tile.getEdge(static_cast<Tile::Side>(i + Tile::SIDE_WEST)).type ==
+           west->getEdge(Tile::SIDE_EAST).type))
+      {
+         current->setType(i == 0 ? Tile::TYPE_EMPTY_PLACEABLE : Tile::TYPE_EMPTY_PLACEABLE_IF_ROTATED);
+         break;
+      }
+   }
+}
+
 void Board::draw() const
 {
+   for (auto i(board_.begin()), end(board_.end()); i != end; ++i)
+   {
+      if (i->second && i->second->getType() == Tile::TYPE_PLACED)
+         i->second->draw();
+   }
+
+   for (auto i(empty_locations_.begin()), end(empty_locations_.end()); i != end; ++i)
+   {
+      Tile* tile = getTileAt(*i);
+      if (tile)
+         tile->draw();
+   }
+}
+
+Tile* Board::makeEmpty(const glm::ivec2& position)
+{
+   std::unique_ptr<Tile>& ptr = board_[position];
+
+   if (!ptr)
+   {
+      ptr.reset(new Tile(asset_mgr_, Tile::TYPE_EMPTY_PLACEABLE));
+      ptr->setPosition(glm::vec3(position.x, 0, position.y));
+      empty_locations_.insert(position);
+   }
+
+   return ptr.get();
 }
 
 } // namespace carcassonne

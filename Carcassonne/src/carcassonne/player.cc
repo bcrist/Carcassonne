@@ -30,8 +30,8 @@
 namespace carcassonne {
 
 Player::Player(const std::string& name, bool human)
-   : name_(),
-     human_()
+   : name_(name),
+     human_(human)
 {
 }
 
@@ -42,7 +42,7 @@ const std::string& Player::getName() const
 
 bool Player::isHuman() const
 {
-   return false;
+   return human_;
 }
 
 Player::SkillLevel Player::getSkillLevel() const

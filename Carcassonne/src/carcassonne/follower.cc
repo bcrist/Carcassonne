@@ -131,8 +131,16 @@ void Follower::draw()const
       glMultMatrixf(glm::value_ptr(farming_transform_));
    
    glColor4fv(glm::value_ptr(color_));
+   bool disable_depth_write = color_.a < 1;
+
+   if (disable_depth_write)
+      glDepthMask(false);
+
    if (mesh_)
       mesh_->draw(GL_MODULATE);
+
+   if (disable_depth_write)
+      glDepthMask(true);
 
    glPopMatrix();
 }

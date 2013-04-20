@@ -28,6 +28,7 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <unordered_map>
+#include <unordered_set>
 
 #include "carcassonne/tile.h"
 
@@ -51,12 +52,15 @@ struct hash<glm::ivec2>
 
 namespace carcassonne {
 
+class AssetManager;
+
 class Board
 {
 public:
-   Board();
+   Board(AssetManager& asset_mgr);
 
-   Tile* getTileAt(const glm::ivec2& position) const;
+   Tile* getTileAt(const glm::vec3& position) const;  // uses world coords
+   Tile* getTileAt(const glm::ivec2& position) const; // uses board coords
 
    // If tile is a TYPE_EMPTY_* tile, return false if the position already has
    // a tile of any kind.
@@ -64,10 +68,27 @@ public:
    // currently have a TYPE_EMPTY_PLACEABLE tile.
    bool placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile);
 
+   // called to indicate that a new tile is now being placed.  updates all EMPTY_ tiles types
+   void usingNewTile(const Tile& tile);
+
+   // similar to usingNewTile, but assumes that the tile is the same as a previous call to
+   // usingNewTile (but perhaps rotated).  Therefore, EMPTY_NOT_PLACEABLE tiles are not rechecked.
+   void tileRotated(const Tile& tile);
+
    void draw() const;
 
 private:
+   void checkTilePlaceable(const glm::ivec2& position, Tile* current, const Tile& tile);
+   Tile* makeEmpty(const glm::ivec2& position);
+
+   AssetManager& asset_mgr_;
+
+   // +X - North
+   // +Z - East
+   // -X - South
+   // -Z - West
    std::unordered_map<glm::ivec2, std::unique_ptr<Tile> > board_;
+   std::unordered_set<glm::ivec2> empty_locations_;
 
    // Disable copy-construction & assignment - do not implement
    Board(const Board&);

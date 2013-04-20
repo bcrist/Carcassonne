@@ -135,16 +135,16 @@ public:
    void setPosition(const glm::vec3& position);
 
    // Returns the type of features which currently exist on the requested side.
-   const TileEdge& getEdge(Side side);
+   const TileEdge& getEdge(Side side) const;
 
    size_t getFeatureCount() const;
    std::weak_ptr<features::Feature> getFeature(size_t index);
 
    // called when a tile is placed next to existing tiles
-   void closeSide(Side side, Tile& new_neighbor);
+   void closeSide(Side side, Tile* new_neighbor);
 
    // called when a tile is placed kitty-corner to existing tiles
-   void closeDiagonal(Tile& new_diagonal_neighbor);
+   void closeDiagonal(Tile* new_diagonal_neighbor);
 
    void draw() const;
    void drawPlaceholders() const;

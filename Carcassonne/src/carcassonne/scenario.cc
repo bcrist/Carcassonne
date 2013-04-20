@@ -39,12 +39,15 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
      floating_height_(0.5f),
      min_simulate_interval_(sf::milliseconds(5)),
      paused_(false),
+     board_(game.getAssetManager()),
      players_(options.players),
      current_player_(players_.end()),
      current_follower_(nullptr)
 {
-   camera_.setPosition(glm::vec3(-2, 10, -4));
+   camera_.setPosition(glm::vec3(-4, 6, -1));
    camera_.setTarget(glm::vec3(0, 0, 0));
+   camera_.recalculatePerspective();
+   hud_camera_.recalculate();
    assert(players_.size() > 1);
 
    draw_pile_.add(std::move(options.tiles));
@@ -69,10 +72,19 @@ void Scenario::endTurn()
    if (current_player_ == players_.end())
       current_player_ = players_.begin();
    else
+   {
       ++current_player_;
+      if (current_player_ == players_.end())
+         current_player_ = players_.begin();
+   }
 
    // set current_tile_
    current_tile_ = draw_pile_.remove();
+
+   // TODO: check for end of pile (game over)
+
+   if (current_tile_)
+      board_.usingNewTile(*current_tile_);
 
    // set current_follower_
    current_follower_ = nullptr;
@@ -101,7 +113,7 @@ void Scenario::onMouseWheel(int delta)
 
    float look_length = glm::length(look_direction);
 
-   float factor = 1.5f;
+   float factor = 0.85f;
    
    if (delta < 0)
    {
@@ -144,12 +156,15 @@ void Scenario::onBlurred()
 
 bool Scenario::onClosed()
 {
-   return false;
+   return true;
 }
 
 void Scenario::draw() const
 {
    camera_.use();
+
+   glEnable(GL_LIGHTING);
+
    board_.draw();
 
    if (current_tile_)
@@ -157,6 +172,7 @@ void Scenario::draw() const
    else if (current_follower_)
       current_follower_->draw();
 
+   glDisable(GL_LIGHTING);
 
    hud_camera_.use();
    // draw current player's HUD

@@ -86,6 +86,7 @@ Tile::Tile(AssetManager& asset_mgr, Type type)
      rotation_(ROTATION_NONE)
 {
    assert(type != TYPE_PLACED && type != TYPE_FLOATING);
+   setType(type);
 }
 
 // Load tile from database
@@ -317,6 +318,13 @@ void Tile::setType(Type type)
             break;
          else
             type_ = type;
+
+         if (type == TYPE_EMPTY_PLACEABLE)
+            color_ = glm::vec4(0.4, 1, 0.4, 0.2);
+         else if (type == TYPE_EMPTY_PLACEABLE_IF_ROTATED)
+            color_ = glm::vec4(1, 1, 0.4, 0.2);
+         else
+            color_ = glm::vec4(1, 0.4, 0.4, 0.2);
          break;
 
       case TYPE_FLOATING:
@@ -357,7 +365,7 @@ void Tile::setPosition(const glm::vec3& position)
 }
 
 // Returns the type of features which currently exist on the requested side.
-const TileEdge& Tile::getEdge(Side side)
+const TileEdge& Tile::getEdge(Side side) const
 {
    return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
 }
@@ -392,10 +400,13 @@ std::weak_ptr<features::Feature> Tile::getFeature(size_t index)
 
 // called when a tile is placed
 // should be called on (up to) all four sides of the new tile
-void Tile::closeSide(Side side, Tile& new_neighbor)
+void Tile::closeSide(Side side, Tile* new_neighbor)
 {
+   if (new_neighbor == nullptr || new_neighbor->type_ != TYPE_PLACED)
+      return;
+
    Side neighbor_side = static_cast<Side>((side + 2) % 4);
-   TileEdge& neighbor_edge = new_neighbor.getEdge_(neighbor_side);
+   TileEdge& neighbor_edge = new_neighbor->getEdge_(neighbor_side);
    TileEdge& edge = getEdge_(side);
 
    edge.open = false;
@@ -428,19 +439,22 @@ void Tile::closeSide(Side side, Tile& new_neighbor)
    }
 
    if (cloister_)
-      static_cast<features::Cloister&>(*cloister_).addTile(new_neighbor);
+      static_cast<features::Cloister&>(*cloister_).addTile(*new_neighbor);
 
-   if (new_neighbor.cloister_)
-      static_cast<features::Cloister&>(*new_neighbor.cloister_).addTile(*this);
+   if (new_neighbor->cloister_)
+      static_cast<features::Cloister&>(*new_neighbor->cloister_).addTile(*this);
 }
 
-void Tile::closeDiagonal(Tile& new_diagonal_neighbor)
+void Tile::closeDiagonal(Tile* new_diagonal_neighbor)
 {
-   if (cloister_)
-      static_cast<features::Cloister&>(*cloister_).addTile(new_diagonal_neighbor);
+   if (new_diagonal_neighbor == nullptr || new_diagonal_neighbor->type_ != TYPE_PLACED)
+      return;
 
-   if (new_diagonal_neighbor.cloister_)
-      static_cast<features::Cloister&>(*new_diagonal_neighbor.cloister_).addTile(*this);
+   if (cloister_)
+      static_cast<features::Cloister&>(*cloister_).addTile(*new_diagonal_neighbor);
+
+   if (new_diagonal_neighbor->cloister_)
+      static_cast<features::Cloister&>(*new_diagonal_neighbor->cloister_).addTile(*this);
 }
 
 void Tile::draw() const
@@ -450,14 +464,34 @@ void Tile::draw() const
    float angle = -90.0f * static_cast<int>(rotation_);
    glRotatef(angle, 0, 1, 0);
 
+   std::cerr << angle << std::endl;
+
    glColor4fv(glm::value_ptr(color_));
+   bool disable_depth_write = color_.a < 1;
+
    if (texture_)
       texture_->enable(GL_MODULATE);
    else
       gfx::Texture::disableAny();
 
+   if (disable_depth_write)
+      glDepthMask(false);
+
    if (mesh_)
       mesh_->drawBase();
+
+   if (disable_depth_write)
+      glDepthMask(true);
+
+   /*
+   gfx::Texture::disableAny();
+   glPointSize(8);
+   glBegin(GL_POINTS);
+   glColor3f(1, 0, 0); glVertex3f(0.4, 0.1, 0);
+   glColor3f(0, 1, 0); glVertex3f(0, 0.1, 0.4);
+   glColor3f(1, 0, 1); glVertex3f(-0.4, 0.1, 0);
+   glColor3f(0, 1, 1); glVertex3f(0, 0.1, -0.4);
+   glEnd();*/
 
    glPopMatrix();
 }

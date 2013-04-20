@@ -28,6 +28,7 @@
 #define CARCASSONNE_GAME_H_
 #include "carcassonne/_carcassonne.h"
 
+#include <vector>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
@@ -90,6 +91,12 @@ private:
    std::vector<std::unique_ptr<gui::Menu> > menu_stack_;
 
    std::unique_ptr<Scenario> scenario_;
+
+
+
+
+   std::vector<Player*> players_;
+
 };
 
 } // namespace carcassonne

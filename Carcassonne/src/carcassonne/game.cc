@@ -46,10 +46,24 @@ Game::Game()
 
 int Game::run()
 {
+   gfx_cfg_.msaa_level = 4;
+   gfx_cfg_.v_sync = false;
+
    graphicsConfigChanged();
-   clearMenus();
+   //clearMenus();
+
+   players_.push_back(new Player("Ben", true));
+   players_.push_back(new Player("Josh", true));
 
    Pile p = assets_.getTileSet("std-base");
+
+   ScenarioInit sci;
+   sci.players.push_back(players_[0]);
+   sci.players.push_back(players_[1]);
+   sci.starting_tile = p.remove();
+   p.shuffle();
+   sci.tiles = std::move(p);
+   this->newScenario(sci);
 
    while (window_.isOpen())
    {
@@ -405,7 +419,7 @@ void Game::initOpenGL()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, glm::value_ptr(light_diffuse));
    glLightfv(GL_LIGHT0, GL_SPECULAR, glm::value_ptr(light_specular));
    
-   // TODO: glEnable(GL_CULL_FACE);
+   glEnable(GL_CULL_FACE);
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_LIGHT0);
