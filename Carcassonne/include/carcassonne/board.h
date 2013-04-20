@@ -59,7 +59,7 @@ class Board
 public:
    Board(AssetManager& asset_mgr);
 
-   Tile* getTileAt(const glm::vec3& position) const;  // uses world coords
+   glm::ivec2 getCoordinates(const glm::vec3& position) const;
    Tile* getTileAt(const glm::ivec2& position) const; // uses board coords
 
    // If tile is a TYPE_EMPTY_* tile, return false if the position already has

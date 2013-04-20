@@ -35,10 +35,10 @@ Board::Board(AssetManager& asset_mgr)
    makeEmpty(glm::ivec2(0,0));
 }
 
-Tile* Board::getTileAt(const glm::vec3& position) const
+glm::ivec2 Board::getCoordinates(const glm::vec3& position) const
 {
-   return getTileAt(glm::ivec2(int(floor(position.x + 0.5f)),
-                               int(floor(position.z + 0.5f))));
+   return glm::ivec2(int(floor(position.x + 0.5f)),
+                     int(floor(position.z + 0.5f)));
 }
 
 Tile* Board::getTileAt(const glm::ivec2& position) const

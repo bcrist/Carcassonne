@@ -161,6 +161,9 @@ void City::join(City& other)
       return;
    }
 
+   std::shared_ptr<Feature> lock1(shared_from_this());
+   std::shared_ptr<Feature> lock2(other.shared_from_this());
+
    City* survivor;
    City* victim;
    if (tiles_.size() > other.tiles_.size())

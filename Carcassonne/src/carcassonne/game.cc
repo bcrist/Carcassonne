@@ -238,6 +238,11 @@ void Game::endScenario()
    scenario_.reset();
 }
 
+void Game::pushMenu(const std::string& name)
+{
+   pushMenu(assets_.getMenu(name));
+}
+
 // adds 'menu' to the top of the menu stack.
 void Game::pushMenu(std::unique_ptr<gui::Menu>&& menu)
 {
@@ -283,6 +288,11 @@ void Game::clearMenus()
       scenario_->setPaused(false);
    else
       pushMenu(assets_.getMenu("splash"));
+}
+
+void Game::setMenu(const std::string& name)
+{
+   setMenu(assets_.getMenu(name));
 }
 
 // clears the menu stack, replacing it with 'menu'

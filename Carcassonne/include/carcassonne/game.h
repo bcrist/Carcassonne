@@ -69,9 +69,11 @@ public:
    void newScenario(ScenarioInit& options);
    void endScenario();
 
+   void pushMenu(const std::string& name);
    void pushMenu(std::unique_ptr<gui::Menu>&& menu);
    void popMenu();
    void clearMenus();
+   void setMenu(const std::string& name);
    void setMenu(std::unique_ptr<gui::Menu>&& menu);
 
 private:

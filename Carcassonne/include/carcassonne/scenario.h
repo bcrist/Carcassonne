@@ -59,6 +59,7 @@ public:
    Player& getCurrentPlayer();
    const Player& getCurrentPlayer() const;
 
+   void placeTile();
    void endTurn();
 
    void onMouseMoved(const glm::ivec2& window_coords);
@@ -85,6 +86,7 @@ private:
 
    gfx::PerspectiveCamera camera_;
    gfx::OrthoCamera hud_camera_;
+   glm::ivec2 mouse_position_;
    float floating_height_;
 
    sf::Clock clock_;

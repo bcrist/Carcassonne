@@ -153,6 +153,9 @@ void Farm::join(Farm& other)
    if (this == &other)
       return;
 
+   std::shared_ptr<Feature> lock1(shared_from_this());
+   std::shared_ptr<Feature> lock2(other.shared_from_this());
+
    Farm* survivor;
    Farm* victim;
    if (tiles_.size() > other.tiles_.size())

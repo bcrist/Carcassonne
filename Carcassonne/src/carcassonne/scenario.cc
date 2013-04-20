@@ -40,6 +40,7 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
      min_simulate_interval_(sf::milliseconds(5)),
      paused_(false),
      board_(game.getAssetManager()),
+     draw_pile_(std::move(options.tiles)),
      players_(options.players),
      current_player_(players_.end()),
      current_follower_(nullptr)
@@ -48,9 +49,8 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
    camera_.setTarget(glm::vec3(0, 0, 0));
    camera_.recalculatePerspective();
    hud_camera_.recalculate();
-   assert(players_.size() > 1);
 
-   draw_pile_.add(std::move(options.tiles));
+   assert(players_.size() > 1);
 
    board_.placeTileAt(glm::ivec2(0,0), std::move(options.starting_tile));
    endTurn();
@@ -64,6 +64,11 @@ Player& Scenario::getCurrentPlayer()
 const Player& Scenario::getCurrentPlayer() const
 {
    return **current_player_;
+}
+
+// switches to follower placement
+void Scenario::placeTile()
+{
 }
 
 void Scenario::endTurn()
@@ -92,6 +97,11 @@ void Scenario::endTurn()
 
 void Scenario::onMouseMoved(const glm::ivec2& window_coords)
 {
+   if (paused_)
+      return;
+
+   mouse_position_ = window_coords;
+
    if (getCurrentPlayer().isHuman())
    {
       glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(window_coords), floating_height_));
@@ -109,6 +119,9 @@ void Scenario::onMouseMoved(const glm::ivec2& window_coords)
 
 void Scenario::onMouseWheel(int delta)
 {
+   if (paused_)
+      return;
+
    glm::vec3 look_direction(camera_.getTarget() - camera_.getPosition());
 
    float look_length = glm::length(look_direction);
@@ -134,14 +147,48 @@ void Scenario::onMouseWheel(int delta)
 
 void Scenario::onMouseButton(sf::Mouse::Button button, bool down)
 {
+   if (paused_)
+      return;
+
+   if (button == sf::Mouse::Left && down == false && getCurrentPlayer().isHuman())
+   {
+      if (current_tile_)
+      {
+         glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(mouse_position_), floating_height_));
+         glm::ivec2 board_coords(board_.getCoordinates(world_coords));
+
+         board_.placeTileAt(board_coords, std::move(current_tile_));
+      }
+   }
+
+   else if (button == sf::Mouse::Right && down == false && getCurrentPlayer().isHuman())
+   {
+      if (current_tile_)
+      {
+         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+             sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+         {
+            current_tile_->rotateCounterclockwise();
+         }
+         else
+         {
+            current_tile_->rotateClockwise();
+         }
+         board_.tileRotated(*current_tile_);
+      }
+   }
 }
 
 void Scenario::onKey(const sf::Event::KeyEvent& event, bool down)
 {
+   if (paused_)
+      return;
 }
 
 void Scenario::onCharacter(const sf::Event::TextEvent& event)
 {
+   if (paused_)
+      return;
 }
 
 void Scenario::onResized()
@@ -152,6 +199,8 @@ void Scenario::onResized()
 
 void Scenario::onBlurred()
 {
+   if (!paused_)
+      game_.pushMenu("pause");
 }
 
 bool Scenario::onClosed()
