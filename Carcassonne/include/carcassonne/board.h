@@ -76,6 +76,7 @@ public:
    void tileRotated(const Tile& tile);
 
    void draw() const;
+   void drawEmpyTiles() const;
 
 private:
    void checkTilePlaceable(const glm::ivec2& position, Tile* current, const Tile& tile);

@@ -426,8 +426,12 @@ void Tile::closeSide(Side side, Tile* new_neighbor)
 
       case TileEdge::TYPE_ROAD:
          neighbor_edge.road->join(*edge.road);
+
+         std::cerr << edge.cw_farm << '\t' << edge.ccw_farm << '\t' << neighbor_edge.cw_farm << '\t' << neighbor_edge.ccw_farm << std::endl;
          neighbor_edge.cw_farm->join(*edge.ccw_farm);
+         std::cerr << edge.cw_farm << '\t' << edge.ccw_farm << '\t' << neighbor_edge.cw_farm << '\t' << neighbor_edge.ccw_farm << std::endl;
          neighbor_edge.ccw_farm->join(*edge.cw_farm);
+         std::cerr << edge.cw_farm << '\t' << edge.ccw_farm << '\t' << neighbor_edge.cw_farm << '\t' << neighbor_edge.ccw_farm << std::endl;
          break;
 
       case TileEdge::TYPE_CITY:
@@ -461,10 +465,48 @@ void Tile::draw() const
 {
    glPushMatrix();
    glTranslatef(position_.x, position_.y, position_.z);
+   /*
+   gfx::Texture::disableAny();
+   glPointSize(8);
+   glBegin(GL_POINTS);
+
+   switch(getEdge(SIDE_NORTH).type)
+   {
+   case TileEdge::TYPE_CITY: glColor3f(1,1,0); break;
+   case TileEdge::TYPE_FARM: glColor3f(0,1,0); break;
+   case TileEdge::TYPE_ROAD: glColor3f(0,0,0); break;
+   }
+   glVertex3f(0.4, 0.1, 0);
+
+   switch(getEdge(SIDE_EAST).type)
+   {
+   case TileEdge::TYPE_CITY: glColor3f(1,1,0); break;
+   case TileEdge::TYPE_FARM: glColor3f(0,1,0); break;
+   case TileEdge::TYPE_ROAD: glColor3f(0,0,0); break;
+   }
+   glVertex3f(0, 0.1, 0.4);
+   
+   switch(getEdge(SIDE_SOUTH).type)
+   {
+   case TileEdge::TYPE_CITY: glColor3f(1,1,0); break;
+   case TileEdge::TYPE_FARM: glColor3f(0,1,0); break;
+   case TileEdge::TYPE_ROAD: glColor3f(0,0,0); break;
+   }
+   glVertex3f(-0.4, 0.1, 0);
+   
+   switch(getEdge(SIDE_WEST).type)
+   {
+   case TileEdge::TYPE_CITY: glColor3f(1,1,0); break;
+   case TileEdge::TYPE_FARM: glColor3f(0,1,0); break;
+   case TileEdge::TYPE_ROAD: glColor3f(0,0,0); break;
+   }
+   glVertex3f(0, 0.1, -0.4);
+   glEnd();*/
+
+
+
    float angle = -90.0f * static_cast<int>(rotation_);
    glRotatef(angle, 0, 1, 0);
-
-   std::cerr << angle << std::endl;
 
    glColor4fv(glm::value_ptr(color_));
    bool disable_depth_write = color_.a < 1;
@@ -483,15 +525,8 @@ void Tile::draw() const
    if (disable_depth_write)
       glDepthMask(true);
 
-   /*
-   gfx::Texture::disableAny();
-   glPointSize(8);
-   glBegin(GL_POINTS);
-   glColor3f(1, 0, 0); glVertex3f(0.4, 0.1, 0);
-   glColor3f(0, 1, 0); glVertex3f(0, 0.1, 0.4);
-   glColor3f(1, 0, 1); glVertex3f(-0.4, 0.1, 0);
-   glColor3f(0, 1, 1); glVertex3f(0, 0.1, -0.4);
-   glEnd();*/
+
+
 
    glPopMatrix();
 }
@@ -554,7 +589,7 @@ void Tile::replaceCity(const features::City& old_city, features::City& new_city)
    for (int i = 0; i < 4; ++i)
    {
       TileEdge& edge = edges_[i];
-      if (edge.city == &old_city)
+      if (edge.type == TileEdge::TYPE_CITY && edge.city == &old_city)
          edge.city = &new_city;
    }
 }
@@ -572,8 +607,17 @@ void Tile::replaceFarm(const features::Farm& old_farm, features::Farm& new_farm)
    for (int i = 0; i < 4; ++i)
    {
       TileEdge& edge = edges_[i];
-      if (edge.farm == &old_farm)
+      if (edge.type == TileEdge::TYPE_FARM && edge.farm == &old_farm)
          edge.farm = &new_farm;
+
+      else if (edge.type == TileEdge::TYPE_ROAD)
+      {
+         if (edge.cw_farm == &old_farm)
+            edge.cw_farm = &new_farm;
+
+         if (edge.ccw_farm == &old_farm)
+            edge.ccw_farm = &new_farm;
+      }
    }
 }
 
@@ -590,7 +634,7 @@ void Tile::replaceRoad(const features::Road& old_road, features::Road& new_road)
    for (int i = 0; i < 4; ++i)
    {
       TileEdge& edge = edges_[i];
-      if (edge.road == &old_road)
+      if (edge.type == TileEdge::TYPE_ROAD && edge.road == &old_road)
          edge.road = &new_road;
    }
 }

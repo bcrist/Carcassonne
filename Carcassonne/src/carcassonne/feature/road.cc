@@ -172,7 +172,6 @@ void Road::join(Road& other)
       survivor = this;
       victim = &other;
    }
-   
    else 
    {
       survivor = &other;
@@ -184,17 +183,17 @@ void Road::join(Road& other)
                                victim->followers_.end());
    victim->followers_.clear();
 
-   if (survivor->followers_.size() > 0 &&  survivor == this)
-   {
+   if (survivor->followers_.empty() &&  survivor == this)
       survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
-   }
 
    for (auto i(victim->tiles_.begin()), end(victim->tiles_.end()); i!= end; ++i)
    {
       Tile* t = *i;
+      survivor->tiles_.push_back(t);
       t->replaceRoad(*victim, *survivor);
    }
+   victim->tiles_.clear();
 }
 
-}
-}
+} // namespace carcassonne::features
+} // namespace carcassonne

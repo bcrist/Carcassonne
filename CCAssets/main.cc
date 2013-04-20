@@ -458,7 +458,7 @@ int obj_mesh(int argc, char** argv)
       {
          s_data.bind(3, i - texture_coords.begin());
          s_data.bind(4, i->x);
-         s_data.bind(5, i->y);
+         s_data.bind(5, -i->y);  // opengl expects texture coordinates that are inverted compared to everyone else
          s_data.bind(6, i->z);
          s_data.step();
          s_data.reset();

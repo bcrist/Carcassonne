@@ -158,12 +158,23 @@ void Board::checkTilePlaceable(const glm::ivec2& position, Tile* current, const 
 
 void Board::draw() const
 {
+   /*
+   gfx::Texture::disableAny();
+   glBegin(GL_LINES);
+   glColor3f(1,0,0); glVertex3f(0,0.1,0); glVertex3f(10, 0.1, 0);
+   glColor3f(0,1,0); glVertex3f(0,0.1,0); glVertex3f(0, 10, 0);
+   glColor3f(0,0,1); glVertex3f(0,0.1,0); glVertex3f(0, 0.1, 10);
+   glEnd();*/
+
    for (auto i(board_.begin()), end(board_.end()); i != end; ++i)
    {
       if (i->second && i->second->getType() == Tile::TYPE_PLACED)
          i->second->draw();
    }
+}
 
+void Board::drawEmpyTiles() const
+{
    for (auto i(empty_locations_.begin()), end(empty_locations_.end()); i != end; ++i)
    {
       Tile* tile = getTileAt(*i);

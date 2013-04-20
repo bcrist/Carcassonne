@@ -174,7 +174,7 @@ void Farm::join(Farm& other)
                                victim->followers_.end());
    victim->followers_.clear();
 
-   if (survivor->followers_.size() > 0 &&  survivor == this)
+   if (survivor->followers_.empty() &&  survivor == this)
       survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
 
    for (auto i(victim->adjacent_cities_.begin()), end(victim->adjacent_cities_.end()); i != end; ++i)
@@ -185,8 +185,10 @@ void Farm::join(Farm& other)
    for (auto i(victim->tiles_.begin()), end(victim->tiles_.end()); i!= end; ++i)
    {
       Tile* t = *i;
+      survivor->tiles_.push_back(t);
       t->replaceFarm(*victim, *survivor);
    }
+   victim->tiles_.clear();
 }
 
 // called by Tile::replaceCity() when cities are joined.

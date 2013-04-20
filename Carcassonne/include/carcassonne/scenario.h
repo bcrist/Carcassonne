@@ -59,7 +59,7 @@ public:
    Player& getCurrentPlayer();
    const Player& getCurrentPlayer() const;
 
-   void placeTile();
+   void placeTile(const glm::ivec2& board_coords);
    void endTurn();
 
    void onMouseMoved(const glm::ivec2& window_coords);

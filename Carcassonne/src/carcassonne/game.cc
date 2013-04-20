@@ -61,6 +61,7 @@ int Game::run()
    sci.players.push_back(players_[0]);
    sci.players.push_back(players_[1]);
    sci.starting_tile = p.remove();
+   p.setSeed(1);
    p.shuffle();
    sci.tiles = std::move(p);
    this->newScenario(sci);

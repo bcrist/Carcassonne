@@ -67,8 +67,13 @@ const Player& Scenario::getCurrentPlayer() const
 }
 
 // switches to follower placement
-void Scenario::placeTile()
+void Scenario::placeTile(const glm::ivec2& board_coords)
 {
+   board_.placeTileAt(board_coords, std::move(current_tile_));
+
+   // TODO: switch to follower placement first
+
+   endTurn();
 }
 
 void Scenario::endTurn()
@@ -157,7 +162,7 @@ void Scenario::onMouseButton(sf::Mouse::Button button, bool down)
          glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(mouse_position_), floating_height_));
          glm::ivec2 board_coords(board_.getCoordinates(world_coords));
 
-         board_.placeTileAt(board_coords, std::move(current_tile_));
+         placeTile(board_coords);
       }
    }
 
@@ -215,6 +220,8 @@ void Scenario::draw() const
    glEnable(GL_LIGHTING);
 
    board_.draw();
+   if (getCurrentPlayer().isHuman() && current_tile_)
+      board_.drawEmpyTiles();
 
    if (current_tile_)
       current_tile_->draw();
