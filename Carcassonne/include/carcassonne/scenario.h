@@ -73,6 +73,8 @@ public:
    void onBlurred();
    bool onClosed();
 
+   void cancelInput();
+
    void draw() const;
    void update();
 
@@ -82,6 +84,9 @@ public:
    void simulate(sf::Time delta);
 
 private:
+   void onCameraMoved();
+   void onMousePositionChanged();
+
    Game& game_;
 
    gfx::PerspectiveCamera camera_;
@@ -101,6 +106,7 @@ private:
    std::vector<Player*>::iterator current_player_; // iterator to the player
                                                    // whose turn it is
    std::unique_ptr<Tile> current_tile_; // the tile that is currently being played
+   Tile* last_placed_tile_;
    Follower* current_follower_;
 
    // Disable copy-construction & assignment - do not implement

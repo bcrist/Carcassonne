@@ -76,6 +76,9 @@ bool Farm::isComplete()const
 // Finally, return all followers to idle state.
 void Farm::score()
 {
+   if (followers_.empty())
+      return;
+
    std::vector<features::City*> complete_cities;
    for (auto i(adjacent_cities_.begin()), end(adjacent_cities_.end()); i !=end; ++i)
    {
@@ -114,6 +117,7 @@ void Farm::score()
          players_with_most_followers.push_back(owner);
       }
    }
+   followers_.clear();
    //players_with_most_followers now has all players who should receive 'points' points.
 
    for (auto i(players_with_most_followers.begin()), 

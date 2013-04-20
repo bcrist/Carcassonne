@@ -1,7 +1,12 @@
 High Priority
 =============
+Follower placement after tile placement
+Better mouse/keyboard input handling
+In-game HUD
+Handle situations where no possible placement exists
+Handle game over
+Compass Rose
 Menus
-Game Logic
 AI
 
 Mid Priority

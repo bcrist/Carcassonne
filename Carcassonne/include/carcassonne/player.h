@@ -30,10 +30,13 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <vector>
+#include <string>
 
 #include "carcassonne/follower.h"
 
 namespace carcassonne {
+
+class AssetManager;
 
 class Player
 {
@@ -66,6 +69,8 @@ public:
 
    // Specific to current game:
 
+   void newScenario(AssetManager& asset_mgr, const glm::vec4& color);
+
    const glm::vec4& getColor() const;
 
    // get an idle follower, or null if there are none
@@ -93,7 +98,6 @@ private:
    glm::vec4 color_;
 
    std::vector<Follower> followers_;
-   int idle_followers_;
 
    int score_;
 

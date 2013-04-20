@@ -92,6 +92,9 @@ bool Road::isComplete() const
 // state.
 void Road::score()
 {
+   if (followers_.empty())
+      return;
+
    int points = 0;
    points = tiles_.size();
 
@@ -120,6 +123,7 @@ void Road::score()
          players_with_most_followers.push_back(owner);
       }
    }
+   followers_.clear();
    //players_with_most_followers now has all players who should receive 'points' points.
 
    for (auto i(players_with_most_followers.begin()), 
@@ -128,7 +132,6 @@ void Road::score()
       Player* p = *i;
       p->scorePoints(points);
    }
-      
 }
 
 // merges this road with another one (due to a tile being placed connecting

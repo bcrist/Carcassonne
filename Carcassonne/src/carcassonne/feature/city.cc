@@ -83,6 +83,9 @@ bool City::isComplete() const
 // Finally, return all followers to idle state.
 void City::score()
 {
+   if (followers_.empty())
+      return;
+
    int points = 0;
    points = tiles_.size() + pennants_;
    if (isComplete())
@@ -115,6 +118,7 @@ void City::score()
          players_with_most_followers.push_back(owner);
       }
    }
+   followers_.clear();
    //players_with_most_followers now has all players who should receive 'points' points.
 
    for (auto i(players_with_most_followers.begin()), 

@@ -62,6 +62,11 @@ bool Feature::isRoad() const
    return getType() == TYPE_ROAD;
 }
 
+bool Feature::hasPlaceholder() const
+{
+   return follower_placeholder_;
+}
+
 void Feature::drawPlaceholder() const
 {
    if (follower_placeholder_)

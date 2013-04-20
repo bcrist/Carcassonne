@@ -73,6 +73,7 @@ void Cloister::score()
       Follower* f = followers_.front();
       f->getOwner()->scorePoints(points);
       f->setIdle(true);
+      followers_.clear();
    }
 }
 

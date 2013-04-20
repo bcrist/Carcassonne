@@ -426,12 +426,8 @@ void Tile::closeSide(Side side, Tile* new_neighbor)
 
       case TileEdge::TYPE_ROAD:
          neighbor_edge.road->join(*edge.road);
-
-         std::cerr << edge.cw_farm << '\t' << edge.ccw_farm << '\t' << neighbor_edge.cw_farm << '\t' << neighbor_edge.ccw_farm << std::endl;
          neighbor_edge.cw_farm->join(*edge.ccw_farm);
-         std::cerr << edge.cw_farm << '\t' << edge.ccw_farm << '\t' << neighbor_edge.cw_farm << '\t' << neighbor_edge.ccw_farm << std::endl;
          neighbor_edge.ccw_farm->join(*edge.cw_farm);
-         std::cerr << edge.cw_farm << '\t' << edge.ccw_farm << '\t' << neighbor_edge.cw_farm << '\t' << neighbor_edge.ccw_farm << std::endl;
          break;
 
       case TileEdge::TYPE_CITY:
@@ -443,10 +439,20 @@ void Tile::closeSide(Side side, Tile* new_neighbor)
    }
 
    if (cloister_)
+   {
       static_cast<features::Cloister&>(*cloister_).addTile(*new_neighbor);
+      checkForCompleteCloister();
+   }
 
    if (new_neighbor->cloister_)
+   {
       static_cast<features::Cloister&>(*new_neighbor->cloister_).addTile(*this);
+      new_neighbor->checkForCompleteCloister();
+   }
+
+   checkForCompleteFeatures();
+   // tiles always share the same features on their edges, so we don't need
+   // new_neighbor->checkForCompleteFeatures();
 }
 
 void Tile::closeDiagonal(Tile* new_diagonal_neighbor)
@@ -455,10 +461,49 @@ void Tile::closeDiagonal(Tile* new_diagonal_neighbor)
       return;
 
    if (cloister_)
+   {
       static_cast<features::Cloister&>(*cloister_).addTile(*new_diagonal_neighbor);
+      checkForCompleteCloister();
+   }
 
    if (new_diagonal_neighbor->cloister_)
+   {
       static_cast<features::Cloister&>(*new_diagonal_neighbor->cloister_).addTile(*this);
+      new_diagonal_neighbor->checkForCompleteCloister();
+   }
+}
+
+void Tile::checkForCompleteFeatures()
+{
+   for (auto i(cities_.begin()), end(cities_.end()); i!= end; ++i)
+   {
+      features::Feature& feature = **i;
+      if (feature.isComplete())
+         feature.score();
+   }
+   /* We know farms are never complete until the end of the game, so we don't need:
+   for (auto i(farms_.begin()), end(farms_.end()); i!= end; ++i)
+   {
+      features::Feature& feature = **i;
+      if (feature.isComplete())
+         feature.score();
+   }
+   */
+
+   for (auto i(roads_.begin()), end(roads_.end()); i!= end; ++i)
+   {
+      features::Feature& feature = **i;
+      if (feature.isComplete())
+         feature.score();
+   }
+
+   // Cloisters are checked separately in checkForCompleteCloister()
+}
+
+void Tile::checkForCompleteCloister()
+{
+   if (cloister_ && cloister_->isComplete())
+      cloister_->score();
 }
 
 void Tile::draw() const

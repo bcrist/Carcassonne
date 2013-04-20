@@ -27,11 +27,18 @@
 
 #include "carcassonne/player.h"
 
+#include "carcassonne/asset_manager.h"
+
 namespace carcassonne {
 
 Player::Player(const std::string& name, bool human)
    : name_(name),
-     human_(human)
+     human_(human),
+     skill_level_(SKILL_LEVEL_TRIVIAL),
+     wins_(0),
+     losses_(0),
+     games_played_(0),
+     high_score_(0)
 {
 }
 
@@ -88,6 +95,16 @@ int Player::getHighScore() const
 
 // Specific to current game:
 
+void Player::newScenario(AssetManager& asset_mgr, const glm::vec4& color)
+{
+   color_ = color;
+   followers_.clear();
+   for (int i = 0; i < 7; ++i)
+      followers_.push_back(Follower(asset_mgr, *this));
+
+   score_ = 0;
+}
+
 const glm::vec4& Player::getColor() const
 {
    return color_;
@@ -96,15 +113,12 @@ const glm::vec4& Player::getColor() const
 // get an idle follower, or null if there are none
 Follower* Player::getIdleFollower()
 {
-   if(idle_followers_ > 0)
+   for(auto i(followers_.begin()), end(followers_.end()); i != end ; ++i)
    {
-      for(auto i(followers_.begin()), end(followers_.end()); i != end ; ++i)
-      {
-         if (i->isIdle())
-            return &(*i);
-      }
-      
+      if (i->isIdle())
+         return &(*i);
    }
+   
    return nullptr;
 }
 
@@ -112,6 +126,8 @@ Follower* Player::getIdleFollower()
 void Player::scorePoints(int points)
 {
    score_ += points;
+
+   std::cout << getName() << " scored " << points << " points!  Score: " << score_ << std::endl;
 }
 
 // display this player's HUD if it's their turn

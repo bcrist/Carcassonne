@@ -43,10 +43,13 @@ class Mesh;
 class Follower
 {
 public:
-   Follower(AssetManager& asset_mgr);
-   Follower(AssetManager& asset_mgr, int id);
+   Follower();
    Follower(const Follower& other);
-   Follower(AssetManager& asset_mgr, Player& owner);
+   void operator=(const Follower& other);
+
+   Follower(AssetManager& asset_mgr, int id);
+   Follower(AssetManager& asset_mgr, Player& owner);   
+
    Player* getOwner()const;
    bool isIdle()const;
    void setIdle(bool idle);
@@ -63,6 +66,8 @@ public:
    void draw() const;
 
 private:
+   void calculateFarmingTransform();
+
    Player* owner_;
 
    gfx::Mesh* mesh_;  // the mesh used to render the follower
@@ -77,8 +82,6 @@ private:
    bool farming_; // followers are rendered laying down when farming.  Ignored when idle
    glm::mat4 farming_transform_; // transforms a standing follower to a laying down follower
    float rotation_;  // rotation around y-axis.  Ignored when idle
-
-   void operator=(const Follower&);
 };
 
 } // namespace carcassonne

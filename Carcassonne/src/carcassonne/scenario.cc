@@ -69,9 +69,28 @@ const Player& Scenario::getCurrentPlayer() const
 // switches to follower placement
 void Scenario::placeTile(const glm::ivec2& board_coords)
 {
-   board_.placeTileAt(board_coords, std::move(current_tile_));
+   last_placed_tile_ = current_tile_.get();
+   if (!board_.placeTileAt(board_coords, std::move(current_tile_)))
+   {
+      last_placed_tile_ = nullptr;
+      return;
+   }
+   current_tile_.reset();
 
    // TODO: switch to follower placement first
+   Follower* follower = getCurrentPlayer().getIdleFollower();
+   if (follower != nullptr)
+   {
+      for (size_t i = 0; i < last_placed_tile_->getFeatureCount(); ++i)
+      {
+         std::shared_ptr<features::Feature> feature = last_placed_tile_->getFeature(i).lock();
+         if (feature->hasPlaceholder())
+         {
+            current_follower_ = follower;
+            return;
+         }
+      }
+   }
 
    endTurn();
 }
@@ -98,6 +117,7 @@ void Scenario::endTurn()
 
    // set current_follower_
    current_follower_ = nullptr;
+   last_placed_tile_ = nullptr;
 }
 
 void Scenario::onMouseMoved(const glm::ivec2& window_coords)
@@ -107,19 +127,7 @@ void Scenario::onMouseMoved(const glm::ivec2& window_coords)
 
    mouse_position_ = window_coords;
 
-   if (getCurrentPlayer().isHuman())
-   {
-      glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(window_coords), floating_height_));
-
-      if (current_tile_)
-      {
-         current_tile_->setPosition(world_coords);
-      }
-      else if (current_follower_)
-      {
-         current_follower_->setPosition(world_coords);
-      }
-   }
+   onMousePositionChanged();
 }
 
 void Scenario::onMouseWheel(int delta)
@@ -204,6 +212,7 @@ void Scenario::onResized()
 
 void Scenario::onBlurred()
 {
+   cancelInput();
    if (!paused_)
       game_.pushMenu("pause");
 }
@@ -211,6 +220,32 @@ void Scenario::onBlurred()
 bool Scenario::onClosed()
 {
    return true;
+}
+
+void Scenario::cancelInput()
+{
+}
+
+void Scenario::onCameraMoved()
+{
+   onMousePositionChanged();
+}
+
+void Scenario::onMousePositionChanged()
+{
+   if (getCurrentPlayer().isHuman())
+   {
+      glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(mouse_position_), floating_height_));
+
+      if (current_follower_)
+      {
+         current_follower_->setPosition(world_coords);
+      }
+      else if (current_tile_)
+      {
+         current_tile_->setPosition(world_coords);
+      }
+   }
 }
 
 void Scenario::draw() const
@@ -223,10 +258,13 @@ void Scenario::draw() const
    if (getCurrentPlayer().isHuman() && current_tile_)
       board_.drawEmpyTiles();
 
-   if (current_tile_)
-      current_tile_->draw();
-   else if (current_follower_)
+   if (current_follower_)
+   {
+      last_placed_tile_->drawPlaceholders();
       current_follower_->draw();
+   }
+   else if (current_tile_)
+      current_tile_->draw();
 
    glDisable(GL_LIGHTING);
 
@@ -258,6 +296,8 @@ void Scenario::setPaused(bool paused)
       paused_ = paused;
 
       if (paused)
+         cancelInput();
+      else
          clock_.restart();
    }
 }

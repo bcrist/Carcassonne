@@ -16,6 +16,7 @@ std-base-a     2
    cloister c1
    follower c1    0     0     10
    follower f1 f -0.25 -0.15  5
+   follower r1    0     -0.4  -3
 
 std-base-b     4
    t std-base-b

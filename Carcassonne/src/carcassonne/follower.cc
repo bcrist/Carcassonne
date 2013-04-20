@@ -37,24 +37,41 @@
 
 namespace carcassonne {
 
-Follower::Follower(AssetManager& asset_mgr)
+Follower::Follower()
    : owner_(nullptr),
-     mesh_(asset_mgr.getMesh("std-follower")),
+     mesh_(nullptr),
      color_(1,1,1,1),
      idle_(false),
      farming_(false),
      rotation_(0)
 {
-   // half follower height: 0.1775
-   // half follower depth: 0.115
-
-   farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
-      glm::vec3(0.0f, -0.1775f, 0.0f)),
-      -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
-      glm::vec3(0.0f, 0.115f, 0.0f));
 }
 
-// load from db
+Follower::Follower(const Follower& other)
+   : owner_(other.owner_),
+     mesh_(other.mesh_),
+     color_(other.color_),
+     idle_(other.idle_),
+     position_(other.position_),
+     farming_(other.farming_),
+     farming_transform_(other.farming_transform_),
+     rotation_(other.rotation_)
+{
+}
+
+void Follower::operator=(const Follower& other)
+{
+   owner_ = other.owner_;
+   mesh_ = other.mesh_;
+   color_ = other.color_;
+   idle_ = other.idle_;
+   position_ = other.position_;
+   farming_ = other.farming_;
+   farming_transform_ = other.farming_transform_;
+   rotation_ = other.rotation_;
+}
+
+// load placeholder follower from db
 Follower::Follower(AssetManager& asset_mgr, int feature_id)
    : owner_(nullptr),
      mesh_(asset_mgr.getMesh("std-follower")),
@@ -77,25 +94,10 @@ Follower::Follower(AssetManager& asset_mgr, int feature_id)
    else
       throw std::runtime_error("Could not find feature to load follower data!");
 
-   farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
-      glm::vec3(0.0f, -0.1775f, 0.0f)),
-      -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
-      glm::vec3(0.0f, 0.115f, 0.0f));
+   calculateFarmingTransform();
 }
 
-// copies a follower (except owning player)
-Follower::Follower(const Follower& other)
-   : owner_(nullptr),
-     mesh_(other.mesh_),
-     color_(other.color_),
-     idle_(other.idle_),
-     position_(other.position_),
-     farming_(other.farming_),
-     farming_transform_(other.farming_transform_),
-     rotation_(other.rotation_)
-{
-}
-
+// create one of a player's follower
 Follower::Follower(AssetManager& asset_mgr, Player& owner)
    : owner_(&owner),
      mesh_(asset_mgr.getMesh("std-follower")),
@@ -104,10 +106,15 @@ Follower::Follower(AssetManager& asset_mgr, Player& owner)
      farming_(false),
      rotation_(0)
 {
+   calculateFarmingTransform();
+}
+
+void Follower::calculateFarmingTransform()
+{
    farming_transform_ = glm::translate(glm::rotate(glm::translate(farming_transform_,
-      glm::vec3(0.0f, -0.1775f, 0.0f)),
+      glm::vec3(0.0f, 0.1775f, 0.0f)),
       -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
-      glm::vec3(0.0f, 0.115f, 0.0f));
+      glm::vec3(0.0f, -0.115f, 0.0f));
 }
 
 Player* Follower::getOwner()const

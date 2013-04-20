@@ -55,6 +55,9 @@ int Game::run()
    players_.push_back(new Player("Ben", true));
    players_.push_back(new Player("Josh", true));
 
+   players_[0]->newScenario(assets_, glm::vec4(0,1,1,1));
+   players_[1]->newScenario(assets_, glm::vec4(1,1,0,1));
+
    Pile p = assets_.getTileSet("std-base");
 
    ScenarioInit sci;

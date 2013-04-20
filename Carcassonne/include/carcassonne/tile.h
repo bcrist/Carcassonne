@@ -175,6 +175,8 @@ private:
 
    FeatureRef getFeature(AssetManager& asset_mgr, db::Stmt& sf, std::vector<FeatureRef>& features, int id);
    TileEdge& getEdge_(Side side);
+   void checkForCompleteFeatures();
+   void checkForCompleteCloister();
 
    static std::mt19937 prng_;
 
