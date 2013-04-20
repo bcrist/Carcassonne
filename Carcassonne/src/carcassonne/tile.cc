@@ -106,7 +106,7 @@ Tile::Tile(AssetManager& asset_mgr, const std::string& name)
                   "north, north_cw, north_ccw, "
                   "east, east_cw, east_ccw, "
                   "south, south_cw, south_ccw, "
-                  "west, west_cw, west_ccw, "
+                  "west, west_cw, west_ccw "
                   "FROM cc_tiles "
                   "WHERE name = ?");
    s.bind(1, name);
@@ -116,7 +116,7 @@ Tile::Tile(AssetManager& asset_mgr, const std::string& name)
 
       int cloister_id = s.getInt(1);
       if (cloister_id > 0)
-         cloister_ = (new features::Cloister(asset_mgr, cloister_id, *this))->shared_from_this();
+         cloister_ = std::shared_ptr<features::Feature>(new features::Cloister(asset_mgr, cloister_id, *this));
 
       std::vector<FeatureRef> features;
 
@@ -128,7 +128,8 @@ Tile::Tile(AssetManager& asset_mgr, const std::string& name)
          TileEdge& edge = edges_[i];
 
          FeatureRef ref = getFeature(asset_mgr, sf, features, id);
-         switch (ref.type)
+         edge.type = ref.type;
+         switch (edge.type)
          {
             case TileEdge::TYPE_CITY:
                edge.city = ref.city;
@@ -180,14 +181,14 @@ Tile::FeatureRef Tile::getFeature(AssetManager& asset_mgr, db::Stmt& sf, std::ve
    {
       case TileEdge::TYPE_CITY:
          ref.city = new features::City(asset_mgr, id, sf.getInt(1), *this);
-         cities_.push_back(ref.city->shared_from_this());
+         cities_.push_back(std::shared_ptr<features::Feature>(ref.city));
          features.push_back(ref);
          break;
 
       case TileEdge::TYPE_FARM:
          {
             ref.farm = new features::Farm(asset_mgr, id, *this);
-            farms_.push_back(ref.farm->shared_from_this());
+            farms_.push_back(std::shared_ptr<features::Feature>(ref.farm));
             features.push_back(ref);
 
             int adjacent[4] = { sf.getInt(2), sf.getInt(3), sf.getInt(4), sf.getInt(5) };
@@ -207,7 +208,7 @@ Tile::FeatureRef Tile::getFeature(AssetManager& asset_mgr, db::Stmt& sf, std::ve
 
       case TileEdge::TYPE_ROAD:
          ref.road = new features::Road(asset_mgr, id, *this);
-         roads_.push_back(ref.road->shared_from_this());
+         roads_.push_back(std::shared_ptr<features::Feature>(ref.road));
          features.push_back(ref);
          break;
 
@@ -236,7 +237,7 @@ Tile::Tile(const Tile& other)
       const features::City& city = static_cast<const features::City&>(**i);
       features::City* new_city = new features::City(city, *this);
 
-      cities_.push_back(new_city->shared_from_this());
+      cities_.push_back(std::shared_ptr<features::Feature>(new_city));
 
       for (int i = 0; i < 4; ++i)
       {
@@ -251,7 +252,7 @@ Tile::Tile(const Tile& other)
       const features::Road& road = static_cast<const features::Road&>(**i);
       features::Road* new_road = new features::Road(road, *this);
 
-      roads_.push_back(new_road->shared_from_this());
+      roads_.push_back(std::shared_ptr<features::Feature>(new_road));
 
       for (int i = 0; i < 4; ++i)
       {
@@ -266,7 +267,7 @@ Tile::Tile(const Tile& other)
       const features::Farm& farm = static_cast<const features::Farm&>(**i);
       features::Farm* new_farm = new features::Farm(farm, *this);
 
-      farms_.push_back(new_farm->shared_from_this());
+      farms_.push_back(std::shared_ptr<features::Feature>(new_farm));
 
       for (auto i(other.cities_.begin()), end(other.cities_.end()); i != end; ++i)
       {

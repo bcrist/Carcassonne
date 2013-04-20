@@ -49,6 +49,8 @@ int Game::run()
    graphicsConfigChanged();
    clearMenus();
 
+   Pile p = assets_.getTileSet("std-base");
+
    while (window_.isOpen())
    {
       sf::Event event;
