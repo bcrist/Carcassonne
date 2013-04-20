@@ -47,6 +47,7 @@ public:
    void join(Road& other);
 
 private:
+   Road(const Road&);
    void operator=(const Road&);
 };
 

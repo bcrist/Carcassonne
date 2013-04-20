@@ -62,6 +62,18 @@ bool Feature::isRoad() const
    return getType() == TYPE_ROAD;
 }
 
+void Feature::drawPlaceholder() const
+{
+   if (follower_placeholder_)
+      follower_placeholder_->draw();
+}
+
+void Feature::setPlaceholderColor(const glm::vec4& color)
+{
+   if (follower_placeholder_)
+      follower_placeholder_->setColor(color);
+}
+
 void Feature::placeFollower(Follower& follower)
 {
    if (!follower_placeholder_)

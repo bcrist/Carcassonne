@@ -26,7 +26,11 @@
 
 #include "carcassonne/tile.h"
 
+#include <ctime>
+
 #include "carcassonne/asset_manager.h"
+#include "carcassonne/db/db.h"
+#include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
 
@@ -70,6 +74,9 @@ TileEdge::TileEdge(features::City* city)
 
 #pragma endregion
 
+// used to randomize starting rotation of tiles
+std::mt19937 Tile::prng_(static_cast<std::mt19937::result_type>(time(nullptr)));
+
 // Constructs a tile of one of the TYPE_EMPTY_* types
 Tile::Tile(AssetManager& asset_mgr, Type type)
 	: type_(type),
@@ -83,9 +90,135 @@ Tile::Tile(AssetManager& asset_mgr, Type type)
 
 // Load tile from database
 Tile::Tile(AssetManager& asset_mgr, const std::string& name)
+   : type_(TYPE_FLOATING),
+     color_(1,1,1,1),
+     mesh_(asset_mgr.getMesh("std-tile")),
+     rotation_(static_cast<Rotation>(prng_() % 4))
 {
-   // TODO
+   db::DB& db = asset_mgr.getDB();
+
+
+   db::Stmt sf(db, "SELECT type, pennants, adjacent1, adjacent2, adjacent3, adjacent4 "
+                   "FROM cc_tile_features "
+                   "WHERE id = ?");
+
+   db::Stmt s(db, "SELECT texture, cloister, "
+                  "north, north_cw, north_ccw, "
+                  "east, east_cw, east_ccw, "
+                  "south, south_cw, south_ccw, "
+                  "west, west_cw, west_ccw, "
+                  "FROM cc_tiles "
+                  "WHERE name = ?");
+   s.bind(1, name);
+   if (s.step())
+   {
+      texture_ = asset_mgr.getTexture(s.getText(0));
+
+      int cloister_id = s.getInt(1);
+      if (cloister_id > 0)
+         cloister_ = (new features::Cloister(asset_mgr, cloister_id, *this))->shared_from_this();
+
+      std::vector<FeatureRef> features;
+
+      for (int i = 0; i < 4; ++i)
+      {
+         int index = 2 + 3 * i;  // statement column index
+         int id = s.getInt(index);
+
+         TileEdge& edge = edges_[i];
+
+         FeatureRef ref = getFeature(asset_mgr, sf, features, id);
+         switch (ref.type)
+         {
+            case TileEdge::TYPE_CITY:
+               edge.city = ref.city;
+               break;
+
+            case TileEdge::TYPE_FARM:
+               edge.farm = ref.farm;
+               break;
+
+            case TileEdge::TYPE_ROAD:
+               {
+                  edge.road = ref.road;
+                  FeatureRef cw_ref = getFeature(asset_mgr, sf, features, s.getInt(index + 1));
+                  if (cw_ref.type != TileEdge::TYPE_FARM)
+                     throw std::runtime_error("Unexpected feature type found!  Expected farm!");
+                  edge.cw_farm = cw_ref.farm;
+
+                  FeatureRef ccw_ref = getFeature(asset_mgr, sf, features, s.getInt(index + 2));
+                  if (ccw_ref.type != TileEdge::TYPE_FARM)
+                     throw std::runtime_error("Unexpected feature type found!  Expected farm!");
+                  edge.ccw_farm = ccw_ref.farm;
+               }
+               break;
+
+            default:
+               break;
+         }
+      }
+   }
+   else
+      throw std::runtime_error("Tile not found!");
 }
+
+Tile::FeatureRef Tile::getFeature(AssetManager& asset_mgr, db::Stmt& sf, std::vector<FeatureRef>& features, int id)
+{
+   FeatureRef ref;
+   ref.id = id;
+
+   auto i(std::find(features.begin(), features.end(), ref));
+   if (i != features.end())
+      return *i;
+
+   sf.bind(1, id);
+   if (!sf.step())
+      throw std::runtime_error("Tile feature not found!");
+
+   ref.type = static_cast<TileEdge::Type>(sf.getInt(0));
+   switch (ref.type)
+   {
+      case TileEdge::TYPE_CITY:
+         ref.city = new features::City(asset_mgr, id, sf.getInt(1), *this);
+         cities_.push_back(ref.city->shared_from_this());
+         features.push_back(ref);
+         break;
+
+      case TileEdge::TYPE_FARM:
+         {
+            ref.farm = new features::Farm(asset_mgr, id, *this);
+            farms_.push_back(ref.farm->shared_from_this());
+            features.push_back(ref);
+
+            int adjacent[4] = { sf.getInt(2), sf.getInt(3), sf.getInt(4), sf.getInt(5) };
+            sf.reset();
+
+            for (int i = 0; i < 4; ++i)
+            {
+               if (adjacent[i] > 0)
+               {
+                  FeatureRef c = getFeature(asset_mgr, sf, features, adjacent[i]);
+                  if (c.type == TileEdge::TYPE_CITY)
+                     ref.farm->addAdjacentCity(*c.city);
+               }
+            }
+         }
+         break;
+
+      case TileEdge::TYPE_ROAD:
+         ref.road = new features::Road(asset_mgr, id, *this);
+         roads_.push_back(ref.road->shared_from_this());
+         features.push_back(ref);
+         break;
+
+      default:
+         throw std::runtime_error("Unrecognized feature type!");
+   }
+
+   sf.reset();
+   return ref;
+}
+
 
 // Copy another tile (does not share feature objects)
 Tile::Tile(const Tile& other)
@@ -101,7 +234,7 @@ Tile::Tile(const Tile& other)
    for (auto i(other.cities_.begin()), end(other.cities_.end()); i != end; ++i)
    {
       const features::City& city = static_cast<const features::City&>(**i);
-      features::City* new_city = new features::City(city);
+      features::City* new_city = new features::City(city, *this);
 
       cities_.push_back(new_city->shared_from_this());
 
@@ -116,7 +249,7 @@ Tile::Tile(const Tile& other)
    for (auto i(other.roads_.begin()), end(other.roads_.end()); i != end; ++i)
    {
       const features::Road& road = static_cast<const features::Road&>(**i);
-      features::Road* new_road = new features::Road(road);
+      features::Road* new_road = new features::Road(road, *this);
 
       roads_.push_back(new_road->shared_from_this());
 
@@ -131,7 +264,7 @@ Tile::Tile(const Tile& other)
    for (auto i(other.farms_.begin()), end(other.farms_.end()); i != end; ++i)
    {
       const features::Farm& farm = static_cast<const features::Farm&>(**i);
-      features::Farm* new_farm = new features::Farm(farm);
+      features::Farm* new_farm = new features::Farm(farm, *this);
 
       farms_.push_back(new_farm->shared_from_this());
 
@@ -158,6 +291,13 @@ Tile::Tile(const Tile& other)
          else if (edge.type == TileEdge::TYPE_FARM && edge.farm == &farm)
             edge.farm = new_farm;
       }
+   }
+
+   if (other.cloister_)
+   {
+      const features::Cloister& cloister = static_cast<const features::Cloister&>(*other.cloister_);
+      features::Cloister* new_cloister = new features::Cloister(cloister, *this);
+      cloister_.reset(new_cloister);
    }
 }
 
@@ -195,7 +335,6 @@ Tile::Type Tile::getType()const
    return type_;
 }
 
-
 // Rotates the tile if it is a TYPE_FLOATING tile
 void Tile::rotateClockwise()
 {
@@ -217,28 +356,46 @@ void Tile::setPosition(const glm::vec3& position)
 }
 
 // Returns the type of features which currently exist on the requested side.
-//const TileEdge& Tile::getEdge(Side side)
-//{
-//   return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
-//}
-
-TileEdge& Tile::getEdge(Side side)
+const TileEdge& Tile::getEdge(Side side)
 {
    return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
 }
 
-/*std::vector<features::Feature*> Tile::getFeatures()
+TileEdge& Tile::getEdge_(Side side)
 {
-   return std::vector<features::Feature*>();
-}*/
+   return edges_[(static_cast<int>(side) + 4 - static_cast<int>(rotation_)) % 4];
+}
+
+size_t Tile::getFeatureCount() const
+{
+   return cities_.size() + roads_.size() + farms_.size() + (cloister_ ? 1 : 0);
+}
+
+std::weak_ptr<features::Feature> Tile::getFeature(size_t index)
+{
+   if (index < cities_.size())
+      return std::weak_ptr<features::Feature>(cities_[index]);
+
+   index -= cities_.size();
+   if (index < roads_.size())
+      return std::weak_ptr<features::Feature>(roads_[index]);
+
+   index -= roads_.size();
+   if (index < farms_.size())
+      return std::weak_ptr<features::Feature>(farms_[index]);
+
+   assert(index == farms_.size());
+
+   return std::weak_ptr<features::Feature>(cloister_);
+}
 
 // called when a tile is placed
 // should be called on (up to) all four sides of the new tile
 void Tile::closeSide(Side side, Tile& new_neighbor)
 {
    Side neighbor_side = static_cast<Side>((side + 2) % 4);
-   TileEdge& neighbor_edge = new_neighbor.getEdge(neighbor_side);
-   TileEdge& edge = getEdge(side);
+   TileEdge& neighbor_edge = new_neighbor.getEdge_(neighbor_side);
+   TileEdge& edge = getEdge_(side);
 
    edge.open = false;
    neighbor_edge.open = false;
@@ -270,25 +427,75 @@ void Tile::closeSide(Side side, Tile& new_neighbor)
    }
 
    if (cloister_)
-      cloister_->addTile(new_neighbor);
+      static_cast<features::Cloister&>(*cloister_).addTile(new_neighbor);
 
    if (new_neighbor.cloister_)
-      new_neighbor.cloister_->addTile(*this);
+      static_cast<features::Cloister&>(*new_neighbor.cloister_).addTile(*this);
 }
 
 void Tile::closeDiagonal(Tile& new_diagonal_neighbor)
 {
    if (cloister_)
-      cloister_->addTile(new_diagonal_neighbor);
+      static_cast<features::Cloister&>(*cloister_).addTile(new_diagonal_neighbor);
 
    if (new_diagonal_neighbor.cloister_)
-      new_diagonal_neighbor.cloister_->addTile(*this);
+      static_cast<features::Cloister&>(*new_diagonal_neighbor.cloister_).addTile(*this);
 }
-
 
 void Tile::draw() const
 {
-   // TODO!
+   glPushMatrix();
+   glTranslatef(position_.x, position_.y, position_.z);
+   float angle = -90.0f * static_cast<int>(rotation_);
+   glRotatef(angle, 0, 1, 0);
+
+   glColor4fv(glm::value_ptr(color_));
+   if (texture_)
+      texture_->enable(GL_MODULATE);
+   else
+      gfx::Texture::disableAny();
+
+   if (mesh_)
+      mesh_->drawBase();
+
+   glPopMatrix();
+}
+
+void Tile::drawPlaceholders() const
+{
+   glPushMatrix();
+   glTranslatef(position_.x, position_.y, position_.z);
+   float angle = -90.0f * static_cast<int>(rotation_);
+   glRotatef(angle, 0, 1, 0);
+
+   for (auto i(cities_.begin()), end(cities_.end()); i!= end; ++i)
+      (*i)->drawPlaceholder();
+
+   for (auto i(farms_.begin()), end(farms_.end()); i!= end; ++i)
+      (*i)->drawPlaceholder();
+
+   for (auto i(roads_.begin()), end(roads_.end()); i!= end; ++i)
+      (*i)->drawPlaceholder();
+
+   if (cloister_)
+      cloister_->drawPlaceholder();
+
+   glPopMatrix();
+}
+
+void Tile::setPlaceholderColor(const glm::vec4& color)
+{
+   for (auto i(cities_.begin()), end(cities_.end()); i!= end; ++i)
+      (*i)->setPlaceholderColor(color);
+
+   for (auto i(farms_.begin()), end(farms_.end()); i!= end; ++i)
+      (*i)->setPlaceholderColor(color);
+
+   for (auto i(roads_.begin()), end(roads_.end()); i!= end; ++i)
+      (*i)->setPlaceholderColor(color);
+
+   if (cloister_)
+      cloister_->setPlaceholderColor(color);
 }
 
 void Tile::replaceCity(const features::City& old_city, features::City& new_city)
@@ -299,6 +506,14 @@ void Tile::replaceCity(const features::City& old_city, features::City& new_city)
 
       if (&old_city == ptr.get())
          ptr = new_city.shared_from_this();
+   }
+
+   for (auto i(farms_.begin()), end(farms_.end()); i!= end; ++i)
+   {
+      std::shared_ptr<features::Feature>& ptr = *i;
+      features::Farm& farm = static_cast<features::Farm&>(*ptr);
+
+      farm.replaceCity(old_city, new_city);
    }
 
    for (int i = 0; i < 4; ++i)

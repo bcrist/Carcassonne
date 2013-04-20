@@ -31,10 +31,11 @@
 #include <memory>
 #include <random>
 
-#include "carcassonne/asset_manager.h"
 #include "carcassonne/tile.h"
 
 namespace carcassonne {
+
+class AssetManager;
 
 class Pile
 {

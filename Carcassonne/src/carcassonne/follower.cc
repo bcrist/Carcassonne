@@ -115,6 +115,10 @@ Player* Follower::getOwner()const
    return owner_;
 }
 
+void Follower::setColor(const glm::vec4& color)
+{
+   color_ = color;
+}
 
 void Follower::draw()const
 {

@@ -26,11 +26,11 @@
 #include "carcassonne/_carcassonne.h"
 
 #include <SFML/Window.hpp>
-#include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
 
 class Game;
+class AssetManager;
 
 namespace gui {
 

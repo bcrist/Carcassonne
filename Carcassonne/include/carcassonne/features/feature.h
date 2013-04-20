@@ -68,6 +68,10 @@ public:
    // idle state.
    virtual void score() = 0;
 
+   void drawPlaceholder() const;
+
+   void setPlaceholderColor(const glm::vec4& color);
+
    void placeFollower(Follower& follower);
       
 

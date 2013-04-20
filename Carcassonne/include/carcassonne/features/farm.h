@@ -43,7 +43,7 @@ class Farm : public Feature
 {
 public:
    Farm(AssetManager& asset_mgr, int id, Tile& tile);
-   Farm(const Farm&, Tile& tile);
+   Farm(const Farm& other, Tile& tile);
    virtual ~Farm();
 
    virtual Type getType() const;   
@@ -57,6 +57,7 @@ public:
 private:
    std::vector<features::City*> adjacent_cities_;
 
+   Farm(const Farm&);
    void operator=(const Farm&);
 };
 

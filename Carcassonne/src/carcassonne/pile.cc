@@ -23,10 +23,11 @@
 //
 // Represents a LIFO pile of tiles.  The pile can also be shuffled.
 
-
 #include "carcassonne/pile.h"
 
 #include <ctime>
+
+#include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
 
@@ -49,6 +50,7 @@ Pile::Pile(Pile&& other)
 Pile& Pile::operator=(Pile&& other)
 {
    tiles_ = std::move(other.tiles_);
+   return *this;
 }
 
 Pile::Pile(AssetManager& asset_mgr, const std::string& tileset_name)

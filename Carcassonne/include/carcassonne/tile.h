@@ -28,8 +28,10 @@
 #define CARCASSONNE_TILE_H_
 #include "carcassonne/_carcassonne.h"
 
-#include "carcassonne/gfx/mesh.h"
+#include <vector>
+#include <random>
 
+#include "carcassonne/gfx/mesh.h"
 #include "carcassonne/features/feature.h"
 #include "carcassonne/features/city.h"
 #include "carcassonne/features/cloister.h"
@@ -133,9 +135,10 @@ public:
    void setPosition(const glm::vec3& position);
 
    // Returns the type of features which currently exist on the requested side.
-   //const TileEdge& getEdge(Side side);
+   const TileEdge& getEdge(Side side);
 
-   //std::vector<features::Feature*> getFeatures();
+   size_t getFeatureCount() const;
+   std::weak_ptr<features::Feature> getFeature(size_t index);
 
    // called when a tile is placed next to existing tiles
    void closeSide(Side side, Tile& new_neighbor);
@@ -143,8 +146,10 @@ public:
    // called when a tile is placed kitty-corner to existing tiles
    void closeDiagonal(Tile& new_diagonal_neighbor);
 
-
    void draw() const;
+   void drawPlaceholders() const;
+
+   void setPlaceholderColor(const glm::vec4& color);
 
    void replaceCity(const features::City& old_city, features::City& new_city);
    void replaceFarm(const features::Farm& old_farm, features::Farm& new_farm);
@@ -152,7 +157,26 @@ public:
    
 
 private:
-   TileEdge& getEdge(Side side);
+   struct FeatureRef
+   {
+      int id;
+      TileEdge::Type type;
+      union {
+         features::Farm* farm;
+         features::Road* road;
+         features::City* city;
+      };
+
+      bool operator==(const FeatureRef& other) const
+      {
+         return id == other.id;
+      }
+   };
+
+   FeatureRef getFeature(AssetManager& asset_mgr, db::Stmt& sf, std::vector<FeatureRef>& features, int id);
+   TileEdge& getEdge_(Side side);
+
+   static std::mt19937 prng_;
 
    Type type_;
 
@@ -168,7 +192,7 @@ private:
    std::vector<std::shared_ptr<features::Feature> > cities_;
    std::vector<std::shared_ptr<features::Feature> > roads_;
    std::vector<std::shared_ptr<features::Feature> > farms_;
-   std::unique_ptr<features::Cloister> cloister_;
+   std::shared_ptr<features::Feature> cloister_;
 
    // Disable assignment - do not implement
    void operator=(const Tile&);

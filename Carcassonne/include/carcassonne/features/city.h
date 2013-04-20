@@ -38,7 +38,7 @@ class City : public Feature
 {
 public:
    City(AssetManager& asset_mgr, int id, int pennants, Tile& tile);
-   City(const City&, Tile& tile);
+   City(const City& other, Tile& tile);
    virtual ~City();
 
    virtual Type getType() const;
@@ -51,6 +51,7 @@ private:
                   // provide an extra 2 points when a city is completed or an
                   // extra 1 point at the end of the game.
 
+   City(const City&);
    void operator=(const City&);
 };
 

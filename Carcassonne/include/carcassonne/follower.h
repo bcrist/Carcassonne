@@ -29,8 +29,6 @@
 #define CARCASSONNE_FOLLOWER_H_
 #include "carcassonne/_carcassonne.h"
 
-
-
 namespace carcassonne {
 
 class Player;
@@ -55,6 +53,8 @@ public:
 
    void setOrientation(const Follower& other);
    void setPosition(const glm::vec3& position);
+
+   void setColor(const glm::vec4& color);
 
    
    // called by Player::draw() if the follower is idle, or Tile::draw() (after

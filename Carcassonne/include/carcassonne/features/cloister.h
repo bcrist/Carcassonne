@@ -46,6 +46,7 @@ public:
    void addTile(Tile& tile);
 
 private:
+   Cloister(const Cloister&);
    void operator=(const Cloister&);
 };
 
