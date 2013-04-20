@@ -28,6 +28,7 @@
 #include <ctime>
 
 #include "carcassonne/asset_manager.h"
+#include "carcassonne/db/stmt.h"
 
 namespace carcassonne {
 
@@ -54,8 +55,30 @@ Pile& Pile::operator=(Pile&& other)
 }
 
 Pile::Pile(AssetManager& asset_mgr, const std::string& tileset_name)
+   : prng_(static_cast<std::mt19937::result_type>(time(nullptr)))
 {
-   // TODO
+   db::DB& db = asset_mgr.getDB();
+
+   db::Stmt s(db, "SELECT id, starting_tile FROM cc_tilesets WHERE name = ?");
+   s.bind(1, tileset_name);
+   if (!s.step())
+      throw std::runtime_error("Tileset not found!");
+
+   db::Stmt st(db, "SELECT tile, quantity FROM cc_tileset_tiles WHERE tileset_id = ?");
+   st.bind(1, s.getInt(0));
+   while (st.step())
+   {
+      Tile* tile = new Tile(asset_mgr, st.getText(0));
+      tiles_.push_back(std::unique_ptr<Tile>(tile));
+
+      // copy tile until quantity required has been added
+      int quantity = st.getInt(1);
+      while (--quantity > 0)
+         tiles_.push_back(std::unique_ptr<Tile>(new Tile(*tile)));
+   }
+
+   // starting tile goes on last
+   tiles_.push_back(std::unique_ptr<Tile>(new Tile(asset_mgr, s.getText(1))));
 }
 
 void Pile::setSeed()
