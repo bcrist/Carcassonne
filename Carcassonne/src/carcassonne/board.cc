@@ -30,7 +30,8 @@
 namespace carcassonne {
 
 Board::Board(AssetManager& asset_mgr)
-   : asset_mgr_(asset_mgr)
+   : asset_mgr_(asset_mgr),
+     next_empty_location_(empty_locations_.begin())
 {
    makeEmpty(glm::ivec2(0,0));
 }
@@ -71,6 +72,7 @@ bool Board::placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile
                return false;
 
             empty_locations_.erase(position);
+            next_empty_location_ = empty_locations_.begin();
             tile->setType(Tile::TYPE_PLACED);
             tile->setPosition(glm::vec3(position.x, 0, position.y));
 
@@ -101,17 +103,26 @@ bool Board::placeTileAt(const glm::ivec2& position, std::unique_ptr<Tile>&& tile
    }
 }
 
-void Board::usingNewTile(const Tile& tile)
+bool Board::usingNewTile(const Tile& tile)
 {
+   bool at_least_one_placeable_location(false);
+
+   next_empty_location_ = empty_locations_.begin();
+
    for (auto i(empty_locations_.begin()), end(empty_locations_.end()); i != end; ++i)
    {
       Tile* current = getTileAt(*i);
-      checkTilePlaceable(*i, current, tile);
+      if (checkTilePlaceable(*i, current, tile) != 0)
+         at_least_one_placeable_location = true;
    }
+
+   return at_least_one_placeable_location;
 }
 
 void Board::tileRotated(const Tile& tile)
 {
+   next_empty_location_ = empty_locations_.begin();
+
    for (auto i(empty_locations_.begin()), end(empty_locations_.end()); i != end; ++i)
    {
       Tile* current = getTileAt(*i);
@@ -122,7 +133,42 @@ void Board::tileRotated(const Tile& tile)
    }
 }
 
-void Board::checkTilePlaceable(const glm::ivec2& position, Tile* current, const Tile& tile)
+
+const glm::ivec2* Board::getNextPlaceableLocation()
+{
+   if (next_empty_location_ == empty_locations_.end())
+      next_empty_location_ = empty_locations_.begin();
+
+   auto start = next_empty_location_;
+
+   do
+   {
+      if (next_empty_location_ != empty_locations_.end())
+      {
+         const glm::ivec2& location = *next_empty_location_;
+         Tile* tile = getTileAt(location);
+
+         if (tile->getType() == Tile::TYPE_EMPTY_PLACEABLE)
+         {
+            ++next_empty_location_;
+            return &location;
+         }
+
+         ++next_empty_location_;
+      }
+
+      if (next_empty_location_ == empty_locations_.end())
+         next_empty_location_ = empty_locations_.begin();
+
+   } while (next_empty_location_ != start);
+
+   // if there are no placeable locations
+   return nullptr;
+}
+
+// returns 0 if tile is not placeable at this location, 1 if it is placeable, but must be rotated,
+// and 2 if it is placeable right now.  Also updates current tile's type at that location.
+int Board::checkTilePlaceable(const glm::ivec2& position, Tile* current, const Tile& tile)
 {
    Tile* north = getTileAt(position + glm::ivec2(1, 0));
    Tile* south = getTileAt(position - glm::ivec2(1, 0));
@@ -151,9 +197,10 @@ void Board::checkTilePlaceable(const glm::ivec2& position, Tile* current, const 
            west->getEdge(Tile::SIDE_EAST).type))
       {
          current->setType(i == 0 ? Tile::TYPE_EMPTY_PLACEABLE : Tile::TYPE_EMPTY_PLACEABLE_IF_ROTATED);
-         break;
+         return i == 0 ? 2 : 1;
       }
    }
+   return 0;
 }
 
 void Board::draw() const
@@ -192,6 +239,7 @@ Tile* Board::makeEmpty(const glm::ivec2& position)
       ptr.reset(new Tile(asset_mgr_, Tile::TYPE_EMPTY_PLACEABLE));
       ptr->setPosition(glm::vec3(position.x, 0, position.y));
       empty_locations_.insert(position);
+      next_empty_location_ = empty_locations_.begin();
    }
 
    return ptr.get();

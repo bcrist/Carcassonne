@@ -35,9 +35,11 @@
     <ClCompile Include="src\carcassonne\gfx\sprite.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
+    <ClCompile Include="src\carcassonne\gui\input_manager.cc" />
     <ClCompile Include="src\carcassonne\gui\menu.cc" />
     <ClCompile Include="src\carcassonne\scheduling\circular_sequence.cc" />
     <ClCompile Include="src\carcassonne\scheduling\delay.cc" />
+    <ClCompile Include="src\carcassonne\scheduling\persistent_sequence.cc" />
     <ClCompile Include="src\main.cc" />
     <ClCompile Include="src\sqlite3.c" />
     <ClCompile Include="src\stb_image.c" />
@@ -66,13 +68,14 @@
     <ClInclude Include="include\carcassonne\gfx\sprite.h" />
     <ClInclude Include="include\carcassonne\gfx\texture.h" />
     <ClInclude Include="include\carcassonne\gfx\texture_font.h" />
+    <ClInclude Include="include\carcassonne\gui\input_manager.h" />
     <ClInclude Include="include\carcassonne\gui\menu.h" />
     <ClInclude Include="include\carcassonne\pile.h" />
     <ClInclude Include="include\carcassonne\player.h" />
     <ClInclude Include="include\carcassonne\scenario.h" />
     <ClInclude Include="include\carcassonne\scheduling\circular_sequence.h" />
     <ClInclude Include="include\carcassonne\scheduling\easing\cubic.h" />
-    <ClInclude Include="include\carcassonne\scheduling\easing\easing.h" />
+    <ClInclude Include="include\carcassonne\scheduling\easing\easings.h" />
     <ClInclude Include="include\carcassonne\scheduling\easing\linear.h" />
     <ClInclude Include="include\carcassonne\scheduling\easing\quadratic.h" />
     <ClInclude Include="include\carcassonne\scheduling\easing\quartic.h" />
@@ -81,6 +84,7 @@
     <ClInclude Include="include\carcassonne\scheduling\interpolator.h" />
     <ClInclude Include="include\carcassonne\scheduling\delay.h" />
     <ClInclude Include="include\carcassonne\scheduling\method.h" />
+    <ClInclude Include="include\carcassonne\scheduling\persistent_sequence.h" />
     <ClInclude Include="include\carcassonne\tile.h" />
     <ClInclude Include="include\carcassonne\_carcassonne.h" />
     <ClInclude Include="include\sqlite3.h" />

@@ -150,6 +150,12 @@
     <ClCompile Include="src\main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\gui\input_manager.cc">
+      <Filter>Source Files\carcassonne\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\scheduling\persistent_sequence.cc">
+      <Filter>Source Files\carcassonne\scheduling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
@@ -263,9 +269,6 @@
     <ClInclude Include="include\carcassonne\scheduling\easing\quartic.h">
       <Filter>Header Files\carcassonne\scheduling\easing</Filter>
     </ClInclude>
-    <ClInclude Include="include\carcassonne\scheduling\easing\easing.h">
-      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
-    </ClInclude>
     <ClInclude Include="include\carcassonne\scheduling\easing\quintic.h">
       <Filter>Header Files\carcassonne\scheduling\easing</Filter>
     </ClInclude>
@@ -277,6 +280,15 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\scheduling\circular_sequence.h">
       <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gui\input_manager.h">
+      <Filter>Header Files\carcassonne\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\persistent_sequence.h">
+      <Filter>Header Files\carcassonne\scheduling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\scheduling\easing\easings.h">
+      <Filter>Header Files\carcassonne\scheduling\easing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

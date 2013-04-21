@@ -19,16 +19,35 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/easing/easing.h
+// File: carcassonne/scheduling/persistent_sequence.cc
 
-#ifndef CARCASSONNE_SCHEDULING_EASING_EASING_H_
-#define CARCASSONNE_SCHEDULING_EASING_EASING_H_
+#include "carcassonne/scheduling/persistent_sequence.h"
 
-#include "carcassonne/scheduling/easing/linear.h"
-#include "carcassonne/scheduling/easing/quadratic.h"
-#include "carcassonne/scheduling/easing/cubic.h"
-#include "carcassonne/scheduling/easing/quartic.h"
-#include "carcassonne/scheduling/easing/quintic.h"
-#include "carcassonne/scheduling/easing/sinusoidal.h"
+namespace carcassonne {
+namespace scheduling {
 
-#endif
+PersistentSequence::PersistentSequence()
+{
+}
+   
+void PersistentSequence::schedule(const std::function<bool(sf::Time)>& deferred)
+{
+   deferred_functions_.push_back(deferred);
+}
+
+void PersistentSequence::clear()
+{
+   deferred_functions_.clear();
+}
+
+bool PersistentSequence::operator()(sf::Time delta)
+{
+   if (!deferred_functions_.empty() && deferred_functions_.front()(delta))
+      deferred_functions_.erase(deferred_functions_.begin());
+
+   return false;
+}
+
+
+} // namespace scheduling
+} // namespace carcassonne

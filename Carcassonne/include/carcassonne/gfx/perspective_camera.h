@@ -41,6 +41,10 @@ public:
    void setTarget(const glm::vec3& target);
    void setUp(const glm::vec3& up);
 
+   void translate(const glm::vec3& delta);
+
+   void rotateAroundTarget(float delta);
+
    const glm::vec3& getPosition() const;
    const glm::vec3& getTarget() const;
    const glm::vec3& getUp() const;

@@ -19,59 +19,35 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/scheduling/interpolator.h
+// File: carcassonne/scheduling/persistent_sequence.h
 
-#ifndef CARCASSONNE_SCHEDULING_INTERPOLATOR_H_
-#define CARCASSONNE_SCHEDULING_INTERPOLATOR_H_
+#ifndef CARCASSONNE_SCHEDULING_PERSISTENT_SEQUENCE_H_
+#define CARCASSONNE_SCHEDULING_PERSISTENT_SEQUENCE_H_
 #include "carcassonne/_carcassonne.h"
 
+#include <deque>
 #include <functional>
 #include <SFML/System.hpp>
 
 namespace carcassonne {
 namespace scheduling {
 
-// T - type of value being interpolated
-// P - type of parameter of function to set value
-// R - return type of function to set value (discarded)
-template <typename T, typename P = T, typename R = void>
-class Interpolator
+class PersistentSequence
 {
 public:
-   Interpolator(sf::Time duration, const std::function<R(P)>& func, P initial = 0, P final = 1, const std::function<float(float)>& easing = nullptr);
+   PersistentSequence();
    
-   sf::Time getDuration() const;
-   sf::Time getElapsed() const;
+   void schedule(const std::function<bool(sf::Time)>& deferred);
 
-   void reset();
-   void reset(sf::Time duration);
-
-   float getFraction() const;
-
-   float getEased() const;
-   float getEased(float fraction) const;
-
-   T get() const;
-
-   T get(float fraction) const;
+   void clear();
 
    bool operator()(sf::Time delta);
 
 private:
-   sf::Time elapsed_;
-   sf::Time duration_;
-
-   std::function<float(float)> easing_;
-
-   T initial_;
-   T final_;
-
-   std::function<R(P)> function_;
+   std::deque<std::function<bool(sf::Time)> > deferred_functions_;
 };
 
 } // namespace scheduling
 } // namespace carcassonne
-
-#include "interpolator.inl"
 
 #endif

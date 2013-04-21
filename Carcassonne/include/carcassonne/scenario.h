@@ -38,7 +38,9 @@
 #include "carcassonne/player.h"
 #include "carcassonne/gfx/perspective_camera.h"
 #include "carcassonne/gfx/ortho_camera.h"
+#include "carcassonne/gui/input_manager.h"
 #include "carcassonne/scheduling/Unifier.h"
+#include "carcassonne/scheduling/persistent_sequence.h"
 
 namespace carcassonne {
 
@@ -63,18 +65,7 @@ public:
    void placeFollower(const glm::vec3& world_coords);
    void endTurn();
 
-   void onMouseMoved(const glm::ivec2& window_coords);
-   void onMouseWheel(int delta);
-   void onMouseButton(sf::Mouse::Button button, bool down);
-
-   void onKey(const sf::Event::KeyEvent& event, bool down);
-   void onCharacter(const sf::Event::TextEvent& event);
-
-   void onResized();
-   void onBlurred();
-   bool onClosed();
-
-   void cancelInput();
+   void zoom(float factor, bool lock_xz);
 
    void draw() const;
    void update();
@@ -84,21 +75,43 @@ public:
 
    void simulate(sf::Time delta);
 
-private:
-   void onCameraMoved();
-   void onMousePositionChanged();
+   void onHover();
+   void onLeftDown();
+   void onRightDown();
+   void onLeftDrag(const glm::ivec2& down_position);
+   void onRightDrag(const glm::ivec2& down_position);
+   void onLeftUp(const glm::ivec2& down_position);
+   void onRightUp(const glm::ivec2& down_position);
+   void onLeftCancel(const glm::ivec2& down_position);
+   void onRightCancel(const glm::ivec2& down_position);
 
+   void onKey(const sf::Event::KeyEvent& event, bool down);
+   void onCharacter(const sf::Event::TextEvent& event);
+
+   void onMouseMoved(const glm::ivec2& window_coords);
+   void onMouseWheel(int delta);
+   void onMouseButton(sf::Mouse::Button button, bool down);
+
+   void onResized();
+   void onBlurred();
+   bool onClosed();
+   void cancelInput();
+
+private:
    Game& game_;
+
+   gui::InputManager input_mgr_;
 
    gfx::PerspectiveCamera camera_;
    gfx::OrthoCamera hud_camera_;
-   glm::ivec2 mouse_position_;
    float floating_height_;
+   bool camera_movement_enabled_;
 
    sf::Clock clock_;
    sf::Time min_simulate_interval_;
    bool paused_;
    scheduling::Unifier simulation_unifier_;
+   scheduling::PersistentSequence simulation_sequence_;
    
    Board board_;
    Pile draw_pile_;

@@ -32,7 +32,7 @@ namespace carcassonne {
 namespace scheduling {
 
 template <typename T, typename P, typename R>
-Interpolator<T,P,T,R>::Interpolator(sf::Time duration, const std::function<R(P)>& func, P initial, P final, const std::function<float(float)>& easing)
+Interpolator<T,P,R>::Interpolator(sf::Time duration, const std::function<R(P)>& func, P initial, P final, const std::function<float(float)>& easing)
    : duration_(duration),
      easing_(easing),
      initial_(initial),

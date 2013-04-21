@@ -40,7 +40,7 @@ public:
    bool operator()(sf::Time delta);
 
 private:
-   std::function<F> method_;
+   std::function<R()> method_;
 };
 
 } // namespace scheduling

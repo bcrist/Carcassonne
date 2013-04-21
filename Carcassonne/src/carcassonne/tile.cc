@@ -593,6 +593,7 @@ void Tile::draw() const
    float angle = -90.0f * static_cast<int>(rotation_);
    glRotatef(angle, 0, 1, 0);
 
+   /*
    gfx::Texture::disableAny();
    glDisable(GL_LIGHTING);
    glBegin(GL_LINES);
@@ -601,7 +602,7 @@ void Tile::draw() const
    glColor3f(0,0,1);
    glVertex3f(0,0,0);glVertex3f(0,0,0.5);
    glEnd();
-   glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHTING);*/
 
    glColor4fv(glm::value_ptr(color_));
    bool disable_depth_write = color_.a < 1;

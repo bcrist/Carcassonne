@@ -60,6 +60,24 @@ void PerspectiveCamera::setUp(const glm::vec3& up)
    recalculateView();
 }
 
+void PerspectiveCamera::translate(const glm::vec3& delta)
+{
+   position_ += delta;
+   target_ += delta;
+   recalculateView();
+}
+
+void PerspectiveCamera::rotateAroundTarget(float delta)
+{
+   glm::vec3 pos(position_ - target_);
+   glm::mat4 transform(glm::rotate(glm::mat4(), delta, glm::vec3(0, 1, 0))); 
+   pos = glm::vec3(transform * glm::vec4(pos, 1));
+   position_ = target_ + pos;
+
+   recalculateView();
+}
+
+
 const glm::vec3& PerspectiveCamera::getPosition() const
 {
    return position_;

@@ -21,8 +21,8 @@
 // Author: Benjamin Crist
 // File: carcassonne/gui/menu.h
 
-#ifndef CARCASSONNE_MENU_H_
-#define CARCASSONNE_MENU_H_
+#ifndef CARCASSONNE_GUI_MENU_H_
+#define CARCASSONNE_GUI_MENU_H_
 #include "carcassonne/_carcassonne.h"
 
 #include <SFML/Window.hpp>
@@ -40,6 +40,7 @@ public:
    static std::unique_ptr<Menu> load(AssetManager& asset_mgr, const std::string& name);
 
    Menu(Game& game);
+   ~Menu();
 
    virtual std::unique_ptr<Menu> clone() const;
 
