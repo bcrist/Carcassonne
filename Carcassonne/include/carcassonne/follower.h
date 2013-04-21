@@ -60,7 +60,7 @@ public:
 
    bool isPlaced() const;
 
-   void setOrientation(const Follower& other);
+   void setOrientation(const Follower& other, const Tile& relative_to);
    void setPosition(const glm::vec3& position);
    const glm::vec3& getPosition() const;
 

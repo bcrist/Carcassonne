@@ -75,7 +75,7 @@ public:
 
    void setPlaceholderColor(const glm::vec4& color);
 
-   void placeFollower(Follower& follower);
+   void placeFollower(Follower& follower, const Tile& relative_to);
       
 
 protected:

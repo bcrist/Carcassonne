@@ -137,6 +137,9 @@ public:
    void setPosition(const glm::vec3& position);
    const glm::vec3& getPosition() const;
 
+   glm::vec3 localToWorld(const glm::vec3& local_coords) const;
+   glm::vec3 worldToLocal(const glm::vec3& world_coords) const;
+
    // Returns the type of features which currently exist on the requested side.
    const TileEdge& getEdge(Side side) const;
 
@@ -148,6 +151,8 @@ public:
 
    // called when a tile is placed kitty-corner to existing tiles
    void closeDiagonal(Tile* new_diagonal_neighbor);
+
+   void checkForCompleteFeatures();
 
    void draw() const;
    void drawPlaceholders() const;
@@ -178,8 +183,9 @@ private:
 
    FeatureRef getFeature(AssetManager& asset_mgr, db::Stmt& sf, std::vector<FeatureRef>& features, int id);
    TileEdge& getEdge_(Side side);
-   void checkForCompleteFeatures();
    void checkForCompleteCloister();
+   void calculateTransform() const;
+   void calculateInverseTransform() const;
 
    static std::mt19937 prng_;
 
@@ -191,6 +197,9 @@ private:
 
    glm::vec3 position_;
    Rotation rotation_;
+   mutable glm::mat4 transform_;
+   mutable glm::mat4 inv_transform_;
+   mutable char transforms_valid_;
 
    TileEdge edges_[4];
 

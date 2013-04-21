@@ -178,8 +178,13 @@ void Farm::join(Farm& other)
                                victim->followers_.end());
    victim->followers_.clear();
 
-   if (survivor->followers_.empty() &&  survivor == this)
-      survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
+   if (survivor->followers_.empty())
+   {
+      if (survivor == this)
+         survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
+   }
+   else
+      survivor->follower_placeholder_.reset();
 
    for (auto i(victim->adjacent_cities_.begin()), end(victim->adjacent_cities_.end()); i != end; ++i)
       survivor->addAdjacentCity(**i);

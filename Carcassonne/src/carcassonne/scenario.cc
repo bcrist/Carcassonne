@@ -43,7 +43,8 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
      draw_pile_(std::move(options.tiles)),
      players_(options.players),
      current_player_(players_.end()),
-     current_follower_(nullptr)
+     current_follower_(nullptr),
+     last_placed_tile_(nullptr)
 {
    camera_.setPosition(glm::vec3(-4, 6, -1));
    camera_.setTarget(glm::vec3(0, 0, 0));
@@ -105,24 +106,7 @@ void Scenario::placeTile(const glm::ivec2& board_coords)
 
 void Scenario::placeFollower(const glm::vec3& world_coords)
 {
-   glm::vec3& tile_coords(world_coords - last_placed_tile_->getPosition());
-   switch (last_placed_tile_->getRotation())
-   {
-      case Tile::ROTATION_CW:
-         tile_coords = glm::vec3(-tile_coords.z, tile_coords.y, tile_coords.x);
-         break;
-
-      case Tile::ROTATION_180:
-         tile_coords = glm::vec3(-tile_coords.x, tile_coords.y, -tile_coords.z);
-         break;
-
-      case Tile::ROTATION_CCW:
-         tile_coords = glm::vec3(tile_coords.z, tile_coords.y, -tile_coords.x);
-         break;
-
-      default:
-         break;
-   }
+   glm::vec3& tile_coords(last_placed_tile_->worldToLocal(world_coords));
 
    features::Feature* closest_feature(nullptr);
    float closest_placeholder_distance(1.0f);
@@ -140,13 +124,16 @@ void Scenario::placeFollower(const glm::vec3& world_coords)
    }
 
    if (closest_feature)
-      closest_feature->placeFollower(*current_follower_);
+      closest_feature->placeFollower(*current_follower_, *last_placed_tile_);
    
    endTurn();
 }
 
 void Scenario::endTurn()
 {
+   if (last_placed_tile_)
+      last_placed_tile_->checkForCompleteFeatures();
+
    // move current_player_ to the next player
    if (current_player_ == players_.end())
       current_player_ = players_.begin();

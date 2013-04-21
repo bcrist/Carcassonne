@@ -189,8 +189,13 @@ void City::join(City& other)
                                victim->followers_.end());
    victim->followers_.clear();
 
-   if (survivor->followers_.empty() &&  survivor == this)
-      survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
+   if (survivor->followers_.empty())
+   {
+      if (survivor == this)
+         survivor->follower_placeholder_ = std::move(other.follower_placeholder_);
+   }
+   else
+      survivor->follower_placeholder_.reset();
 
    for (auto i(victim->tiles_.begin()), end(victim->tiles_.end()); i!= end; ++i)
    {

@@ -185,11 +185,11 @@ void Follower::setFloating(bool floating)
    floating_ = floating;
 }
 
-void Follower::setOrientation(const Follower& other)
+void Follower::setOrientation(const Follower& other, const Tile& relative_to)
 {
-   position_ = other.position_;
+   position_ = relative_to.localToWorld(other.position_);
    farming_ = other.farming_;
-   rotation_ = other.rotation_;
+   rotation_ = other.rotation_ - 90.0f * static_cast<int>(relative_to.getRotation());
 }
 
 void Follower::setPosition(const glm::vec3& position)

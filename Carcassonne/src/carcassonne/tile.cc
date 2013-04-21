@@ -84,7 +84,8 @@ Tile::Tile(AssetManager& asset_mgr, Type type)
      color_(1,1,1,1),
 	  mesh_(asset_mgr.getMesh("std-tile")),
      texture_(nullptr),
-     rotation_(ROTATION_NONE)
+     rotation_(ROTATION_NONE),
+     transforms_valid_(0)
 {
    assert(type != TYPE_PLACED && type != TYPE_FLOATING);
    setType(type);
@@ -95,7 +96,8 @@ Tile::Tile(AssetManager& asset_mgr, const std::string& name)
    : type_(TYPE_FLOATING),
      color_(1,1,1,1),
      mesh_(asset_mgr.getMesh("std-tile")),
-     rotation_(static_cast<Rotation>(prng_() % 4))
+     rotation_(static_cast<Rotation>(prng_() % 4)),
+     transforms_valid_(0)
 {
    db::DB& db = asset_mgr.getDB();
 
@@ -229,7 +231,8 @@ Tile::Tile(const Tile& other)
      color_(other.color_),
      mesh_(other.mesh_),
      texture_(other.texture_),
-     rotation_(ROTATION_NONE)
+     rotation_(ROTATION_NONE),
+     transforms_valid_(0)
 {
    for (int i = 0; i < 4; ++i)
       edges_[i] = other.edges_[i];
@@ -351,6 +354,7 @@ void Tile::rotateClockwise()
    if (type_ != TYPE_FLOATING)
       return;
    rotation_ = static_cast<Rotation>((static_cast<int>(rotation_) + 1) % 4);
+   transforms_valid_ = 0;
 }
 
 void Tile::rotateCounterclockwise()
@@ -358,6 +362,7 @@ void Tile::rotateCounterclockwise()
    if (type_ != TYPE_FLOATING)
       return;
    rotation_ = static_cast<Rotation>((static_cast<int>(rotation_) + 3) % 4);
+   transforms_valid_ = 0;
 }
 
 Tile::Rotation Tile::getRotation() const
@@ -368,12 +373,46 @@ Tile::Rotation Tile::getRotation() const
 void Tile::setPosition(const glm::vec3& position)
 {
    position_ = position;
+   transforms_valid_ = 0;
 }
 
 const glm::vec3& Tile::getPosition() const
 {
    return position_;
 }
+
+glm::vec3 Tile::localToWorld(const glm::vec3& local_coords) const
+{
+   if (transforms_valid_ < 2)
+      calculateInverseTransform();
+
+   return glm::vec3(inv_transform_ * glm::vec4(local_coords, 1.0f));
+}
+
+glm::vec3 Tile::worldToLocal(const glm::vec3& world_coords) const
+{
+   if (transforms_valid_ < 1)
+      calculateTransform();
+
+   return glm::vec3(transform_ * glm::vec4(world_coords, 1.0f));
+}
+
+void Tile::calculateTransform() const
+{
+   float angle = 90.0f * static_cast<int>(rotation_);
+   transform_ = glm::translate(glm::rotate(glm::mat4(), angle, glm::vec3(0, 1, 0)), -position_);
+   transforms_valid_ = 1;
+}
+
+void Tile::calculateInverseTransform() const
+{
+   if (transforms_valid_ < 1)
+      calculateTransform();
+
+   inv_transform_ = glm::inverse(transform_);
+   transforms_valid_ = 2;
+}
+
 
 // Returns the type of features which currently exist on the requested side.
 const TileEdge& Tile::getEdge(Side side) const
@@ -450,20 +489,13 @@ void Tile::closeSide(Side side, Tile* new_neighbor)
    }
 
    if (cloister_)
-   {
       static_cast<features::Cloister&>(*cloister_).addTile(*new_neighbor);
-      checkForCompleteCloister();
-   }
 
    if (new_neighbor->cloister_)
    {
       static_cast<features::Cloister&>(*new_neighbor->cloister_).addTile(*this);
       new_neighbor->checkForCompleteCloister();
    }
-
-   checkForCompleteFeatures();
-   // tiles always share the same features on their edges, so we don't need
-   // new_neighbor->checkForCompleteFeatures();
 }
 
 void Tile::closeDiagonal(Tile* new_diagonal_neighbor)
@@ -472,10 +504,7 @@ void Tile::closeDiagonal(Tile* new_diagonal_neighbor)
       return;
 
    if (cloister_)
-   {
       static_cast<features::Cloister&>(*cloister_).addTile(*new_diagonal_neighbor);
-      checkForCompleteCloister();
-   }
 
    if (new_diagonal_neighbor->cloister_)
    {
@@ -508,7 +537,7 @@ void Tile::checkForCompleteFeatures()
          feature.score();
    }
 
-   // Cloisters are checked separately in checkForCompleteCloister()
+   checkForCompleteCloister();
 }
 
 void Tile::checkForCompleteCloister()
@@ -563,6 +592,16 @@ void Tile::draw() const
 
    float angle = -90.0f * static_cast<int>(rotation_);
    glRotatef(angle, 0, 1, 0);
+
+   gfx::Texture::disableAny();
+   glDisable(GL_LIGHTING);
+   glBegin(GL_LINES);
+   glColor3f(1,0,0);
+   glVertex3f(0,0,0);glVertex3f(0.5,0,0);
+   glColor3f(0,0,1);
+   glVertex3f(0,0,0);glVertex3f(0,0,0.5);
+   glEnd();
+   glEnable(GL_LIGHTING);
 
    glColor4fv(glm::value_ptr(color_));
    bool disable_depth_write = color_.a < 1;

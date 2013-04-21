@@ -24,6 +24,9 @@
 // Base class for cities, cloisters, farms, and roads.
 
 #include "carcassonne\features\feature.h"
+
+#include "carcassonne\tile.h"
+
 namespace carcassonne {
 namespace features {
 
@@ -84,13 +87,13 @@ void Feature::setPlaceholderColor(const glm::vec4& color)
       follower_placeholder_->setColor(color);
 }
 
-void Feature::placeFollower(Follower& follower)
+void Feature::placeFollower(Follower& follower, const Tile& relative_to)
 {
    if (!follower_placeholder_)
       return;
 
    follower.setIdle(false);
-   follower.setOrientation(*follower_placeholder_);
+   follower.setOrientation(*follower_placeholder_, relative_to);
    followers_.push_back(&follower);
    follower_placeholder_.reset();
 }
