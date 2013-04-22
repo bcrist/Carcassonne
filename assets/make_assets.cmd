@@ -1,7 +1,7 @@
 del carcassonne.ccassets
 
 CCAssets carcassonne.ccassets texture font-kingthings std\kingthings.png
-CCAssets carcassonne.ccassets texfont kingthings 0 std\kingthings.fontspec.txt
+CCAssets carcassonne.ccassets texfont kingthings 63 std\kingthings.fontspec.txt 3
 
 CCAssets carcassonne.ccassets texture std-base-a std\base\a.png
 CCAssets carcassonne.ccassets texture std-base-b std\base\b.png

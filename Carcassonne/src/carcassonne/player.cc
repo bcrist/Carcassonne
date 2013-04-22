@@ -27,6 +27,8 @@
 
 #include "carcassonne/player.h"
 
+#include <sstream>
+
 #include "carcassonne/asset_manager.h"
 
 namespace carcassonne {
@@ -97,6 +99,8 @@ int Player::getHighScore() const
 
 void Player::newScenario(AssetManager& asset_mgr, const glm::vec4& color)
 {
+   font_ = asset_mgr.getTextureFont("kingthings");
+
    color_ = color;
    followers_.clear();
    for (int i = 0; i < 7; ++i)
@@ -133,7 +137,17 @@ void Player::scorePoints(int points)
 // display this player's HUD if it's their turn
 void Player::draw() const
 {
+   glPushMatrix();
+   glTranslatef(10, 60, 0);
+   glScalef(500, 500, 500);
 
+   glColor4fv(glm::value_ptr(color_));
+
+   std::ostringstream oss;
+   oss << name_ << ": " << score_;
+
+   font_->print(oss.str(), GL_MODULATE);
+   glPopMatrix();
 }
 
 void Player::drawPlacedFollowers() const

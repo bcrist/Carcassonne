@@ -33,6 +33,7 @@
 #include <string>
 
 #include "carcassonne/follower.h"
+#include "carcassonne/gfx/texture_font.h"
 
 namespace carcassonne {
 
@@ -98,6 +99,8 @@ private:
 
 
    // Specific to current game:
+   gfx::TextureFont* font_;
+
    glm::vec4 color_;
 
    std::vector<Follower> followers_;

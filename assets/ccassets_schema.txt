@@ -79,6 +79,8 @@ CREATE TABLE cc_tile_features
       follower_z           NUMERIC,
       follower_r           NUMERIC     );
       
+      
+      
 CREATE TABLE cc_texfonts
 (     name                 TEXT UNIQUE,
       id                   INTEGER PRIMARY KEY AUTOINCREMENT,

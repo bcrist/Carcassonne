@@ -973,12 +973,12 @@ int texfont(int argc, char** argv)
 {
    std::string filename(argv[1]);
 
-   if (argc < 5)
+   if (argc < 6)
    {
       std::cout << std::endl
                << "Usage: " << std::endl
                << "   " << (argc > 0 ? argv[0] : "CCAssets") << " \"" << filename
-               << "\" texfont <texfont name> <default character index> <spec filename> [<preload start> <preload count>]" << std::endl;
+               << "\" texfont <texfont name> <default character index> <spec filename> [<character spacing> [<preload start> <preload count>]]" << std::endl;
       return 1;
    }
 
@@ -988,11 +988,17 @@ int texfont(int argc, char** argv)
    int preload_start = 0;
    int preload_count = 0;
    int id = 0;
+   float extra_spacing = 0;
 
    if (argc >= 7)
    {
-      preload_start = atoi(argv[5]);
-      preload_count = atoi(argv[6]);
+      extra_spacing = atof(argv[6]);
+   }
+
+   if (argc >= 9)
+   {
+      preload_start = atoi(argv[7]);
+      preload_count = atoi(argv[8]);
    }
 
    try {
@@ -1093,9 +1099,9 @@ int texfont(int argc, char** argv)
          float rect_y = (baseline - ascent) / height;
          float rect_h = (ascent + descent) / height;
 
-         float w = (right - left) / width;
+         float w = (right - left + extra_spacing) / width;
          float offset_x = (rect_x + rect_w * 0.5f) - ((right + left) * 0.5f / width);
-         float offset_y = (rect_y + rect_h * 0.5f) - baseline / width;
+         float offset_y = (rect_y + rect_h * 0.5f) - baseline / height;
 
          sfc.bind(2, charindex);
          sfc.bind(3, sprite_name.str());

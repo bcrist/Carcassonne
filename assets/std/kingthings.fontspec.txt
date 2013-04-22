@@ -31,3 +31,66 @@
 'Y    font-kingthings      103         3        47       451   483      4        2
 
 'Z    font-kingthings      164         3        47       6     36       5        3
+
+'a    font-kingthings      216         3        32       4     30       3        3
+
+'b    font-kingthings      274         3        50       4     27       2        1
+
+'c    font-kingthings      216         3        32       37    60       2        0
+
+'d    font-kingthings      274         3        50       33    59       3        2
+
+'e    font-kingthings      216         3        32       65    87       3        1
+
+'f    font-kingthings      274         16       52       72    95       9        1
+'g    font-kingthings      274         17       32       101   127      2        1
+'h    font-kingthings      274         3        50       133   156      3        3
+'i    font-kingthings      274         3        46       164   176      3        2
+'j    font-kingthings      274         15       46       183   194      3        0
+'k    font-kingthings      274         3        50       198   225      2        2
+'l    font-kingthings      274         3        50       231   242      2        2
+
+'m    font-kingthings      216         3        32       94    138      4        1
+'n    font-kingthings      216         3        32       145   173      4        2
+'o    font-kingthings      216         4        32       180   205      2        1
+
+'p    font-kingthings      274         18       33       250   277      4        1
+'q    font-kingthings      274         15       32       283   309      3        3
+
+'r    font-kingthings      216         3        32       211   233      3        1
+'s    font-kingthings      216         3        33       238   261      2        1
+
+'t    font-kingthings      274         3        49       318   339      3        1
+
+'u    font-kingthings      216         4        32       267   296      3        2
+'v    font-kingthings      216         3        32       305   333      5        1
+'w    font-kingthings      216         3        32       340   383      4        1
+'x    font-kingthings      216         3        32       390   417      3        1
+
+'y    font-kingthings      274         16       32       346   372      4        1
+
+'z    font-kingthings      216         3        32       423   443      3        2
+
+'0    font-kingthings      164         4        32       140   170      1       -1
+'1    font-kingthings      164         3        32       166   196     -5       -7
+'2    font-kingthings      164         3        32       190   220     -1       -3
+'3    font-kingthings      164         16       32       218   248      0       -4
+'4    font-kingthings      164         16       33       247   277      1        3
+'5    font-kingthings      164         17       32       281   311     -1       -4
+'6    font-kingthings      164         3        46       310   340      1       -1
+'7    font-kingthings      164         17       32       340   370     -1       -4
+'8    font-kingthings      164         4        33       367   397     -1       -4
+'9    font-kingthings      164         16       33       396   426      1       -1
+
+'-    font-kingthings      164        -11       26       439   469      0        0
+'+    font-kingthings      164        -1        34       470   500      0        0
+20    font-kingthings      164         0        0        430   460      0       -30
+
+':    font-kingthings      345         3        23       4     13       2        1
+';    font-kingthings      345         7        23       20    29       3        0
+',    font-kingthings      345         7        11       33    41       2        1
+''    font-kingthings      345        -31       48       33    41       2        1
+'.    font-kingthings      345         3        11       46    55       2        1
+'"    font-kingthings      345        -31       48       46    63       2        1
+'?    font-kingthings      345         7        49       69    95       3        1
+'!    font-kingthings      345         6        47       100   108      2        0

@@ -39,7 +39,8 @@ void AssetManager::reload()
 {
    for (auto i(textures_.begin()), end(textures_.end()); i != end; ++i)
    {
-      try {
+      try
+      {
          i->second->init();
       }
       catch (const std::runtime_error& err)
@@ -48,9 +49,13 @@ void AssetManager::reload()
       }
    }
 
+   for (auto i(fonts_.begin()), end(fonts_.end()); i != end; ++i)
+      i->second->init();
+
    for (auto i(meshes_.begin()), end(meshes_.end()); i != end; ++i)
    {
-      try {
+      try
+      {
          i->second->init();
       }
       catch (const std::runtime_error& err)
@@ -79,6 +84,25 @@ gfx::Texture* AssetManager::getTexture(const std::string& name)
    return ptr.get();
 }
 
+gfx::TextureFont* AssetManager::getTextureFont(const std::string& name)
+{
+   std::unique_ptr<gfx::TextureFont>& ptr = fonts_[name];
+
+   if (!ptr)
+   {
+      try
+      {
+         ptr.reset(new gfx::TextureFont(*this, name));
+      }
+      catch (const std::runtime_error& err)
+      {
+         std::cerr << "Failed to load texture font \"" << name << "\": " << err.what() << std::endl;
+      }
+   }
+
+   return ptr.get();
+}
+
 gfx::Mesh* AssetManager::getMesh(const std::string& name)
 {
    std::unique_ptr<gfx::Mesh>& ptr = meshes_[name];
@@ -98,18 +122,21 @@ gfx::Mesh* AssetManager::getMesh(const std::string& name)
    return ptr.get();
 }
 
-const gfx::Sprite& AssetManager::getSprite(const std::string& name)
+gfx::Sprite AssetManager::getSprite(const std::string& name)
 {
    auto i(sprites_.find(name));
    if (i == sprites_.end())
    {
       try
       {
-         sprites_.insert(std::make_pair(name, gfx::Sprite(*this, name)));
+         gfx::Sprite s(*this, name);
+         sprites_.insert(std::make_pair(name, s));
+         return s;
       }
       catch (std::runtime_error& err)
       {
          std::cerr << "Failed to load sprite \"" << name << "\": " << err.what() << std::endl;   
+         return gfx::Sprite();
       }
    }
    return i->second;

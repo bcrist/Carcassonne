@@ -23,6 +23,8 @@
 
 #include "carcassonne/gfx/ortho_camera.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace carcassonne {
 namespace gfx {
 
@@ -34,6 +36,8 @@ OrthoCamera::OrthoCamera(const GraphicsConfiguration& gfx_cfg)
 
 void OrthoCamera::recalculate()
 {
+   glm::mat4 projection(glm::ortho(0.f, float(gfx_cfg_.viewport_size.x), float(gfx_cfg_.viewport_size.y), float(0), -1.f, 1.f));
+   Camera::setViewProjection(glm::mat4(), projection);
    // TODO: calculate projection to fit client area inside viewport
 
    // TODO: use identity view matrix
@@ -42,7 +46,7 @@ void OrthoCamera::recalculate()
 // calculate the world position at the window coordinates provided
 glm::vec3 OrthoCamera::windowToWorld(const glm::vec2& window_coords) const
 {
-   return glm::vec3();
+   return glm::vec3(window_coords, 0);
 }
 
 } // namespace carcassonne::gfx

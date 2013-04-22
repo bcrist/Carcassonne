@@ -221,8 +221,9 @@ void Scenario::draw() const
    camera_.use();
 
    glEnable(GL_LIGHTING);
-
+   
    board_.draw();
+   
    if (getCurrentPlayer().isHuman() && current_tile_)
       board_.drawEmpyTiles();
 
@@ -239,14 +240,19 @@ void Scenario::draw() const
       Player& p = **i;
       p.drawPlacedFollowers();
    }
-
-
+   
    glDisable(GL_LIGHTING);
+   glDisable(GL_DEPTH_TEST);
+   glDisable(GL_CULL_FACE);
+
+   //gfx::Texture::disableAny();
 
    hud_camera_.use();
    // draw current player's HUD
    getCurrentPlayer().draw();
 
+   glEnable(GL_DEPTH_TEST);
+   
    // TODO: draw all players' scores
 }
 
