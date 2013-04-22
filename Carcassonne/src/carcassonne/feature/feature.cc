@@ -93,6 +93,7 @@ void Feature::placeFollower(Follower& follower, const Tile& relative_to)
       return;
 
    follower.setIdle(false);
+   follower.setFloating(false);
    follower.setOrientation(*follower_placeholder_, relative_to);
    followers_.push_back(&follower);
    follower_placeholder_.reset();

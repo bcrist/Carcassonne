@@ -176,10 +176,16 @@ void Follower::setIdle(bool idle)
       floating_ = false;
 
       if (owner_)
-      {
-         setPosition(glm::vec3(0.5f * owner_->getIdleFollowerCount(), 0, 0));
-      }
+         owner_->organizeIdleFollowers();
    }
+}
+
+void Follower::setFloating(bool floating)
+{
+   floating_ = floating;
+
+   if (floating)
+      setIdle(false);
 }
 
 bool Follower::isFloating() const
@@ -192,10 +198,6 @@ bool Follower::isPlaced() const
    return !(floating_ || idle_);
 }
 
-void Follower::setFloating(bool floating)
-{
-   floating_ = floating;
-}
 
 void Follower::setOrientation(const Follower& other, const Tile& relative_to)
 {

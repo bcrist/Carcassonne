@@ -120,7 +120,7 @@ const glm::vec4& Player::getColor() const
 // get an idle follower, or null if there are none
 Follower* Player::getIdleFollower()
 {
-   for(auto i(followers_.begin()), end(followers_.end()); i != end ; ++i)
+   for(auto i(followers_.rbegin()), end(followers_.rend()); i != end ; ++i)
    {
       if (i->isIdle())
          return &(*i);
@@ -139,6 +139,20 @@ size_t Player::getIdleFollowerCount() const
    }
 
    return count;
+}
+
+void Player::organizeIdleFollowers()
+{
+   size_t count = 0;
+   for(auto i(followers_.begin()), end(followers_.end()); i != end ; ++i)
+   {
+      if (i->isIdle())
+      {
+         ++count;
+
+         i->setPosition(glm::vec3(0.5f * count, 0, 0));
+      }
+   }
 }
 
 // increase score_;
@@ -168,7 +182,7 @@ void Player::draw() const
    //glRotatef(90, 0, 1, 0);
 
    for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
-      if (i->isIdle())
+      if (i->isIdle() && !i->isFloating())
          i->draw();
 
    glPopMatrix();
