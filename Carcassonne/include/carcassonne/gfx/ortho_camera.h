@@ -25,6 +25,7 @@
 #define CARCASSONNE_GFX_ORTHO_CAMERA_H_
 #include "carcassonne/_carcassonne.h"
 
+#include "carcassonne/gfx/rect.h"
 #include "carcassonne/gfx/camera.h"
 #include "carcassonne/gfx/graphics_configuration.h"
 
@@ -36,12 +37,16 @@ class OrthoCamera : public Camera
 public:
    OrthoCamera(const GraphicsConfiguration& gfx_cfg);
 
+   void setClient(const Rect& rect);
+
    void recalculate();
 
    glm::vec3 windowToWorld(const glm::vec2& window_coords) const;
 
 private:
    const GraphicsConfiguration& gfx_cfg_;
+
+   Rect client_;
 
    OrthoCamera(const OrthoCamera&);
    void operator=(const OrthoCamera&);

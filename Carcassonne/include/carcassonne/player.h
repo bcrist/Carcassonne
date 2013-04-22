@@ -76,6 +76,7 @@ public:
 
    // get an idle follower, or null if there are none
    Follower* getIdleFollower();
+   size_t getIdleFollowerCount() const;
 
    // increase score_;
    void scorePoints(int points);

@@ -63,6 +63,8 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
    camera_.setPosition(glm::vec3(-4, 6, -1));
    camera_.setTarget(glm::vec3(0, 0, 0));
    camera_.recalculatePerspective();
+
+   hud_camera_.setClient(gfx::Rect(0.0f, 0.0f, 1.33f, 1.0f));
    hud_camera_.recalculate();
 
    scheduling::PersistentSequence* seq = &simulation_sequence_;
@@ -114,6 +116,7 @@ void Scenario::placeTile(const glm::ivec2& board_coords)
       if (found_placeholder)
       {
          current_follower_ = follower;
+         follower->setFloating(true);
          return;  // don't end turn
       }
    }
@@ -142,6 +145,8 @@ void Scenario::placeFollower(const glm::vec3& world_coords)
 
    if (closest_feature)
       closest_feature->placeFollower(*current_follower_, *last_placed_tile_);
+   else
+      current_follower_->setIdle(true);
    
    endTurn();
 }

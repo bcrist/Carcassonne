@@ -2,18 +2,23 @@ High Priority
 =============
 In-game HUD
 Handle game over
-Menus
+Menus - Splash/Main/New Game/Pause/Controls
 Stupid AI
 Snapping to locations where tiles/followers can be placed
 Commenting
+Finish tilespec
+Final tile textures
 
 Mid Priority
 ------------
+Follower texture
 Compass Rose
 Audio
 Animations/Transitions
 Better AI
 Graphics class for general opengl state management
+Menus - Graphics Options/High Scores
+Tutorial/Attract mode
 
 Low Priority / Optional
 -----------------------

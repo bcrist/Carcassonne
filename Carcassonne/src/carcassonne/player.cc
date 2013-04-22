@@ -104,7 +104,10 @@ void Player::newScenario(AssetManager& asset_mgr, const glm::vec4& color)
    color_ = color;
    followers_.clear();
    for (int i = 0; i < 7; ++i)
+   {
       followers_.push_back(Follower(asset_mgr, *this));
+      followers_.back().setIdle(true);
+   }
 
    score_ = 0;
 }
@@ -126,6 +129,18 @@ Follower* Player::getIdleFollower()
    return nullptr;
 }
 
+size_t Player::getIdleFollowerCount() const
+{
+   size_t count = 0;
+   for(auto i(followers_.begin()), end(followers_.end()); i != end ; ++i)
+   {
+      if (i->isIdle())
+         ++count;
+   }
+
+   return count;
+}
+
 // increase score_;
 void Player::scorePoints(int points)
 {
@@ -138,15 +153,24 @@ void Player::scorePoints(int points)
 void Player::draw() const
 {
    glPushMatrix();
-   glTranslatef(10, 60, 0);
-   glScalef(500, 500, 500);
+   //glTranslatef(10, 60, 0);
+   //glScalef(500, 500, 500);
 
-   glColor4fv(glm::value_ptr(color_));
+   //glColor4fv(glm::value_ptr(color_));
 
-   std::ostringstream oss;
-   oss << name_ << ": " << score_;
+   //std::ostringstream oss;
+   //oss << name_ << ": " << score_;
 
-   font_->print(oss.str(), GL_MODULATE);
+   //font_->print(oss.str(), GL_MODULATE);
+   
+   glTranslatef(0.0f, 0.95f, 0.0f);
+   glScalef(0.2f, -0.2f, 0.2f);
+   //glRotatef(90, 0, 1, 0);
+
+   for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
+      if (i->isIdle())
+         i->draw();
+
    glPopMatrix();
 }
 

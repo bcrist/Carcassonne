@@ -168,6 +168,18 @@ bool Follower::isIdle()const
 void Follower::setIdle(bool idle)
 {
    idle_ = idle;
+
+   if (idle)
+   {
+      farming_ = false;
+      rotation_ = 90;
+      floating_ = false;
+
+      if (owner_)
+      {
+         setPosition(glm::vec3(0.5f * owner_->getIdleFollowerCount(), 0, 0));
+      }
+   }
 }
 
 bool Follower::isFloating() const
