@@ -1,0 +1,33 @@
+#char texture_name         baseline    descent  ascent   left  right    extra-l  extra-r
+
+'A    font-kingthings      164         3        55       93    133      5        3
+
+'B    font-kingthings      49          3        47       8     40       6        1  
+'C    font-kingthings      49          4        48       47    79       3        1
+'D    font-kingthings      49          4        47       87    122      5        1
+'E    font-kingthings      49          3        47       130   158      5        2
+'F    font-kingthings      49          4        47       168   194      6        5
+'G    font-kingthings      49          4        48       204   239      3        2
+'H    font-kingthings      49          4        47       249   284      6        2
+'I    font-kingthings      49          4        47       292   307      3        2
+'J    font-kingthings      49          4        47       314   349      2        3
+'K    font-kingthings      49          4        47       359   394      5        3
+'L    font-kingthings      49          4        47       404   432      5        2
+'M    font-kingthings      49          4        48       440   491      3        2
+
+'N    font-kingthings      103         4        48       5     42       4        3
+'O    font-kingthings      103         4        48       51    84       3        1
+'P    font-kingthings      103         4        47       92    121      5        1
+
+'Q    font-kingthings      164         15       48       43    78       2        8
+
+'R    font-kingthings      103         4        47       130   165      5        4
+'S    font-kingthings      103         4        48       174   205      2        1
+'T    font-kingthings      103         4        47       215   248      6        4
+'U    font-kingthings      103         3        47       258   296      3        2
+'V    font-kingthings      103         3        47       305   342      4        1
+'W    font-kingthings      103         3        47       351   401      5        1
+'X    font-kingthings      103         3        47       409   442      5        2
+'Y    font-kingthings      103         3        47       451   483      4        2
+
+'Z    font-kingthings      164         3        47       6     36       5        3

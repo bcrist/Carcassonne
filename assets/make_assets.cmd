@@ -1,5 +1,8 @@
 del carcassonne.ccassets
 
+CCAssets carcassonne.ccassets texture font-kingthings std\kingthings.png
+CCAssets carcassonne.ccassets texfont kingthings 0 std\kingthings.fontspec.txt
+
 CCAssets carcassonne.ccassets texture std-base-a std\base\a.png
 CCAssets carcassonne.ccassets texture std-base-b std\base\b.png
 CCAssets carcassonne.ccassets texture std-base-c std\base\c.png
@@ -26,8 +29,7 @@ CCAssets carcassonne.ccassets texture std-base-w std\base\w.png
 CCAssets carcassonne.ccassets texture std-base-x std\base\x.png
 
 CCAssets carcassonne.ccassets texture std-follower std\follower.png
-
 CCAssets carcassonne.ccassets obj std-follower std-follower std\follower.obj
-CCAssets carcassonne.ccassets obj std-tile std-base-d std\tile.obj
 
+CCAssets carcassonne.ccassets obj std-tile std-base-d std\tile.obj
 CCAssets carcassonne.ccassets tileset std-base std\base\tilespec.txt

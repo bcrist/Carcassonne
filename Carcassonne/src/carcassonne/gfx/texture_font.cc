@@ -73,6 +73,8 @@ TextureFontCharacter& TextureFontCharacter::operator=(const TextureFontCharacter
       glDeleteLists(display_list_, 1);
       display_list_ = 0;
    }
+
+   return *this;
 }
 
 TextureFontCharacter::~TextureFontCharacter()

@@ -9,6 +9,8 @@
 #include <vector>
 #include <set>
 
+#include "stb_image.h"
+
 #include "carcassonne/db/db.h"
 #include "carcassonne/db/stmt.h"
 #include "carcassonne/db/transaction.h"
@@ -84,8 +86,16 @@ int texture(int argc, char** argv)
    std::string tex_name(argv[3]);
    std::string source(argv[4]);
 
-
    try {
+      int width(0), height(0), comps(0);
+
+      stbi_uc* data = stbi_load(source.c_str(), &width, &height, &comps, 4);
+      if (data == nullptr)
+         throw std::runtime_error("Could not load file!");
+
+      stbi_image_free(data);
+
+
       std::ifstream ifs(source, std::ifstream::in | std::ifstream::binary);
       std::vector<char> content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
       ifs.close();
@@ -103,9 +113,11 @@ int texture(int argc, char** argv)
               "height INTEGER DEFAULT 0, "
               "data BLOB);");
 
-      carcassonne::db::Stmt update(db, "INSERT OR REPLACE INTO cc_textures (name, data) VALUES (?, ?);");
+      carcassonne::db::Stmt update(db, "INSERT OR REPLACE INTO cc_textures (name, data, width, height) VALUES (?, ?, ?, ?);");
       update.bind(1, tex_name);
       update.bindBlob(2, content.data(), content.size());
+      update.bind(3, width);
+      update.bind(4, height);
       update.step();
 
       transaction.commit();
@@ -119,6 +131,31 @@ int texture(int argc, char** argv)
    }
 
    return 0;
+}
+
+void saveSprite(carcassonne::db::DB& db, const std::string& name, const std::string& texture, float x, float y, float w, float h)
+{
+   static bool table_check_done(false);
+
+   if (!table_check_done)
+   {
+      table_check_done = true;
+      db.exec("CREATE TABLE IF NOT EXISTS cc_sprites ("
+              "name TEXT PRIMARY KEY, "
+              "texture TEXT, "
+              "x NUMERIC, y NUMERIC, "
+              "width NUMERIC, height NUMERIC)");
+   }
+
+   carcassonne::db::Stmt update(db, "INSERT OR REPLACE INTO cc_sprites (name, texture, x, y, width, height) VALUES (?, ?, ?, ?, ?, ?);");
+   update.bind(1, name);
+   update.bind(2, texture);
+   update.bind(3, x);
+   update.bind(4, y);
+   update.bind(5, w);
+   update.bind(6, h);
+   update.step();
+   update.reset();
 }
 
 int sprite(int argc, char** argv)
@@ -147,24 +184,9 @@ int sprite(int argc, char** argv)
       carcassonne::db::DB db(filename);
       carcassonne::db::Transaction transaction(db);
 
-      db.exec("CREATE TABLE IF NOT EXISTS cc_sprites ("
-              "name TEXT PRIMARY KEY, "
-              "texture TEXT, "
-              "x NUMERIC, y NUMERIC, "
-              "width NUMERIC, height NUMERIC)");
-
       for (int i = 8; i < argc; ++i)
       {
-         std::string sprite_name(argv[i]);
-
-         carcassonne::db::Stmt update(db, "INSERT OR REPLACE INTO cc_sprites (name, texture, x, y, width, height) VALUES (?, ?, ?, ?, ?, ?);");
-         update.bind(1, sprite_name);
-         update.bind(2, tex_name);
-         update.bind(3, x);
-         update.bind(4, y);
-         update.bind(5, w);
-         update.bind(6, h);
-         update.step();
+         saveSprite(db, argv[i], tex_name, x, y, w, h);
 
          x += w;
          if (x >= 1)
@@ -173,6 +195,7 @@ int sprite(int argc, char** argv)
             y += h;
          }
       }
+      
       transaction.commit();
    }
    catch (const std::exception& e)
@@ -692,7 +715,6 @@ void insertTile(carcassonne::db::DB& db, const std::string& tile_name, const std
    s_insert_tile.step();
 }
 
-
 int tilespec(int argc, char** argv)
 {
    std::string filename(argv[1]);
@@ -947,6 +969,161 @@ int tilespec(int argc, char** argv)
    return 0;
 }
 
+int texfont(int argc, char** argv)
+{
+   std::string filename(argv[1]);
+
+   if (argc < 5)
+   {
+      std::cout << std::endl
+               << "Usage: " << std::endl
+               << "   " << (argc > 0 ? argv[0] : "CCAssets") << " \"" << filename
+               << "\" texfont <texfont name> <default character index> <spec filename> [<preload start> <preload count>]" << std::endl;
+      return 1;
+   }
+
+   std::string font_name(argv[3]);
+   int default_character(atoi(argv[4]));
+   std::string source(argv[5]);
+   int preload_start = 0;
+   int preload_count = 0;
+   int id = 0;
+
+   if (argc >= 7)
+   {
+      preload_start = atoi(argv[5]);
+      preload_count = atoi(argv[6]);
+   }
+
+   try {
+      carcassonne::db::DB db(filename);
+      carcassonne::db::Transaction transaction(db);
+      
+      db.exec("CREATE TABLE IF NOT EXISTS cc_texfonts ("
+              "name TEXT UNIQUE, "
+              "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+              "default_character INTEGER DEFAULT 0, "
+              "preload_start INTEGER, "
+              "preload_count INTEGER); "
+
+              "CREATE TABLE IF NOT EXISTS cc_texfont_characters ("
+              "font_id INTEGER, "
+              "character INTEGER, "
+              "sprite TEXT, "
+              "offset_x NUMERIC, "
+              "offset_y NUMERIC, "
+              "width NUMERIC, "
+              "PRIMARY KEY (font_id, character));");
+      
+      carcassonne::db::Stmt sf(db, "INSERT OR REPLACE INTO cc_texfonts (name, default_character, preload_start, preload_count) VALUES (?, ?, ?, ?);");
+      sf.bind(1, font_name);
+      sf.bind(2, default_character);
+      sf.bind(3, preload_start);
+      sf.bind(4, preload_count);
+      sf.step();
+
+      carcassonne::db::Stmt get_sf_id(db, "SELECT id FROM cc_texfonts WHERE name = ?");
+      get_sf_id.bind(1, font_name);
+      if (get_sf_id.step())
+         id = get_sf_id.getInt(0);
+      else
+         throw std::runtime_error("Failed to insert texfont into database!");
+
+
+
+      carcassonne::db::Stmt get_tex_dims(db, "SELECT width, height FROM cc_textures WHERE name = ?");
+
+      carcassonne::db::Stmt sfc(db, "INSERT OR REPLACE INTO cc_texfont_characters ("
+                                    "font_id, character, "
+                                    "sprite, offset_x, offset_y, "
+                                    "width) VALUES (?, ?, ?, ?, ?, ?);");
+      sfc.bind(1, id);
+
+
+      std::ifstream ifs(source, std::ifstream::in);
+      std::string line;
+      while (std::getline(ifs, line))
+      {
+         if (line.length() < 1)
+            continue;   // skip blank lines
+
+         if (line[0] == '#')
+            continue;   // skip comment lines
+
+         std::istringstream iss(line);
+
+         std::string character;
+         int charindex;
+
+         iss >> character;
+         if (character.length() >= 2 && character[0] == '\'')
+            charindex = (int)character[1];
+         else
+         {
+            std::istringstream iss(character);
+            iss >> std::hex >> charindex;
+         }
+
+         std::string texture;
+         iss >> texture;
+
+         float baseline(0), descent(0), ascent(0), left(0), right(0), extra_l(0), extra_r(0);
+         iss >> baseline >> descent >> ascent >> left >> right >> extra_l >> extra_r;
+
+         float width(256);
+         float height(256);
+
+         get_tex_dims.bind(1, texture);
+         if (get_tex_dims.step())
+         {
+            width = get_tex_dims.getInt(0);
+            height = get_tex_dims.getInt(1);
+         }
+         else
+            std::cerr << "Warning: texture '" << texture << "' not found; assuming 256x256 dimensions!" << std::endl;
+         get_tex_dims.reset();
+
+         std::ostringstream sprite_name;
+         sprite_name << "font-" << font_name << '-' << charindex;
+
+         std::cout << charindex << ":\t" << baseline << '\t' << descent << '\t' << ascent << '\t' << left << '\t' << right << '\t' << extra_l << '\t' << extra_r << std::endl;
+
+         float rect_x = (left - extra_l) / width;
+         float rect_w = (right + extra_r + extra_l - left) / width;
+         float rect_y = (baseline - ascent) / height;
+         float rect_h = (ascent + descent) / height;
+
+         float w = (right - left) / width;
+         float offset_x = (rect_x + rect_w * 0.5f) - ((right + left) * 0.5f / width);
+         float offset_y = (rect_y + rect_h * 0.5f) - baseline / width;
+
+         sfc.bind(2, charindex);
+         sfc.bind(3, sprite_name.str());
+         sfc.bind(4, offset_x);
+         sfc.bind(5, offset_y);
+         sfc.bind(6, w);
+         sfc.step();
+         sfc.reset();
+
+         saveSprite(db, sprite_name.str(), texture, rect_x, rect_y, rect_w, rect_h);
+      }
+      ifs.close();
+
+      
+
+      transaction.commit();
+   }
+   catch (const std::runtime_error& e)
+   {
+      std::cerr << e.what();
+      return 1;
+   }
+
+   return 0;
+}
+
+
+
 int runApp(int argc, char** argv)
 {
    if (argc < 2)
@@ -971,6 +1148,8 @@ int runApp(int argc, char** argv)
       return obj_mesh(argc, argv);
    else if (operation == "tileset")
       return tilespec(argc, argv);
+   else if (operation == "texfont")
+      return texfont(argc, argv);
    else
    {
       std::cerr << "Unrecognized operation!" << std::endl;
@@ -991,7 +1170,8 @@ int main(int argc, char** argv)
                 << "   texture   Create a texture asset by embedding an image file." << std::endl
                 << "   sprite    Specify texture and texture coordinates for a sprite asset." << std::endl
                 << "   obj       Create a mesh asset from a Wavefront .OBJ file (only v, vn, vt, f supported)." << std::endl
-                << "   tileset   Create a tileset asset from a tilespec file." << std::endl;
+                << "   tileset   Create a tileset asset from a tilespec file." << std::endl
+                << "   texfont   Create a texture font asset from a fontspec file." << std::endl;
 
    return result;
 }
