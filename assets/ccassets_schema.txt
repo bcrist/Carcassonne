@@ -78,3 +78,19 @@ CREATE TABLE cc_tile_features
       follower_x           NUMERIC,
       follower_z           NUMERIC,
       follower_r           NUMERIC     );
+      
+CREATE TABLE cc_texfonts
+(     name                 TEXT UNIQUE,
+      id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+      default_character    INTEGER DEFAULT 0,
+      preload_start        INTEGER,
+      preload_count        INTEGER    );
+      
+CREATE TABLE cc_texfont_characters
+(     font_id              INTEGER,
+      character            INTEGER,
+      sprite               TEXT,
+      offset_x             NUMERIC,
+      offset_y             NUMERIC,
+      width                NUMERIC,
+      PRIMARY KEY (font_id, character)    );

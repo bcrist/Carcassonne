@@ -25,42 +25,76 @@
 #define CARCASSONNE_GFX_TEXTURE_FONT_H_
 #include "carcassonne/_carcassonne.h"
 
-//#include "TextureLoader.h"
+#include <unordered_map>
 
-#define TEXTUREFONT_LIST_COUNT 256
+#include "carcassonne/gfx/sprite.h"
 
 namespace carcassonne {
 namespace gfx {
-   /*
-struct TextureFontCharacterSpec
+   
+class TextureFontCharacter
 {
-	GLubyte code;
-	GLuint row;
-	GLuint col;
-	GLfloat width;
+   friend class TextureFont;
+public:
+   TextureFontCharacter();
+   TextureFontCharacter(AssetManager& asset_mgr, int font_id, unsigned int character);
+   TextureFontCharacter(const TextureFontCharacter& other);
+   TextureFontCharacter& operator=(const TextureFontCharacter& other);
+   ~TextureFontCharacter();
+   
+   float getWidth() const;
+
+   Rect getBounds() const;
+
+   void draw() const;
+   void draw(GLenum texture_mode) const;
+   void draw(GLenum texture_mode, const glm::vec4& color) const;
+
+   void init() const;
+
+private:
+   void drawBase() const;
+
+   Sprite sprite_;
+   glm::vec2 offset_;
+   float width_;
+   mutable GLuint display_list_;
 };
 
 class TextureFont
 {
 public:
-	TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined);
-	~TextureFont();
+   TextureFont(AssetManager& asset_mgr, const std::string& name);
 
-	void metrics(const std::string &str, GLfloat scaleX, GLfloat scaleY, GLfloat &width, GLfloat &y0, GLfloat &y1) const;
-	void print(const std::string &str, GLfloat scaleX, GLfloat scaleY) const;
+   void init() const;
+
+   void loadCharacters(unsigned int first, unsigned int count);
+	
+	void print(const std::string &content);
+   void print(const std::string &content, GLenum texture_mode);
+   void print(const std::string &content, GLenum texture_mode, const glm::vec4& color);
+
+   float getWidth(const std::string& content);
+   Rect getBounds(const std::string& content);
 
 private:
-	GLuint listBase;	// first displaylist
+   Rect expandRect(const Rect& rect, const Rect& other);
 
-	// displaylist for getting ready to print a string
-	GLuint initList;
+   AssetManager& asset_mgr_;
 
-	// font info for calculating metrics
-	GLfloat charWidths[TEXTUREFONT_LIST_COUNT];
-	GLfloat baseline;
-};*/
+   int id_;
+   unsigned int default_character_;
 
-} // namespace gfx
+   // use an unordered map instead of a sparse vector in case 
+   // we want to support unicode in the future
+	std::unordered_map<unsigned int, TextureFontCharacter> characters_;
+
+   // disable copy & assign
+   TextureFont(const TextureFont&);
+   void operator=(const TextureFont&);
+};
+
+} // namespace carcassonne::gfx
 } // namespace carcassonne
 
 #endif

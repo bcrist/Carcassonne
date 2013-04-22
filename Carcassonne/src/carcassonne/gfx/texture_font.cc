@@ -23,87 +23,323 @@
 
 #include "carcassonne/gfx/texture_font.h"
 
+#include "carcassonne/asset_manager.h"
+#include "carcassonne/db/stmt.h"
+
 namespace carcassonne {
 namespace gfx {
-   /*
-TextureFont::TextureFont(GLenum textureMode, GLuint texture, GLfloat *vertexColor, GLfloat baseline, int rows, int cols, TextureFontCharacterSpec *listsDefined, int numListsDefined)
+
+TextureFontCharacter::TextureFontCharacter()
+   : width_(0),
+     display_list_(0)
 {
-	listBase = glGenLists(TEXTUREFONT_LIST_COUNT);
+}
 
-	initList = glGenLists(1);
-	glNewList(initList, GL_COMPILE);
-		glEnable(GL_TEXTURE_2D);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, textureMode);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		if (vertexColor != NULL)
-			glColor4fv(vertexColor);
-		glListBase(listBase);
-	glEndList();
+TextureFontCharacter::TextureFontCharacter(AssetManager& asset_mgr, int font_id, unsigned int character)
+   : width_(0),
+     display_list_(0)
+{
+   db::DB& db(asset_mgr.getDB());
 
-	for (int i = 0; i < numListsDefined; i++)
-	{
-		TextureFontCharacterSpec &cs = listsDefined[i];
+   db::Stmt s(db, "SELECT sprite, offset_x, offset_y, width FROM cc_texfont_characters WHERE font_id = ? AND character = ?");
+   s.bind(1, font_id);
+   s.bind(2, static_cast<int>(character));
+   if (s.step())
+   {
+      sprite_ = asset_mgr.getSprite(s.getText(0));
+      offset_ = glm::vec2(static_cast<float>(s.getDouble(1)), static_cast<float>(s.getDouble(2)));
+      width_ = static_cast<float>(s.getDouble(3));
+   }
+   else
+      std::cerr << "Warning: Failed to load character " << character << " from font " << font_id << "!" << std::endl;
+}
 
-		this->baseline = baseline;
-		charWidths[cs.code] = cs.width;
-		GLfloat charS0 = cs.col / (GLfloat)cols;
-		GLfloat charS1 = (cs.col + cs.width) / (GLfloat)cols;
-		GLfloat charT0 = cs.row / (GLfloat)rows;
-		GLfloat charT1 = (cs.row + 1) / (GLfloat)rows;
-		GLfloat oneMinusBaseline = 1 - baseline;
+TextureFontCharacter::TextureFontCharacter(const TextureFontCharacter& other)
+   : sprite_(other.sprite_),
+     offset_(other.offset_),
+     width_(other.width_),
+     display_list_(0)
+{
+}
 
-		glNewList(listBase + cs.code, GL_COMPILE);
-			if (cs.row >= 0)
-			{
-				glBegin(GL_QUADS);
-					glTexCoord2f(charS0, charT0); glVertex3f(0, oneMinusBaseline, 0);
-					glTexCoord2f(charS1, charT0); glVertex3f(cs.width, oneMinusBaseline, 0);
-					glTexCoord2f(charS1, charT1); glVertex3f(cs.width, -baseline, 0);
-					glTexCoord2f(charS0, charT1); glVertex3f(0, -baseline, 0);
-				glEnd();
-			}
-			glTranslatef(cs.width, 0, 0);
-		glEndList();
-	}
+TextureFontCharacter& TextureFontCharacter::operator=(const TextureFontCharacter& other)
+{
+   sprite_ = other.sprite_;
+   offset_ = other.offset_;
+   width_ = other.width_;
+
+   if (display_list_ != 0)
+   {
+      glDeleteLists(display_list_, 1);
+      display_list_ = 0;
+   }
+}
+
+TextureFontCharacter::~TextureFontCharacter()
+{
+   if (display_list_ != 0)
+      glDeleteLists(display_list_, 1);
+}
+
+float TextureFontCharacter::getWidth() const
+{
+   return width_;
+}
+
+Rect TextureFontCharacter::getBounds() const
+{
+   return Rect(offset_ + glm::vec2(width_ * 0.5f, 0) - sprite_.texture_coords.size * 0.5f, sprite_.texture_coords.size);
+}
+
+void TextureFontCharacter::draw() const
+{
+   if (sprite_.texture)
+      sprite_.texture->enable();
+   else
+      std::cerr << "Warning: drawing character with no texture specified!" << std::endl;
+   
+   drawBase();
+}
+
+void TextureFontCharacter::draw(GLenum texture_mode) const
+{
+   if (sprite_.texture)
+      sprite_.texture->enable();
+   else
+      std::cerr << "Warning: drawing character with no texture specified!" << std::endl;
+   
+   drawBase();
+}
+
+void TextureFontCharacter::draw(GLenum texture_mode, const glm::vec4& color) const
+{
+   if (sprite_.texture)
+      sprite_.texture->enable();
+   else
+      std::cerr << "Warning: drawing character with no texture specified!" << std::endl;
+   
+   drawBase();
+}
+
+void TextureFontCharacter::drawBase() const
+{
+   if (display_list_ > 0)
+      glCallList(display_list_);
+   else
+   {
+      Rect bounds(getBounds());
+
+      display_list_ = glGenLists(1);
+      glNewList(display_list_, GL_COMPILE_AND_EXECUTE);
+
+      glBegin(GL_QUADS);
+
+      glTexCoord2f(sprite_.texture_coords.left(),  sprite_.texture_coords.top());    glVertex2f(bounds.left(), bounds.top());
+      glTexCoord2f(sprite_.texture_coords.left(),  sprite_.texture_coords.bottom()); glVertex2f(bounds.left(), bounds.bottom());
+      glTexCoord2f(sprite_.texture_coords.right(), sprite_.texture_coords.bottom()); glVertex2f(bounds.right(), bounds.bottom());
+      glTexCoord2f(sprite_.texture_coords.right(), sprite_.texture_coords.top());    glVertex2f(bounds.right(), bounds.top());
+
+      glEnd();
+
+      glTranslatef(width_, 0, 0);
+
+      glEndList();
+   }
+}
+
+void TextureFontCharacter::init() const
+{
+   if (display_list_ != 0)
+   {
+      glDeleteLists(display_list_, 1);
+      display_list_ = 0;
+   }
 }
 
 
-TextureFont::~TextureFont()
+TextureFont::TextureFont(AssetManager& asset_mgr, const std::string& name)
+   : asset_mgr_(asset_mgr)
 {
-	glDeleteLists(initList, 1);
-	glDeleteLists(listBase, TEXTUREFONT_LIST_COUNT);
+   db::DB& db(asset_mgr.getDB());
+
+   unsigned int preload_start = 0;
+   unsigned int preload_count = 0;
+
+   db::Stmt s(db, "SELECT id, default_character, preload_start, preload_count FROM cc_texfonts WHERE name = ?");
+   s.bind(1, name);
+   if (s.step())
+   {
+      id_ = s.getInt(0);
+      default_character_ = static_cast<unsigned int>(s.getInt(1));
+      preload_start = static_cast<unsigned int>(s.getInt(2));
+      preload_count = static_cast<unsigned int>(s.getInt(3));
+   }
+   else
+      throw std::runtime_error("Texture font not found!");
+
+   db::Stmt sc(db, "SELECT character FROM cc_texfont_characters WHERE font_id = ?");
+   sc.bind(1, id_);
+   while (sc.step())
+      characters_[static_cast<unsigned int>(sc.getInt(0))] = TextureFontCharacter();
+
+   loadCharacters(preload_start, preload_count);
 }
 
-void TextureFont::metrics(const std::string &str, GLfloat scaleX, GLfloat scaleY, GLfloat &width, GLfloat &y0, GLfloat &y1) const
+void TextureFont::init() const
 {
-	GLfloat calcWidth = 0;
-	GLfloat calcHeight = scaleY;
-
-	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it)
-	{
-		unsigned char c = *it;
-		if (c < TEXTUREFONT_LIST_COUNT)
-			calcWidth += charWidths[c];
-	}
-
-	width = calcWidth * scaleX;
-	y0 = scaleY * (1 - baseline);
-	y1 = -scaleY * baseline;
+   for (auto i(characters_.begin()), end(characters_.end()); i != end; ++i)
+      i->second.init();
 }
 
-void TextureFont::print(const std::string &str, GLfloat scaleX, GLfloat scaleY) const
+void TextureFont::loadCharacters(unsigned int first, unsigned int count)
 {
-	glCallList(initList);
+   for (unsigned int i = first; i < first + count; ++i)
+   {
+      auto j(characters_.find(i));
+      if (j == characters_.end())
+         continue;
 
-	if (scaleX != 1 || scaleY != 1)
-		glScalef(scaleX, scaleY, 1);
+      TextureFontCharacter& tfc = j->second;
 
-	glCallLists(str.length(), GL_BYTE, str.c_str());
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-}*/
+      if (tfc.sprite_.texture == nullptr)
+         tfc = TextureFontCharacter(asset_mgr_, id_, i);
+   }
+}
 
-} // namespace gfx
+void TextureFont::print(const std::string& content)
+{
+   glPushMatrix();
+
+   for (auto i(content.begin()), end(content.end()); i != end; ++i)
+   {
+      auto j(characters_.find(*i));
+      if (j == characters_.end())
+      {
+         j = characters_.find(default_character_);
+         if (j == characters_.end())
+            continue;
+      }
+
+      TextureFontCharacter& tfc = j->second;
+
+      if (tfc.sprite_.texture == nullptr)
+         tfc = TextureFontCharacter(asset_mgr_, id_, j->first);
+
+      tfc.draw();
+   }
+
+   glPopMatrix();
+}
+
+void TextureFont::print(const std::string& content, GLenum texture_mode)
+{
+   glPushMatrix();
+
+   for (auto i(content.begin()), end(content.end()); i != end; ++i)
+   {
+      auto j(characters_.find(*i));
+      if (j == characters_.end())
+      {
+         j = characters_.find(default_character_);
+         if (j == characters_.end())
+            continue;
+      }
+
+      TextureFontCharacter& tfc = j->second;
+
+      if (tfc.sprite_.texture == nullptr)
+         tfc = TextureFontCharacter(asset_mgr_, id_, j->first);
+
+      tfc.draw(texture_mode);
+   }
+
+   glPopMatrix();
+}
+
+void TextureFont::print(const std::string& content, GLenum texture_mode, const glm::vec4& color)
+{
+   glPushMatrix();
+
+   for (auto i(content.begin()), end(content.end()); i != end; ++i)
+   {
+      auto j(characters_.find(*i));
+      if (j == characters_.end())
+      {
+         j = characters_.find(default_character_);
+         if (j == characters_.end())
+            continue;
+      }
+
+      TextureFontCharacter& tfc = j->second;
+
+      if (tfc.sprite_.texture == nullptr)
+         tfc = TextureFontCharacter(asset_mgr_, id_, j->first);
+
+      tfc.draw(texture_mode, color);
+   }
+
+   glPopMatrix();
+}
+
+float TextureFont::getWidth(const std::string& content)
+{
+   float width = 0;
+
+   for (auto i(content.begin()), end(content.end()); i != end; ++i)
+   {
+      auto j(characters_.find(*i));
+      if (j == characters_.end())
+      {
+         j = characters_.find(default_character_);
+         if (j == characters_.end())
+            continue;
+      }
+
+      TextureFontCharacter& tfc = j->second;
+
+      if (tfc.sprite_.texture == nullptr)
+         tfc = TextureFontCharacter(asset_mgr_, id_, j->first);
+
+      width += tfc.width_;
+   }
+
+   return width;
+}
+
+Rect TextureFont::getBounds(const std::string& content)
+{
+   Rect bounds;
+
+   for (auto i(content.begin()), end(content.end()); i != end; ++i)
+   {
+      auto j(characters_.find(*i));
+      if (j == characters_.end())
+      {
+         j = characters_.find(default_character_);
+         if (j == characters_.end())
+            continue;
+      }
+
+      TextureFontCharacter& tfc = j->second;
+
+      if (tfc.sprite_.texture == nullptr)
+         tfc = TextureFontCharacter(asset_mgr_, id_, j->first);
+
+      expandRect(bounds, tfc.getBounds());
+   }
+
+   return bounds;
+}
+
+Rect TextureFont::expandRect(const Rect& rect, const Rect& other)
+{
+   float left = std::min(rect.left(), other.left());
+   float right = std::max(rect.right(), other.right());
+   float top = std::min(rect.top(), other.top());
+   float bottom = std::max(rect.bottom(), other.bottom());
+
+   return Rect(left, top, right - left, bottom - top);
+}
+
+} // namespace carcassonne::gfx
 } // namespace carcassonne
