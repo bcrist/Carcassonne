@@ -99,7 +99,7 @@ int Player::getHighScore() const
 
 void Player::newScenario(AssetManager& asset_mgr, const glm::vec4& color)
 {
-   font_ = asset_mgr.getTextureFont("kingthings");
+   
 
    color_ = color;
    followers_.clear();
@@ -163,23 +163,17 @@ void Player::scorePoints(int points)
    std::cout << getName() << " scored " << points << " points!  Score: " << score_ << std::endl;
 }
 
+int Player::getScore() const
+{
+   return score_;
+}
+
 // display this player's HUD if it's their turn
 void Player::draw() const
 {
    glPushMatrix();
-   //glTranslatef(10, 60, 0);
-   //glScalef(500, 500, 500);
-
-   //glColor4fv(glm::value_ptr(color_));
-
-   //std::ostringstream oss;
-   //oss << name_ << ": " << score_;
-
-   //font_->print(oss.str(), GL_MODULATE);
-   
    glTranslatef(0.0f, 0.95f, 0.0f);
-   glScalef(0.2f, -0.2f, 0.2f);
-   //glRotatef(90, 0, 1, 0);
+   glScalef(0.15f, -0.15f, 0.15f);
 
    for (auto i(followers_.begin()), end(followers_.end()); i != end; ++i)
       if (i->isIdle() && !i->isFloating())

@@ -38,6 +38,7 @@
 #include "carcassonne/player.h"
 #include "carcassonne/gfx/perspective_camera.h"
 #include "carcassonne/gfx/ortho_camera.h"
+#include "carcassonne/gfx/texture_font.h"
 #include "carcassonne/gui/input_manager.h"
 #include "carcassonne/scheduling/Unifier.h"
 #include "carcassonne/scheduling/persistent_sequence.h"
@@ -106,6 +107,8 @@ private:
    gfx::OrthoCamera hud_camera_;
    float floating_height_;
    bool camera_movement_enabled_;
+
+   gfx::TextureFont* font_;
 
    sf::Clock clock_;
    sf::Time min_simulate_interval_;

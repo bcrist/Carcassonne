@@ -33,7 +33,7 @@
 #include <string>
 
 #include "carcassonne/follower.h"
-#include "carcassonne/gfx/texture_font.h"
+
 
 namespace carcassonne {
 
@@ -81,6 +81,7 @@ public:
 
    // increase score_;
    void scorePoints(int points);
+   int getScore() const;
 
    // display this player's HUD if it's their turn
    void draw() const;
@@ -101,8 +102,6 @@ private:
 
 
    // Specific to current game:
-   gfx::TextureFont* font_;
-
    glm::vec4 color_;
 
    std::vector<Follower> followers_;

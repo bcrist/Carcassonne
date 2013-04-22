@@ -27,6 +27,8 @@
 
 #include "carcassonne/scenario.h"
 
+#include <sstream>
+
 #include "carcassonne/pile.h"
 #include "carcassonne/game.h"
 #include "carcassonne/scheduling/interpolator.h"
@@ -40,6 +42,8 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
      camera_(game.getGraphicsConfiguration()),
      hud_camera_(game.getGraphicsConfiguration()),
      floating_height_(0.5f),
+     camera_movement_enabled_(true),
+     font_(game.getAssetManager().getTextureFont("kingthings")),
      min_simulate_interval_(sf::milliseconds(5)),
      paused_(false),
      board_(game.getAssetManager()),
@@ -97,7 +101,6 @@ void Scenario::placeTile(const glm::ivec2& board_coords)
    }
    current_tile_.reset();
 
-   // TODO: switch to follower placement first
    Follower* follower = getCurrentPlayer().getIdleFollower();
    if (follower != nullptr)
    {
@@ -117,6 +120,7 @@ void Scenario::placeTile(const glm::ivec2& board_coords)
       {
          current_follower_ = follower;
          follower->setFloating(true);
+         onHover();
          return;  // don't end turn
       }
    }
@@ -249,16 +253,52 @@ void Scenario::draw() const
    glDisable(GL_LIGHTING);
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
-
-   //gfx::Texture::disableAny();
-
    hud_camera_.use();
    // draw current player's HUD
    getCurrentPlayer().draw();
 
-   glEnable(GL_DEPTH_TEST);
+   // draw all players' scores
+
+   glPushMatrix();
+   glScalef(0.3f, 0.3f, 0.3f);
+
+   glTranslatef(0.0f, 0.15f, 0.0f);
+
+
+   for (auto i(players_.begin()), end(players_.end()); i != end; ++i)
+   {
+      bool active = &getCurrentPlayer() == *i;
+
+      std::ostringstream oss;
+      oss << (*i)->getName() << ": " << (*i)->getScore() << " points";
+
+      glm::vec4 color((*i)->getColor());
+      if (active)
+      {
+         glTranslatef(0.0f, 0.05f, 0.0f);
+         glScalef(1.5f, 1.5f, 1.5f);
+      }
+      else
+      {
+         color.a = 0.5f;
+      }
+
+      glColor4fv(glm::value_ptr(color));
+      font_->print(oss.str(), GL_MODULATE);
+
+      if (active)
+         glScalef(0.75f, 0.75f, 0.75f);
+
+      glTranslatef(0.0f, 0.15f, 0.0f);
+   }
+
+   glPopMatrix();
+
    
-   // TODO: draw all players' scores
+
+   
+
+   glEnable(GL_DEPTH_TEST);
 }
 
 void Scenario::update()
