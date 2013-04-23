@@ -77,6 +77,8 @@ public:
 
    const glm::ivec2* getNextPlaceableLocation();
 
+   void scoreAllTiles();
+
    void draw() const;
    void drawEmpyTiles() const;
 

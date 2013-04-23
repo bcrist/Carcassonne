@@ -67,6 +67,8 @@ void OrthoCamera::recalculate()
       bottom = top + height;
    }
 
+   expanded_ = Rect(left, top, right - left, bottom - top);
+
    glm::mat4 projection(glm::ortho(left, right, bottom, top, -1.f, 1.f));
    Camera::setViewProjection(glm::mat4(), projection);
 }
@@ -74,7 +76,21 @@ void OrthoCamera::recalculate()
 // calculate the world position at the window coordinates provided
 glm::vec3 OrthoCamera::windowToWorld(const glm::vec2& window_coords) const
 {
-   return glm::vec3(Camera::clipToWorld(glm::vec4(window_coords, 0, 1)));
+   glm::vec2 normalized(window_coords);
+
+   normalized.y = gfx_cfg_.viewport_size.y - normalized.y;
+   normalized.x /= gfx_cfg_.viewport_size.x;
+   normalized.y /= gfx_cfg_.viewport_size.y;
+
+   normalized -= glm::vec2(0.5f, 0.5f);
+   normalized *= 2.0f;
+
+   return glm::vec3(Camera::clipToWorld(glm::vec4(normalized, 0, 1)));
+}
+
+const Rect& OrthoCamera::getExpandedClientRect() const
+{
+   return expanded_;
 }
 
 } // namespace carcassonne::gfx

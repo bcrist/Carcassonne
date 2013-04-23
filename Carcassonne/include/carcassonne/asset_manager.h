@@ -37,10 +37,12 @@
 
 namespace carcassonne {
 
+class Game;
+
 class AssetManager
 {
 public:
-   AssetManager(const std::string& filename);
+   AssetManager(Game& game, const std::string& filename);
 
    db::DB& getDB();
 
@@ -55,6 +57,7 @@ public:
    std::unique_ptr<gui::Menu> getMenu(const std::string& name);
 
 private:
+   Game& game_;
    db::DB db_;
 
    std::unordered_map<std::string, std::unique_ptr<gfx::Texture> > textures_;

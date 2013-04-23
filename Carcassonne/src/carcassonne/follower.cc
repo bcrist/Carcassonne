@@ -140,14 +140,17 @@ void Follower::draw()const
    glTranslatef(position_.x, position_.y, position_.z);
    glRotatef(rotation_, 0, 1, 0);
 
-   if (farming_)
-      glMultMatrixf(glm::value_ptr(farming_transform_));
-   
+
    if (owner_ == nullptr)
    {
       glScalef(0.5f, 0.5f, 0.5f);
       glEnable(GL_NORMALIZE); // lighting is messed up when normals are scaled otherwise
    }
+
+   if (farming_)
+      glMultMatrixf(glm::value_ptr(farming_transform_));
+   
+   
 
    glColor4fv(glm::value_ptr(color_));
 

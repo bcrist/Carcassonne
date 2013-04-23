@@ -53,11 +53,9 @@ public:
    virtual void onLeftUp(const glm::vec3& coords, const glm::vec3& down_coords);
    virtual void onLeftCancel(const glm::vec3& coords, const glm::vec3& down_coords);
 
-
-
    virtual void onMouseMoved(const glm::vec3& world_coords);
    virtual void onMouseWheel(int delta);
-   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
+   virtual void onMouseButton(sf::Mouse::Button button, bool down);
 
    virtual void onKey(const sf::Event::KeyEvent& event, bool down);
    virtual void onCharacter(const sf::Event::TextEvent& event);
@@ -76,7 +74,7 @@ protected:
 
    Game& game_;
 
-   InputManager input_mgr_;
+   InputManager<glm::vec3> input_mgr_;
 
    std::vector<Button> buttons_;
 };

@@ -47,6 +47,8 @@ public:
    Game();
    int run();
 
+   Player* getPlayer(int index);
+
    db::DB& getConfigurationDB();
    const gfx::GraphicsConfiguration& getGraphicsConfiguration() const;
    AssetManager& getAssetManager();
@@ -76,6 +78,8 @@ public:
    void setMenu(const std::string& name);
    void setMenu(std::unique_ptr<gui::Menu>&& menu);
 
+   scheduling::Unifier unifier;
+
 private:
    void graphicsConfigChanged();
    void createWindow();
@@ -94,11 +98,9 @@ private:
 
    std::unique_ptr<Scenario> scenario_;
 
+   std::vector<std::unique_ptr<Player> > players_;
 
-
-
-   std::vector<Player*> players_;
-
+   
 };
 
 } // namespace carcassonne

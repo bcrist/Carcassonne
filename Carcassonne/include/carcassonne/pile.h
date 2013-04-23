@@ -55,6 +55,8 @@ public:
 
    void shuffle();
 
+   int size() const;
+
    std::unique_ptr<Tile> remove();
 
 private:

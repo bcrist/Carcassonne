@@ -203,6 +203,17 @@ int Board::checkTilePlaceable(const glm::ivec2& position, Tile* current, const T
    return 0;
 }
 
+void Board::scoreAllTiles()
+{
+   for (auto i(board_.begin()), end(board_.end()); i != end; ++i)
+   {
+      for (int j = 0; j < i->second->getFeatureCount(); ++j)
+      {
+         i->second->getFeature(j).lock()->score();
+      }
+   }
+}
+
 void Board::draw() const
 {
    /*

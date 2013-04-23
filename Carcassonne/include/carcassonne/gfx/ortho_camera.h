@@ -43,10 +43,13 @@ public:
 
    glm::vec3 windowToWorld(const glm::vec2& window_coords) const;
 
+   const Rect& getExpandedClientRect() const;
+
 private:
    const GraphicsConfiguration& gfx_cfg_;
 
    Rect client_;
+   Rect expanded_;
 
    OrthoCamera(const OrthoCamera&);
    void operator=(const OrthoCamera&);

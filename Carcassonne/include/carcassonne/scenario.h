@@ -63,7 +63,7 @@ public:
    const Player& getCurrentPlayer() const;
 
    void placeTile(const glm::ivec2& board_coords);
-   void placeFollower(const glm::vec3& world_coords);
+   void placeFollower(const glm::vec3& world_coords, bool limit_distance);
    void endTurn();
 
    void zoom(float factor, bool lock_xz);
@@ -101,7 +101,7 @@ public:
 private:
    Game& game_;
 
-   gui::InputManager input_mgr_;
+   gui::InputManager<> input_mgr_;
 
    gfx::PerspectiveCamera camera_;
    gfx::OrthoCamera hud_camera_;
@@ -115,6 +115,8 @@ private:
    bool paused_;
    scheduling::Unifier simulation_unifier_;
    scheduling::PersistentSequence simulation_sequence_;
+
+   bool game_over_;
    
    Board board_;
    Pile draw_pile_;

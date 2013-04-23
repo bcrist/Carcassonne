@@ -38,8 +38,20 @@ public:
 
    virtual std::unique_ptr<Menu> clone() const;
 
+   virtual void draw();
+
+   void nextPlayerType(int player);
+   void newGame();
+
 protected:
    MainMenu(const MainMenu& other);
+
+   enum PlayerType {
+      HUMAN, MACHINE, NONE
+   };
+
+   PlayerType player_types[6];
+
 };
 
 } // namespace carcassonne::gui

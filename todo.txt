@@ -1,17 +1,13 @@
 High Priority
 =============
-Handle game over
-Menus - Splash/Main/New Game/Pause/Controls
-Stupid AI
-Snapping to locations where tiles/followers can be placed
-Commenting
 
 Mid Priority
 ------------
+Snapping to locations where tiles/followers can be placed
 Follower texture
 Compass Rose
 Audio
-Animations/Transitions
+More Animations/Transitions
 Better AI
 Graphics class for general opengl state management
 Menus - Graphics Options/High Scores

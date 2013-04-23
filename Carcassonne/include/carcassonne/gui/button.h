@@ -28,6 +28,7 @@
 #include <functional>
 
 #include "carcassonne/gfx/sprite.h"
+#include "carcassonne/gfx/texture_font.h"
 
 namespace carcassonne {
 namespace gui {
@@ -35,6 +36,12 @@ namespace gui {
 class Button
 {
 public:
+   enum State {
+      STATE_NORMAL = 0,
+      STATE_HOVERED = 1,
+      STATE_ACTIVE = 2
+   };
+
    Button();
    Button(const Button& other);
    Button& operator=(const Button& other);
@@ -42,9 +49,14 @@ public:
    void setDrawingPlane(const gfx::Rect& rect);
    void setEventPlane(const gfx::Rect& rect);
 
+   void setSprite(State state, const gfx::Sprite& sprite);
 
-
+   void setTextColor(State state, const glm::vec4& color);
+   void setTextScale(float scale);
+   void setTextYOffset(float offset);
    void setText(const std::string& content);
+   void setFont(gfx::TextureFont* font);
+
    void setAction(const std::function<void()>& action);
 
    void onHover(const glm::vec3& coords);
@@ -59,11 +71,7 @@ public:
 private:
    bool checkEventPlane(const glm::vec3& coords) const;
 
-   enum State {
-      STATE_NORMAL = 0,
-      STATE_HOVERED = 1,
-      STATE_ACTIVE = 2
-   } state_;
+   State state_;
 
    gfx::Rect drawing_plane_;
    gfx::Rect event_plane_;
@@ -71,6 +79,7 @@ private:
    gfx::Sprite background_[3];
    glm::vec4 text_color_[3];
    std::string text_;
+   gfx::TextureFont* font_;
 
    float text_scale_;
    float text_y_offset_;

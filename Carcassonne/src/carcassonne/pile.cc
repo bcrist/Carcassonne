@@ -114,6 +114,11 @@ void Pile::shuffle()
    }
 }
 
+int Pile::size() const
+{
+   return tiles_.size();
+}
+
 std::unique_ptr<Tile> Pile::remove()
 {
    if (tiles_.size() == 0)

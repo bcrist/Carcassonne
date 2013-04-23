@@ -49,8 +49,18 @@ std-base-d     4 start
    f f1 f 0.2 0.3 -15
    f f2 f -0.25 0.1 10
 
-std-base-e     5
-   t std-base-e
+std-base-e1     3
+   t std-base-e1
+   n c c1
+   e f f1
+   s f f1
+   w f f1
+   a f1 c1
+   f f1 f 0 -0.2 16
+   f c1   0 0.3 100
+   
+std-base-e2    2
+   t std-base-e2
    n c c1
    e f f1
    s f f1
@@ -111,40 +121,44 @@ std-base-i	2
 std-base-j	3
    t std-base-j
    n c c1
-   e r r1
-   s r r1
+   e r r1 f2 f1
+   s r r1 f1 f2
    w f f1
    a f1 c1
-   a f1 r1
    f f1 f -0.2 0 3
+   f f2 f 0.3 -0.3 33
    f r1   0.15 -0.15 3
    f c1  0  0.4 3
 
 std-base-k	3
    t std-base-k
-   n r r1
+   n r r1 f1 f2
    e c c1
    s f f1
-   w r r1
-   a f r1
-   a f c1
-   f f1 f 0 -0.2 3
+   w r r1 f2 f1
+   a f1 c1
+   f f1 f 0 -0.3 32
+   f f2 f -0.3 0.3 11
    f r1   -0.15 0.15 3
    f c1   0.4 0 3
 
 std-base-l	3
-   std-base-l
-   n r r1
+   t std-base-l
+   n r r1 f1 f2
    e c c1
-   s r r3
-   w r r2
+   s r r3 f3 f1
+   w r r2 f2 f3
+   a f1 c1
+   f f1 f 0.1 0 90
+   f f2 f -0.3 0.3 34
+   f f3 f -0.4 -0.3 -66
    f r1   0 0.4 3
    f r2   -0.4 0 3
    f r3   0 -0.4 3
    f c1   0.3 0 3
 
 std-base-m	2
-   std-base-m
+   t std-base-m
    n c c1
    e f f1
    s f f1
@@ -155,7 +169,7 @@ std-base-m	2
    f c1   -0.3 0.3 3
 
 std-base-n	3
-   std-base-n
+   t std-base-n
    n c c1
    e f f1
    s f f1
@@ -165,106 +179,165 @@ std-base-n	3
    f c1   -0.3 0.3 3
 
 std-base-o	2
-   std-base-o
+   t std-base-o
    n c c1
-   e r r1
-   s r r1
+   e r r1 f2 f1
+   s r r1 f1 f2
    w c c1
+   a f1 c1
    p c1
-   f c1   -0.3 0.3 3
+   f f1 f 0.1 -0.1 -84
+   f f2 f 0.35 -0.35 22
+   f c1   -0.3 0.3 34
    f r1   0.1 -0.1 3
 
 
 std-base-p	3
-   std-base-p
+   t std-base-p
    n c c1
-   e r r1
-   s r r1
+   e r r1 f2 f1
+   s r r1 f1 f2
    w c c1
-   f c1   -0.3 0.3 3
-   f r1   0.1 -0.1 3
+   a f1 c1
+   f f1 f 0.1 -0.1 -84
+   f f2 f 0.35 -0.35 22
+   f c1   -0.3 0.3 -73
+   f r1   0.1 -0.1 19
 
 std-base-q	1
-   std-base-q
+   t std-base-q
    n c c1
    e c c1
    s f f1
    w c c1
    p c1
    a f1 c1
-   f f1 f 0 -0.3 3
+   f f1 f 0 -0.35 35
    f c1   0 0.1 3
 
 std-base-r	3
-   std-base-r
+   t std-base-r
    n c c1
    e c c1
    s f f1
    w c c1
    a f1 c1
-   f f1 f 0 -0.3 3
-   f c1   0 0.1 3
+   f f1 f 0 -0.3 99
+   f c1   0 0.1 45
 
 std-base-s	2
-   std-base-s
+   t std-base-s
    n c c1
    e c c1
-   s r r1
+   s r r1 f1 f2
    w c c1
    p c1
+   a f1 c1
+   a f2 c1
+   f f1 f -0.3 -0.4 90
+   f f2 f 0.3 -0.4 -90
    f r1   0 -0.3 3
    f c1   0 0.1 3
 
 std-base-t	1
-   std-base-t
+   t std-base-t
    n c c1
    e c c1
-   s r r1
+   s r r1 f1 f2
    w c c1
+   a f1 c1
+   a f2 c1
+   f f1 f -0.3 -0.4 90
+   f f2 f 0.3 -0.4 -90
    f r1   0 -0.3 3
    f c1   0 0.1 3
 
-std-base-u	8
-   std-base-u
-   n r r1
-   e f f1
-   s r r1
-   w f f2
-   a f1 r1
-   a f2 r1
-   f f1 f 0.3 0 3
-   f f2 f -0.3 0 3
+std-base-u1 4
+   t std-base-u1
+   n r r1 f2 f1
+   e f f2
+   s r r1 f1 f2
+   w f f1
+   f f1 f 0.3 0.25 -97
+   f f2 f -0.3 -0.3 35
    f r1   0 -0.1 3
 
-std-base-v	9
-   std-base-v
+std-base-u2 4
+   t std-base-u2
+   n r r1 f2 f1
+   e f f2
+   s r r1 f1 f2
+   w f f1
+   f f1 f 0.3 0.25 -97
+   f f2 f -0.3 -0.3 35
+   f r1   0 -0.1 3
+   
+std-base-v1	3
+   t std-base-v1
    n f f1
    e f f1
-   s r r1
-   w r r1
-   a f1 r1
-   f f1 f 0.3 0.1 3
+   s r r1 f2 f1
+   w r r1 f1 f2
+   f f1 f 0.3 0.1 39
+   f f2 f -0.3 -0.25 54
+   f r1   -0.1 -0.1 3
+   
+std-base-v2	3
+   t std-base-v2
+   n f f1
+   e f f1
+   s r r1 f2 f1
+   w r r1 f1 f2
+   f f1 f 0.3 0.1 39
+   f f2 f -0.3 -0.25 54
+   f r1   -0.1 -0.1 3
+   
+std-base-v3	3
+   t std-base-v3
+   n f f1
+   e f f1
+   s r r1 f2 f1
+   w r r1 f1 f2
+   f f1 f 0.3 0.1 39
+   f f2 f -0.3 -0.25 54
    f r1   -0.1 -0.1 3
 
-std-base-w	4
-   std-base-w
+std-base-w1	2
+   t std-base-w1
    n f f1
-   e r r1
-   s r r2
-   w r r3
-   a f1 r1
-   a f1 r2
-   f f1 f 0 0.2 3
+   e r r1 f2 f1
+   s r r2 f3 f2
+   w r r3 f1 f3
+   f f1 f 0 0.2 23
+   f f2 f 0.4 -0.25 -61
+   f f3 f -0.3 -0.35 34
+   f r1   0.3 0 3
+   f r2   0 -0.4 3
+   f r3   -0.3 0 3
+   
+std-base-w2	2
+   t std-base-w2
+   n f f1
+   e r r1 f2 f1
+   s r r2 f3 f2
+   w r r3 f1 f3
+   f f1 f 0 0.2 23
+   f f2 f 0.4 -0.25 -61
+   f f3 f -0.3 -0.35 34
    f r1   0.3 0 3
    f r2   0 -0.4 3
    f r3   -0.3 0 3
 
 std-base-x	1
-   std-base-x
-   n r r1
-   e r r2
-   s r r3
-   w r r4
+   t std-base-x
+   n r r1 f2 f1
+   e r r2 f4 f2
+   s r r3 f3 f4
+   w r r4 f1 f3
+   f f1 f -0.3 0.3 38
+   f f2 f 0.3 0.3 383
+   f f3 f -0.3 -0.3 83
+   f f4 f 0.3 -0.3 338
    f r1   0 0.4 3
    f r2   0.4 0 3
    f r3   0 -0.4 3

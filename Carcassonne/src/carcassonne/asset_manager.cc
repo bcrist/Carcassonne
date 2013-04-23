@@ -25,8 +25,9 @@
 
 namespace carcassonne {
 
-AssetManager::AssetManager(const std::string& filename)
-   : db_(filename)
+AssetManager::AssetManager(Game& game, const std::string& filename)
+   : game_(game),
+     db_(filename)
 {
 }
 
@@ -150,7 +151,7 @@ std::unique_ptr<gui::Menu> AssetManager::getMenu(const std::string& name)
    {
       try
       {
-         ptr = gui::Menu::load(*this, name);
+         ptr = gui::Menu::load(game_, name);
       }
       catch (const std::runtime_error& err)
       {

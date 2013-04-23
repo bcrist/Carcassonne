@@ -150,9 +150,6 @@
     <ClCompile Include="src\main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\carcassonne\gui\input_manager.cc">
-      <Filter>Source Files\carcassonne\gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\carcassonne\scheduling\persistent_sequence.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
@@ -345,6 +342,9 @@
     </None>
     <None Include="include\carcassonne\scheduling\interpolator.inl">
       <Filter>Header Files\carcassonne\scheduling</Filter>
+    </None>
+    <None Include="include\carcassonne\gui\input_manager.inl">
+      <Filter>Header Files\carcassonne\gui</Filter>
     </None>
   </ItemGroup>
 </Project>

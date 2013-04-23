@@ -49,6 +49,11 @@ const std::string& Player::getName() const
    return name_;
 }
 
+void Player::setHuman(bool human)
+{
+   human_ = human;
+}
+
 bool Player::isHuman() const
 {
    return human_;
@@ -110,6 +115,11 @@ void Player::newScenario(AssetManager& asset_mgr, const glm::vec4& color)
    }
 
    score_ = 0;
+}
+
+void Player::setColor(const glm::vec4& color)
+{
+   color_ = color;
 }
 
 const glm::vec4& Player::getColor() const

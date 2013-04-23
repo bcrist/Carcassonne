@@ -56,6 +56,7 @@ public:
    Player(const std::string& name, bool human);
 
    const std::string& getName() const;
+   void setHuman(bool human);
    bool isHuman() const;
    SkillLevel getSkillLevel() const;
 
@@ -72,6 +73,7 @@ public:
 
    void newScenario(AssetManager& asset_mgr, const glm::vec4& color);
 
+   void setColor(const glm::vec4& color);
    const glm::vec4& getColor() const;
 
    // get an idle follower, or null if there are none

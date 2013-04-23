@@ -32,12 +32,13 @@
 namespace carcassonne {
 namespace gui {
 
+template <typename T = glm::ivec2>
 class InputManager
 {
 public:
    InputManager();
 
-   void onMouseMoved(const glm::ivec2& window_coords);
+   void onMouseMoved(const T& window_coords);
    //void onMouseWheel(int delta);
    void onMouseButton(sf::Mouse::Button button, bool down);
 
@@ -47,35 +48,35 @@ public:
    void cancelInput();
 
 
-   const glm::ivec2& getMousePosition() const;
-   const glm::ivec2& getMouseDelta() const;
+   const T& getMousePosition() const;
+   const T& getMouseDelta() const;
 
    void setMouseDownHandler(sf::Mouse::Button button,
       const std::function<void()>& func);
 
    void setMouseDragHandler(sf::Mouse::Button button,
-      const std::function<void(const glm::ivec2&)>& func);
+      const std::function<void(const T&)>& func);
 
    void setMouseUpHandler(sf::Mouse::Button button,
-      const std::function<void(const glm::ivec2&)>& func);
+      const std::function<void(const T&)>& func);
 
    void setMouseCancelHandler(sf::Mouse::Button button,
-      const std::function<void(const glm::ivec2&)>& func);
+      const std::function<void(const T&)>& func);
 
    void setMouseHoverHandler(const std::function<void()>& func);
 
 private:
-   glm::ivec2 current_pos_;
-   glm::ivec2 last_delta_;
+   T current_pos_;
+   T last_delta_;
 
    bool btn_down_[3];
    
-   glm::ivec2 btn_down_pos_[3];
+   T btn_down_pos_[3];
 
    std::function<void()> down_handler_[3];
-   std::function<void(const glm::ivec2&)> drag_handler_[3];
-   std::function<void(const glm::ivec2&)> up_handler_[3];
-   std::function<void(const glm::ivec2&)> cancel_handler_[3];
+   std::function<void(const T&)> drag_handler_[3];
+   std::function<void(const T&)> up_handler_[3];
+   std::function<void(const T&)> cancel_handler_[3];
    std::function<void()> hover_handler_;
 
    // disable copy/assign
@@ -85,5 +86,7 @@ private:
 
 } // namespace carcassonne::gui
 } // namespace carcassonne
+
+#include "carcassonne/gui/input_manager.inl"
 
 #endif

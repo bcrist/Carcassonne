@@ -36,38 +36,39 @@
 
 namespace carcassonne {
 
+#pragma warning (push)
+#pragma warning (disable: 4355)
 Game::Game()
    : config_db_("carcassonne.ccconfig"),
      gfx_cfg_(gfx::GraphicsConfiguration::load(config_db_)),
-     assets_("carcassonne.ccassets"),
+     assets_(*this, "carcassonne.ccassets"),
      menu_camera_(gfx_cfg_)
 {
+   menu_camera_.setClient(gfx::Rect(0, 0, 1, 1));
 }
+#pragma warning (pop)
 
 int Game::run()
 {
    gfx_cfg_.msaa_level = 4;
-   gfx_cfg_.v_sync = false;
+   //gfx_cfg_.v_sync = false;
+
+   players_.push_back(std::unique_ptr<Player>(new Player("Player 1", true)));
+   players_.back()->setColor(glm::vec4(1, 0.3, 0.3, 1));
+   players_.push_back(std::unique_ptr<Player>(new Player("Player 2", true)));
+   players_.back()->setColor(glm::vec4(0.3, 1, 0.3, 1));
+   players_.push_back(std::unique_ptr<Player>(new Player("Player 3", true)));
+   players_.back()->setColor(glm::vec4(0.3, 0.3, 1, 1));
+
+   players_.push_back(std::unique_ptr<Player>(new Player("Player 4", true)));
+   players_.back()->setColor(glm::vec4(1, 1, 0.3, 1));
+   players_.push_back(std::unique_ptr<Player>(new Player("Player 5", true)));
+   players_.back()->setColor(glm::vec4(0.3, 1, 1, 1));
+   players_.push_back(std::unique_ptr<Player>(new Player("Player 6", true)));
+   players_.back()->setColor(glm::vec4(1, 0.3, 1, 1));
 
    graphicsConfigChanged();
-   //clearMenus();
-
-   players_.push_back(new Player("Ben", true));
-   players_.push_back(new Player("Josh", true));
-
-   players_[0]->newScenario(assets_, glm::vec4(0,1,1,1));
-   players_[1]->newScenario(assets_, glm::vec4(1,1,0,1));
-
-   Pile p = assets_.getTileSet("std-base");
-
-   ScenarioInit sci;
-   sci.players.push_back(players_[0]);
-   sci.players.push_back(players_[1]);
-   sci.starting_tile = p.remove();
-   p.setSeed(1);
-   p.shuffle();
-   sci.tiles = std::move(p);
-   this->newScenario(sci);
+   clearMenus();
 
    while (window_.isOpen())
    {
@@ -104,6 +105,11 @@ int Game::run()
    }
 
    return 0;
+}
+
+Player* Game::getPlayer(int index)
+{
+   return players_[index].get();
 }
 
 db::DB& Game::getConfigurationDB()
@@ -444,6 +450,8 @@ void Game::initOpenGL()
 
 void Game::update()
 {
+   unifier(sf::Time::Zero);
+
    if (scenario_)
       scenario_->update();
 

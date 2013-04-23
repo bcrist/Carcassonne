@@ -51,7 +51,8 @@ Scenario::Scenario(Game& game, ScenarioInit& options)
      players_(options.players),
      current_player_(players_.end()),
      current_follower_(nullptr),
-     last_placed_tile_(nullptr)
+     last_placed_tile_(nullptr),
+     game_over_(false)
 {
    // set InputManager callbacks
    input_mgr_.setMouseHoverHandler(                   ([=](){ onHover(); }));
@@ -128,19 +129,19 @@ void Scenario::placeTile(const glm::ivec2& board_coords)
    endTurn();
 }
 
-void Scenario::placeFollower(const glm::vec3& world_coords)
+void Scenario::placeFollower(const glm::vec3& world_coords, bool limit_distance)
 {
    glm::vec3& tile_coords(last_placed_tile_->worldToLocal(world_coords));
 
    features::Feature* closest_feature(nullptr);
-   float closest_placeholder_distance(1.0f);
+   float closest_placeholder_distance(limit_distance ? 1.0f : -1.0f);
    for (auto i(follower_placeholders_.begin()), end(follower_placeholders_.end()); i != end; ++i)
    {
       features::Feature* feature = i->get();
       const Follower* follower = feature->getPlaceholder();
       float distance(glm::distance(tile_coords, follower->getPosition()));
 
-      if (closest_placeholder_distance > distance)
+      if (closest_placeholder_distance < 0 || closest_placeholder_distance > distance)
       {
          closest_placeholder_distance = distance;
          closest_feature = feature;
@@ -185,7 +186,16 @@ void Scenario::endTurn()
 
    if (!current_tile_)
    {
-      // TODO: game over
+      board_.scoreAllTiles();
+
+      std::cout << "Game Over!" <<std::endl;
+      int p = 1;
+      for (auto i(players_.begin()), end(players_.end()); i != end; ++i)
+      {
+         std::cout << "Player " << p << ": " << (*i)->getScore() << " points" << std::endl;
+         ++p;
+      }
+      game_over_ = true;
    }
 
    
@@ -254,16 +264,32 @@ void Scenario::draw() const
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
    hud_camera_.use();
+
+   const gfx::Rect& expanded = hud_camera_.getExpandedClientRect();
+
+   // draw tiles remaining count
+   glPushMatrix();
+   glTranslatef(expanded.right(), 0.0f, 0.0f);
+   glScalef(0.3f, 0.3f, 0.3f);
+
+   std::ostringstream oss;
+   oss << draw_pile_.size() << " tiles remain";
+   float w = font_->getWidth(oss.str());
+   glTranslatef(-(w + 0.1f), 0.15f, 0.0f);
+   glColor4f(1,1,1,0.5);
+   font_->print(oss.str(), GL_MODULATE);
+
+   glPopMatrix();
+
+   glPushMatrix();
+   glTranslatef(expanded.left(), 0, 0);
+
    // draw current player's HUD
    getCurrentPlayer().draw();
 
    // draw all players' scores
-
-   glPushMatrix();
    glScalef(0.3f, 0.3f, 0.3f);
-
-   glTranslatef(0.0f, 0.15f, 0.0f);
-
+   glTranslatef(0.1f, 0.15f, 0.0f);
 
    for (auto i(players_.begin()), end(players_.end()); i != end; ++i)
    {
@@ -293,10 +319,6 @@ void Scenario::draw() const
    }
 
    glPopMatrix();
-
-   
-
-   
 
    glEnable(GL_DEPTH_TEST);
 }
@@ -330,6 +352,31 @@ void Scenario::setPaused(bool paused)
 
 void Scenario::simulate(sf::Time delta)
 {
+   if (!getCurrentPlayer().isHuman() && !game_over_)
+   {
+      if (current_tile_)
+      {
+         const glm::ivec2* location = board_.getNextPlaceableLocation();
+         
+         while (location == nullptr)
+         {
+            current_tile_->rotateClockwise();
+            board_.tileRotated(*current_tile_);
+            location = board_.getNextPlaceableLocation();
+         }
+
+         glm::ivec2 loc = *location;
+         placeTile(loc);
+      }
+      else if (current_follower_)
+      {
+         placeFollower(glm::vec3(), false);
+      }
+      else
+         endTurn();
+   }
+
+
    if (camera_movement_enabled_)
    {
       bool w_down = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
@@ -437,6 +484,9 @@ void Scenario::onRightDrag(const glm::ivec2& down_position)
 
 void Scenario::onLeftUp(const glm::ivec2& down_position)
 {
+   if (game_over_)
+      game_.pushMenu("splash");
+
    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
    {
       onHover();
@@ -454,7 +504,7 @@ void Scenario::onLeftUp(const glm::ivec2& down_position)
       {
          glm::vec3 world_coords(camera_.windowToWorld(glm::vec2(input_mgr_.getMousePosition()), 0.1f));
 
-         placeFollower(world_coords);
+         placeFollower(world_coords, true);
       }
    }
 }
