@@ -71,3 +71,201 @@ std-base-f     2
    f f1 f 0.1 0.45 -92
    f f2 f 0 -0.4 80
    f c1   -0.2 -0.05 3
+
+std-base-g	1
+   t std-base-g
+   n c c1
+   e f f1
+   s c c1
+   w f f2
+   a f1 c1
+   a f2 c1
+   f f1 f 0.3 0 3
+   f f2 f -0.3 0 3
+   f c1   -0.2 -0.05 3
+
+std-base-h	3
+   t std-base-h
+   n f f1
+   e c c1
+   s f f1
+   w c c2
+   a f1 c1
+   a f1 c2
+   f f1 f 0 0 3
+   f c1   0.3 0 3
+   f c2   -0.3 0 3
+
+std-base-i	2
+   t std-base-i
+   n f f1
+   e c c1
+   s c c1
+   w f f1
+   a f1 c1
+   a f1 c2  
+   f f1 f 0 0 3
+   f c1  -0.4 0 3
+   f c2  0 -0.4 3
+
+std-base-j	3
+   t std-base-j
+   n c c1
+   e r r1
+   s r r1
+   w f f1
+   a f1 c1
+   a f1 r1
+   f f1 f -0.2 0 3
+   f r1   0.15 -0.15 3
+   f c1  0  0.4 3
+
+std-base-k	3
+   t std-base-k
+   n r r1
+   e c c1
+   s f f1
+   w r r1
+   a f r1
+   a f c1
+   f f1 f 0 -0.2 3
+   f r1   -0.15 0.15 3
+   f c1   0.4 0 3
+
+std-base-l	3
+   std-base-l
+   n r r1
+   e c c1
+   s r r3
+   w r r2
+   f r1   0 0.4 3
+   f r2   -0.4 0 3
+   f r3   0 -0.4 3
+   f c1   0.3 0 3
+
+std-base-m	2
+   std-base-m
+   n c c1
+   e f f1
+   s f f1
+   w c c1
+   p c1
+   a f1 c1
+   f f1 f 0.1 -0.1 3
+   f c1   -0.3 0.3 3
+
+std-base-n	3
+   std-base-n
+   n c c1
+   e f f1
+   s f f1
+   w c c1
+   a f1 c1
+   f f1 f 0.1 -0.1 3
+   f c1   -0.3 0.3 3
+
+std-base-o	2
+   std-base-o
+   n c c1
+   e r r1
+   s r r1
+   w c c1
+   p c1
+   f c1   -0.3 0.3 3
+   f r1   0.1 -0.1 3
+
+
+std-base-p	3
+   std-base-p
+   n c c1
+   e r r1
+   s r r1
+   w c c1
+   f c1   -0.3 0.3 3
+   f r1   0.1 -0.1 3
+
+std-base-q	1
+   std-base-q
+   n c c1
+   e c c1
+   s f f1
+   w c c1
+   p c1
+   a f1 c1
+   f f1 f 0 -0.3 3
+   f c1   0 0.1 3
+
+std-base-r	3
+   std-base-r
+   n c c1
+   e c c1
+   s f f1
+   w c c1
+   a f1 c1
+   f f1 f 0 -0.3 3
+   f c1   0 0.1 3
+
+std-base-s	2
+   std-base-s
+   n c c1
+   e c c1
+   s r r1
+   w c c1
+   p c1
+   f r1   0 -0.3 3
+   f c1   0 0.1 3
+
+std-base-t	1
+   std-base-t
+   n c c1
+   e c c1
+   s r r1
+   w c c1
+   f r1   0 -0.3 3
+   f c1   0 0.1 3
+
+std-base-u	8
+   std-base-u
+   n r r1
+   e f f1
+   s r r1
+   w f f2
+   a f1 r1
+   a f2 r1
+   f f1 f 0.3 0 3
+   f f2 f -0.3 0 3
+   f r1   0 -0.1 3
+
+std-base-v	9
+   std-base-v
+   n f f1
+   e f f1
+   s r r1
+   w r r1
+   a f1 r1
+   f f1 f 0.3 0.1 3
+   f r1   -0.1 -0.1 3
+
+std-base-w	4
+   std-base-w
+   n f f1
+   e r r1
+   s r r2
+   w r r3
+   a f1 r1
+   a f1 r2
+   f f1 f 0 0.2 3
+   f r1   0.3 0 3
+   f r2   0 -0.4 3
+   f r3   -0.3 0 3
+
+std-base-x	1
+   std-base-x
+   n r r1
+   e r r2
+   s r r3
+   w r r4
+   f r1   0 0.4 3
+   f r2   0.4 0 3
+   f r3   0 -0.4 3
+   f r4   -0.4 0 3
