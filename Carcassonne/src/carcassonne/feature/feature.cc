@@ -44,27 +44,30 @@ Feature::Feature(const Feature& other)
 Feature::~Feature()
 {
 }
-
+//returns true if getType is a TYPE_CITY
 bool Feature::isCity() const
 {
    return getType() == TYPE_CITY;
 }
-
+//returns true if getType is a TYPE_CLOISTER
 bool Feature::isCloister() const
 {
    return getType() == TYPE_CLOISTER;
 }
-
+// returns true if this feature is complete, and can be scored immediately.
+// After each turn, this is called on each feature of the placed tile, and
+// if it returns true, the feature's score() function is called.
 bool Feature::isFarm() const
 {
    return getType() == TYPE_FARM;
 }
-
+//returns true if getType is a TYPE_ROAD
 bool Feature::isRoad() const
 {
    return getType() == TYPE_ROAD;
 }
-
+//if true places placeholders in the correct position relative to the 
+//tile displaying where a follower may be placed
 bool Feature::hasPlaceholder() const
 {
    return follower_placeholder_;

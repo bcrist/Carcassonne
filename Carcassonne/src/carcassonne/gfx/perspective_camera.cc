@@ -29,7 +29,7 @@
 
 namespace carcassonne {
 namespace gfx {
-
+//sets up the camera angle to the perspective view
 PerspectiveCamera::PerspectiveCamera(const GraphicsConfiguration& gfx_cfg)
    : gfx_cfg_(gfx_cfg),
      position_(0,0,0),
@@ -41,7 +41,8 @@ PerspectiveCamera::PerspectiveCamera(const GraphicsConfiguration& gfx_cfg)
      top_(0)
 {
 }
-
+//sets the position of the camera and calls the recalculate
+//function to determine the ortho
 void PerspectiveCamera::setPosition(const glm::vec3& position)
 {
    position_ = position;
@@ -53,20 +54,20 @@ void PerspectiveCamera::setTarget(const glm::vec3& target)
    target_ = target;
    recalculateView();
 }
-
+//sets the direction of up
 void PerspectiveCamera::setUp(const glm::vec3& up)
 {
    up_ = up;
    recalculateView();
 }
-
+//sets up the camera for movement
 void PerspectiveCamera::translate(const glm::vec3& delta)
 {
    position_ += delta;
    target_ += delta;
    recalculateView();
 }
-
+//sets up the camera for rotation
 void PerspectiveCamera::rotateAroundTarget(float delta)
 {
    glm::vec3 pos(position_ - target_);
@@ -108,7 +109,8 @@ void PerspectiveCamera::recalculatePerspective()
    top_ = tan(half_fov_rads);
    right_ = top_ * aspect;
 }
-
+//updates the perspectiveCamera based on window size in relation to 
+//the matricies
 void PerspectiveCamera::recalculateView()
 {
    if (position_ == target_ || up_ == glm::vec3())

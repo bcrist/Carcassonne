@@ -40,7 +40,8 @@ void OrthoCamera::setClient(const Rect& rect)
    client_ = rect;
    recalculate();
 }
-
+//updates the orthoCamera based on window size in relation to 
+//the matricies
 void OrthoCamera::recalculate()
 {
    float window_aspect = float(gfx_cfg_.viewport_size.x) / float(gfx_cfg_.viewport_size.y);

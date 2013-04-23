@@ -67,14 +67,14 @@ public:
    // feature.  After scoring, the feature's followers are returned to
    // idle state.
    virtual void score() = 0;
-
+   //returns true if tile has placeholders where followers can be placed
    bool hasPlaceholder() const;
    const Follower* getPlaceholder() const;
-
+   //draw a placeholder on the tile displaying where a follower is legal
    void drawPlaceholder() const;
-
+   //sets the color of the placeholder
    void setPlaceholderColor(const glm::vec4& color);
-
+   //places placeholder on til in the right postion 
    void placeFollower(Follower& follower, const Tile& relative_to);
       
 

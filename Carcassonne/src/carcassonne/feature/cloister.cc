@@ -76,7 +76,7 @@ void Cloister::score()
       followers_.clear();
    }
 }
-
+//adds cloister tiles to the pile
 void Cloister::addTile(Tile& tile)
 {
    auto i(std::find(tiles_.begin(), tiles_.end(), &tile));

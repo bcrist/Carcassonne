@@ -134,7 +134,8 @@ const std::string& Mesh::getName() const
 {
    return name_;
 }
-
+// Uses texture specified by this mesh
+// make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
 void Mesh::draw() const
 {
    if (texture_)
@@ -144,7 +145,8 @@ void Mesh::draw() const
 
    drawBase();
 }
-
+// Uses texture specified by this mesh
+// make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
 void Mesh::draw(GLenum texture_mode) const
 {
    if (texture_)
@@ -154,7 +156,8 @@ void Mesh::draw(GLenum texture_mode) const
 
    drawBase();
 }
-
+// Uses texture specified by this mesh
+// make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
 void Mesh::draw(GLenum texture_mode, const glm::vec4& texture_env_color) const
 {
    if (texture_)
@@ -164,7 +167,8 @@ void Mesh::draw(GLenum texture_mode, const glm::vec4& texture_env_color) const
 
    drawBase();
 }
-
+// Uses whatever texture settings are currently set
+// make sure depth buffer writing and GL_DEPTH_TEST are enabled before drawing!
 void Mesh::drawBase() const
 {
    if (display_list_id_ != 0)
