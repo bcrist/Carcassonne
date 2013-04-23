@@ -19,66 +19,27 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gui/menu.h
+// File: carcassonne/gui/main_menu.h
 
-#ifndef CARCASSONNE_GUI_MENU_H_
-#define CARCASSONNE_GUI_MENU_H_
+#ifndef CARCASSONNE_GUI_MAIN_MENU_H_
+#define CARCASSONNE_GUI_MAIN_MENU_H_
 #include "carcassonne/_carcassonne.h"
 
-#include <SFML/Window.hpp>
-
-#include "carcassonne/gui/input_manager.h"
-#include "carcassonne/gui/button.h"
+#include "carcassonne/gui/menu.h"
 
 namespace carcassonne {
-
-class Game;
-class AssetManager;
-
 namespace gui {
 
-class Menu
+class MainMenu : public Menu
 {
 public:
-   static std::unique_ptr<Menu> load(Game& game, const std::string& name);
-
-   Menu(Game& game);
-   virtual ~Menu();
+   MainMenu(Game& game);
+   virtual ~MainMenu();
 
    virtual std::unique_ptr<Menu> clone() const;
 
-   virtual void onHover(const glm::vec3& coords);
-   virtual void onLeftDown(const glm::vec3& coords);
-   virtual void onLeftDrag(const glm::vec3& coords, const glm::vec3& down_coords);
-   virtual void onLeftUp(const glm::vec3& coords, const glm::vec3& down_coords);
-   virtual void onLeftCancel(const glm::vec3& coords, const glm::vec3& down_coords);
-
-
-
-   virtual void onMouseMoved(const glm::vec3& world_coords);
-   virtual void onMouseWheel(int delta);
-   virtual void onMouseButton(sf::Mouse::Button Button, bool down);
-
-   virtual void onKey(const sf::Event::KeyEvent& event, bool down);
-   virtual void onCharacter(const sf::Event::TextEvent& event);
-
-   virtual void onResized();
-   virtual void onBlurred();
-   virtual bool onClosed();
-
-   virtual void update();
-   virtual void draw();
-
-   virtual void cancelInput();
-
 protected:
-   Menu(const Menu& other);
-
-   Game& game_;
-
-   InputManager input_mgr_;
-
-   std::vector<Button> buttons_;
+   MainMenu(const MainMenu& other);
 };
 
 } // namespace carcassonne::gui

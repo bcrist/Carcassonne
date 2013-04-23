@@ -74,7 +74,7 @@ void OrthoCamera::recalculate()
 // calculate the world position at the window coordinates provided
 glm::vec3 OrthoCamera::windowToWorld(const glm::vec2& window_coords) const
 {
-   return glm::vec3(window_coords, 0);
+   return glm::vec3(Camera::clipToWorld(glm::vec4(window_coords, 0, 1)));
 }
 
 } // namespace carcassonne::gfx

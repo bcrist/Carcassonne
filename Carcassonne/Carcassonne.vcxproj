@@ -35,7 +35,9 @@
     <ClCompile Include="src\carcassonne\gfx\sprite.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture.cc" />
     <ClCompile Include="src\carcassonne\gfx\texture_font.cc" />
+    <ClCompile Include="src\carcassonne\gui\button.cc" />
     <ClCompile Include="src\carcassonne\gui\input_manager.cc" />
+    <ClCompile Include="src\carcassonne\gui\main_menu.cc" />
     <ClCompile Include="src\carcassonne\gui\menu.cc" />
     <ClCompile Include="src\carcassonne\scheduling\circular_sequence.cc" />
     <ClCompile Include="src\carcassonne\scheduling\delay.cc" />
@@ -68,7 +70,9 @@
     <ClInclude Include="include\carcassonne\gfx\sprite.h" />
     <ClInclude Include="include\carcassonne\gfx\texture.h" />
     <ClInclude Include="include\carcassonne\gfx\texture_font.h" />
+    <ClInclude Include="include\carcassonne\gui\button.h" />
     <ClInclude Include="include\carcassonne\gui\input_manager.h" />
+    <ClInclude Include="include\carcassonne\gui\main_menu.h" />
     <ClInclude Include="include\carcassonne\gui\menu.h" />
     <ClInclude Include="include\carcassonne\pile.h" />
     <ClInclude Include="include\carcassonne\player.h" />

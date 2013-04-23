@@ -19,90 +19,66 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gui/menu.cc
+// File: carcassonne/gui/button.h
 
-#include "carcassonne/gui/menu.h"
+#ifndef CARCASSONNE_GUI_BUTTON_H_
+#define CARCASSONNE_GUI_BUTTON_H_
+#include "carcassonne/_carcassonne.h"
 
-#include "carcassonne/game.h"
-#include "carcassonne/gui/main_menu.h"
+#include <functional>
+
+#include "carcassonne/gfx/sprite.h"
 
 namespace carcassonne {
 namespace gui {
 
-std::unique_ptr<Menu> Menu::load(Game& game, const std::string& name)
+class Button
 {
-   if (name == "splash")
-      return std::unique_ptr<Menu>(new MainMenu(game));
+public:
+   Button();
+   Button(const Button& other);
+   Button& operator=(const Button& other);
 
-   throw std::runtime_error("Menu not found!");
-}
+   void setDrawingPlane(const gfx::Rect& rect);
+   void setEventPlane(const gfx::Rect& rect);
 
-Menu::Menu(Game& game)
-   : game_(game)
-{
-}
 
-Menu::Menu(const Menu& other)
-   : game_(other.game_),
-     buttons_(other.buttons_)
-{
-   InputManager* input_mgr(&input_mgr_);
-   input_mgr_.setMouseDownHandler(sf::Mouse::Left, ([=](){ onHover(input_mgr->getMousePosition()); }));
-}
 
-Menu::~Menu()
-{
-}
+   void setText(const std::string& content);
+   void setAction(const std::function<void()>& action);
 
-std::unique_ptr<Menu> Menu::clone() const
-{
-   return std::unique_ptr<Menu>(new Menu(*this));
-}
+   void onHover(const glm::vec3& coords);
+   void onLeftDown(const glm::vec3& coords);
+   void onLeftDrag(const glm::vec3& coords, const glm::vec3& down_coords);
+   void onLeftUp(const glm::vec3& coords, const glm::vec3& down_coords);
+   void onLeftCancel(const glm::vec3& coords, const glm::vec3& down_coords);
 
-void Menu::onMouseMoved(const glm::vec3& world_coords)
-{
-}
+   //void update();
+   void draw();
 
-void Menu::onMouseWheel(int delta)
-{
-}
+private:
+   bool checkEventPlane(const glm::vec3& coords) const;
 
-void Menu::onMouseButton(sf::Mouse::Button Button, bool down)
-{
-}
+   enum State {
+      STATE_NORMAL = 0,
+      STATE_HOVERED = 1,
+      STATE_ACTIVE = 2
+   } state_;
 
-void Menu::onKey(const sf::Event::KeyEvent& event, bool down)
-{
-}
+   gfx::Rect drawing_plane_;
+   gfx::Rect event_plane_;
 
-void Menu::onCharacter(const sf::Event::TextEvent& event)
-{
-}
+   gfx::Sprite background_[3];
+   glm::vec4 text_color_[3];
+   std::string text_;
 
-void Menu::onResized()
-{
-}
+   float text_scale_;
+   float text_y_offset_;
 
-void Menu::onBlurred()
-{
-}
-
-bool Menu::onClosed()
-{
-   return true;
-}
-
-void Menu::update()
-{
-}
-
-void Menu::draw()
-{
-}
-
-void Menu::cancelInput()
-{
-}
+   std::function<void()> action_;
+};
 
 } // namespace carcassonne::gui
 } // namespace carcassonne
+
+#endif

@@ -156,6 +156,12 @@
     <ClCompile Include="src\carcassonne\scheduling\persistent_sequence.cc">
       <Filter>Source Files\carcassonne\scheduling</Filter>
     </ClCompile>
+    <ClCompile Include="src\carcassonne\gui\button.cc">
+      <Filter>Source Files\carcassonne\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\carcassonne\gui\main_menu.cc">
+      <Filter>Source Files\carcassonne\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\carcassonne\_carcassonne.h">
@@ -289,6 +295,12 @@
     </ClInclude>
     <ClInclude Include="include\carcassonne\scheduling\easing\easings.h">
       <Filter>Header Files\carcassonne\scheduling\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gui\button.h">
+      <Filter>Header Files\carcassonne\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\carcassonne\gui\main_menu.h">
+      <Filter>Header Files\carcassonne\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

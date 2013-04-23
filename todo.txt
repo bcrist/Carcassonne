@@ -1,13 +1,10 @@
 High Priority
 =============
-In-game HUD
 Handle game over
 Menus - Splash/Main/New Game/Pause/Controls
 Stupid AI
 Snapping to locations where tiles/followers can be placed
 Commenting
-Finish tilespec
-Final tile textures
 
 Mid Priority
 ------------

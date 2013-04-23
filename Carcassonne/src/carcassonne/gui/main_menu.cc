@@ -19,90 +19,35 @@
 // IN THE SOFTWARE.
 //
 // Author: Benjamin Crist
-// File: carcassonne/gui/menu.cc
+// File: carcassonne/gui/main_menu.cc
 
-#include "carcassonne/gui/menu.h"
-
-#include "carcassonne/game.h"
 #include "carcassonne/gui/main_menu.h"
 
 namespace carcassonne {
 namespace gui {
 
-std::unique_ptr<Menu> Menu::load(Game& game, const std::string& name)
-{
-   if (name == "splash")
-      return std::unique_ptr<Menu>(new MainMenu(game));
-
-   throw std::runtime_error("Menu not found!");
-}
-
-Menu::Menu(Game& game)
-   : game_(game)
+MainMenu::MainMenu(Game& game)
+   : Menu(game)
 {
 }
 
-Menu::Menu(const Menu& other)
-   : game_(other.game_),
-     buttons_(other.buttons_)
-{
-   InputManager* input_mgr(&input_mgr_);
-   input_mgr_.setMouseDownHandler(sf::Mouse::Left, ([=](){ onHover(input_mgr->getMousePosition()); }));
-}
-
-Menu::~Menu()
+MainMenu::MainMenu(const MainMenu& other)
+   : Menu(other)
 {
 }
 
-std::unique_ptr<Menu> Menu::clone() const
-{
-   return std::unique_ptr<Menu>(new Menu(*this));
-}
-
-void Menu::onMouseMoved(const glm::vec3& world_coords)
+MainMenu::~MainMenu()
 {
 }
 
-void Menu::onMouseWheel(int delta)
+std::unique_ptr<Menu> MainMenu::clone() const
 {
+   return std::unique_ptr<Menu>(new MainMenu(*this));
 }
 
-void Menu::onMouseButton(sf::Mouse::Button Button, bool down)
-{
-}
 
-void Menu::onKey(const sf::Event::KeyEvent& event, bool down)
-{
-}
-
-void Menu::onCharacter(const sf::Event::TextEvent& event)
-{
-}
-
-void Menu::onResized()
-{
-}
-
-void Menu::onBlurred()
-{
-}
-
-bool Menu::onClosed()
-{
-   return true;
-}
-
-void Menu::update()
-{
-}
-
-void Menu::draw()
-{
-}
-
-void Menu::cancelInput()
-{
-}
 
 } // namespace carcassonne::gui
 } // namespace carcassonne
+
+#endif
