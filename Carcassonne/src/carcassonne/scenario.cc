@@ -240,6 +240,8 @@ void Scenario::draw() const
    camera_.use();
 
    glEnable(GL_LIGHTING);
+   glEnable(GL_DEPTH_TEST);
+   glEnable(GL_CULL_FACE);
    
    board_.draw();
    
@@ -553,7 +555,8 @@ void Scenario::onKey(const sf::Event::KeyEvent& event, bool down)
       {
          case sf::Keyboard::Escape:
             setPaused(true);
-            game_.pushMenu("paused");
+            //game_.close();
+            //game_.pushMenu("paused");
             break;
 
          case sf::Keyboard::Tab:

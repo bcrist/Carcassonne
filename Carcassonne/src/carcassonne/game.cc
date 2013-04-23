@@ -50,7 +50,8 @@ Game::Game()
 
 int Game::run()
 {
-   gfx_cfg_.msaa_level = 4;
+   //gfx_cfg_.msaa_level = 4;
+   gfx_cfg_.window_mode = gfx::GraphicsConfiguration::WINDOW_MODE_FULLSCREEN_WINDOWED;
    //gfx_cfg_.v_sync = false;
 
    players_.push_back(std::unique_ptr<Player>(new Player("Player 1", true)));
@@ -87,7 +88,12 @@ int Game::run()
          else if (event.type == sf::Event::KeyPressed)
             onKey(event.key, true);
          else if (event.type == sf::Event::KeyReleased)
+         {
+            if (event.key.code == sf::Keyboard::Escape)
+               close();
+
             onKey(event.key, false);
+         }
          else if (event.type == sf::Event::TextEntered)
             onCharacter(event.text);
 
